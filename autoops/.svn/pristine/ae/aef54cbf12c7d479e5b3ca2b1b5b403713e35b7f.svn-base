@@ -1,0 +1,24 @@
+from django.shortcuts import render, render_to_response
+from asset.models import  JMSINFO
+from asset.mysql import  db_operate
+from UAT import settings
+# Create your views here.
+def getdb(request):
+   
+    
+    dic=JMSINFO.objects.all()
+    
+    
+    return render_to_response('monitor/db_status.html',{'dic':dic})
+    
+def getdb1(request):
+    db=db_operate()
+    dic1=db.mysql_command(settings.conn, 'select * from asset_jmsinfo limit 10')
+    dic=list(dic1)
+    print dic
+    #print type(dic)
+
+
+
+    return render_to_response('monitor/db_status.html',{'dic':dic})
+    

@@ -1,0 +1,19 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+import time
+
+    
+    
+def timeit(fun):
+    def wrapper():
+        start=time.clock()
+        fun()
+        end=time.clock()
+        print 'used:',end-start
+    return wrapper
+    @timeit
+def foo():
+    print 'foo'
+if __name__ == '__main__':
+    #foo=timeit(foo)
+    foo()

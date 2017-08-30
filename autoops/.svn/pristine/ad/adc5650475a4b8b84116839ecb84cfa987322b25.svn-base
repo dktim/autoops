@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+
+{%block container%}
+
+
+
+
+
+请选择实例名称：</br>
+<div class="btn-group">
+   <button type="button" class="btn btn-default dropdown-toggle" 
+      data-toggle="dropdown">
+      默认 <span class="caret"></span>
+   </button>
+   <ul class="dropdown-menu" role="menu">
+      <li><a href="#">IPS</a></li>
+      <li><a href="#">IPW</a></li>
+      <li><a href="#">PAY</a></li>
+      <li class="divider"></li>
+      <li><a href="#">REG</a></li>
+      <li><a href="#">WEB</a></li>
+   </ul>
+</div>
+
+{%endblock%}
+

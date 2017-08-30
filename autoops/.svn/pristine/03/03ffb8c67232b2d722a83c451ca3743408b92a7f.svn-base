@@ -1,0 +1,38 @@
+﻿ {% extends 'base.html'%} 
+{% block title%}
+
+logstash_monitor
+{% endblock %}
+
+ {% block container%}
+<div class="row" style="float: left;margin-left: 1px;">
+            <div class="col-md-12">
+                 <div class="panel panel-default">
+                      <div class="panel-body">
+<table  id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+<thead>
+	<tr>
+		<td width="200px">ip</td>
+		<td width="200px">logstash进程数量</td>
+		</tr>
+	</thead>	
+<tbody>
+	{% for item in list %}
+	<tr>
+		<td>{{item.ip}}</td>
+		<td>{{item.logstash}}</td>
+		
+		
+		</tr>
+	
+	
+	</tbody>	
+	
+	{% endfor%}
+	</table>
+
+</div>
+</div>
+</div>
+</div>
+{%endblock%}

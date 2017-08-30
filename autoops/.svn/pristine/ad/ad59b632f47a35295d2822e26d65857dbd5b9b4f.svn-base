@@ -1,0 +1,87 @@
+
+
+
+
+{% extends "base1.html"%}
+ 
+
+
+{% block title%}
+ 
+
+server_detail
+{% endblock%}
+{% block content%}
+
+<script src="/static/js/controller_jdbc_status.js"></script>
+<script src="/static/js/controller_jms_status.js"></script>
+<script src="/static/js/controller_hub_status.js"></script>
+<script src="/static/js/controller_lsn_status.js"></script>
+
+<script type="text/javascript">
+function aa(){
+
+
+alert("sdfs")}
+
+</script>
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<div class="tabbable" id="tabs-33434">
+				<ul class="nav nav-tabs">
+					<li class="active">
+						 <a href="#" data-toggle="tab">主机概要</a>
+						 
+<h3 id="ip">{{ip}}</h3><br>
+<h3 id="reg">{{reg}}</h3><br>
+<h3>{{desc}}</h3>
+					</li>
+					<li onclick="single_jdbc()">
+						 <a href="#panel-30317" data-toggle="tab">JDBC连接</a>
+					</li>
+					<li onclick="single_jms()">
+						 <a href="#panel-30318" data-toggle="tab">jms活动连接</a>
+					</li>
+					<li onclick="single_lsn()">
+						 <a href="#panel-30319" data-toggle="tab">linstener连接</a>
+					</li>
+
+					<li onclick="single_hub()">
+						 <a href="#panel-30320" data-toggle="tab">hub活动连接</a>
+					</li>
+				</ul>
+				<div class="tab-content">
+					<div class="tab-pane" id="panel-831737">
+					</div>
+					<div class="tab-pane" id="panel-30317">
+						<div id='jdbc_container'>
+						
+						</div>
+					</div>
+					<div class="tab-pane" id="panel-30318">
+						<div id='jms_container'>
+						
+						</div>
+					</div>
+					<div class="tab-pane" id="panel-30319">
+						<div id='lsn_container'>
+					
+							
+						</div>
+					</div>
+					<div class="tab-pane" id="panel-30320">
+						<div id='hub_container'>
+						
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+{%endblock%}
+

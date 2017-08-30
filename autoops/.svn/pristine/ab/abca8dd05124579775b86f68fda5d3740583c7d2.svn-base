@@ -1,0 +1,188 @@
+#coding:utf-8
+
+from autoops.settings import conn,oracle_conn
+from autoops.mysql import db_operate
+from __builtin__ import list
+from autoops.oracle import oracle_db_operate
+
+def get_ip_list(reg,start_time,end_time):
+    
+    db=oracle_db_operate()
+    #sql="select distinct HOST from monitor.monitor_jdbc where TIME between '%s' and '%s'  and RegName='%s'"%(start_time,end_time,reg)
+    sql_cmd="select distinct HOST from monitor_jdbc where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and RegName='%s'" %(start_time,end_time,reg)
+    print sql_cmd
+    result=db.oracle_command_direct(oracle_conn, sql_cmd)
+    #print result
+    ip_list=[]
+    print result
+    for i in result:
+        ip_list.append(i)
+    return ip_list
+
+def get_count_with_ip(ip_list,start_time,end_time,reg):
+     db=oracle_db_operate()
+     name=['name','data']
+     dic={}
+     ret=[]
+     for ip in ip_list:
+        #sql_cmd="select ActiveCurrent from monitor.monitor_jdbc where HOST='%s' and TIME between '%s' and '%s' and ActiveCurrent>0 and regname='%s' and  jdbcpoolname in(select default JDBCPOOL from appregioninfo where regname='%s')order by TM_SMP" %(ip,start_time,end_time,reg,reg)
+        sql_cmd="""
+select c.activecurrent
+  from appregioninfo a,machineinfo b, monitor_jdbc c
+ where c.regname = '{0}'
+   and c.host='{1}'
+   and c.host=b.ipaddress
+   and c.regname=b.regname
+   and c.regname=a.regname
+   and c.jdbcpoolname = a.defaultjdbcpool   
+   and c.tm_smp > to_date('{2}', 'yyyy-mm-dd hh24:mi:ss')
+   and c.tm_smp < to_date('{3}', 'yyyy-mm-dd hh24:mi:ss')
+   order by c.seqnum asc
+"""
+	sql_cmd=sql_cmd.format(reg,ip,start_time,end_time)
+	result=db.oracle_command_direct(oracle_conn, sql_cmd)
+        print sql_cmd
+        count=[]
+        for item in result:
+            count.append(item)
+        s=[ip,count]
+        dic=dict(zip(name,s))
+        ret.append(dic)
+     return ret
+ 
+def parse_ip_count(dic):
+    count_list=[]
+    desc_list=[]
+    ip_list=[]
+    time_list=[]
+    for key,value in dic.items():
+        for item in value:
+            count_list.append(int(item['ActiveCurrent']))
+    return count_list
+               
+def get_time_with_ajax(ip_list,start_time,end_time,type,reg):
+    db=db_operate()
+    oracle_db=oracle_db_operate()
+    list=[]    
+    print type
+    if type=='jms':      
+        for ip in ip_list:
+            #sql_cmd="select TM_SMP from monitor.monitor_jms where HOST='%s' and TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and NAME in(select DEFAULTJMSQUEUE from appregioninfo where regname='%s')order by TM_SMP" %(ip,start_time,end_time,reg)
+            sql_cmd="""
+ select c.time
+  from appregioninfo a,machineinfo b, monitor_jms c
+ where c.regname ='{0}'
+   and c.host='{1}'
+   and c.host=b.ipaddress
+   and c.regname=b.regname
+   and c.regname=a.regname
+   and c.name = a.DEFAULTJMSQUEUE
+   and c.tm_smp > to_date('{2}', 'yyyy-mm-dd hh24:mi:ss')
+   and c.tm_smp < to_date('{3}', 'yyyy-mm-dd hh24:mi:ss')
+   order by c.seqnum asc
+
+"""	
+            sql_cmd=sql_cmd.format(reg,ip,start_time,end_time)
+            print sql_cmd
+            result=oracle_db.oracle_command_direct(oracle_conn, sql_cmd)
+            for item in result:
+                list.append(item)
+        #print list
+        print len(list)
+        return list
+    
+    elif type=='jdbc':
+        for ip in ip_list:
+           # sql_cmd="select TM_SMP from monitor.monitor_jdbc where HOST='%s' and TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and ActiveCurrent>0 and jdbcpoolname in(select defaultJDBCPOOL from appregioninfo where regname='%s') order by TM_SMP" %(ip,start_time,end_time,reg)
+           # print sql_cmd
+            sql_cmd="""
+      
+  select c.time
+  from appregioninfo a,machineinfo b, monitor_jdbc c
+ where c.regname ='{0}'
+   and c.host='{1}'
+   and c.host=b.ipaddress
+   and c.regname=b.regname
+   and c.regname=a.regname
+   and c.jdbcpoolname = a.defaultjdbcpool   
+   and c.tm_smp > to_date('{2}', 'yyyy-mm-dd hh24:mi:ss')
+   and c.tm_smp < to_date('{3}', 'yyyy-mm-dd hh24:mi:ss')
+   order by c.seqnum asc
+   """
+   	    sql_cmd=sql_cmd.format(reg,ip,start_time,end_time)
+            result=oracle_db.oracle_command_direct(oracle_conn, sql_cmd)
+            
+            for item in result:
+                list.append(item)
+        return list
+    elif type=='lsn':
+        print ip_list
+        for ip in ip_list:
+            sql_cmd="select TM_SMP from monitor.lsnstat where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and HOST='%s' and RegName='%s'" %(start_time,end_time,ip,reg)
+            result=oracle_db.oracle_command_direct(oracle_conn, sql_cmd)
+            for item in result:
+                list.append(item.strftime('%Y-%m-%d:%H:%M:%S'))
+        return list
+    elif type=='hub':
+        print ip_list
+        for ip in ip_list:
+            sql_cmd="select TM_SMP from monitor.hubstat where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and HOST='%s'" %(start_time,end_time,ip)
+            result=oracle_db.oracle_command_direct(oracle_conn, sql_cmd)
+            print result
+            for item in result:
+                list.append(item.strftime('%Y-%m-%d:%H:%M:%S'))
+       # print list
+        return list
+               
+               
+def get_jms_count(start,end):
+    db=db_operate()
+    sql="select Time,IpAddress,RegName,JMSQueueName,MessagesCurrentCount from asset_jmsstat where Time between '%s' and '%s' and RegName='PAY'" %(start,end)
+    result=db.mysql_command(conn, sql)  
+    #print sql,result   
+    desc_list=[]
+    count_list=[]
+    for item in result:
+        str=item['Time']+'-'+item['RegName']+'@'+item['JMSQueueName']
+        desc_list.append(str.encode('utf-8'))
+        count_list.append(int(item['MessagesCurrentCount']))
+   # print result  
+    return desc_list,count_list    
+               
+               
+def get_lsn_count(start,end):
+    db=db_operate()
+    sql="select Time,IpAddress,RegName,ServiceName,CurrActiveThreadCount from servicethreadstat where Time between '%s' and '%s' and ServiceName='S.LSNSVR'" %(start,end)
+    result=db.mysql_command(conn, sql)  
+    #print sql,result   
+    desc_list=[]
+    count_list=[]
+    for item in result:
+        str=item['Time']+'-'+item['RegName']+'@'+item['ServiceName']
+        desc_list.append(str.encode('utf-8'))
+        count_list.append(int(item['CurrActiveThreadCount']))
+   # print result  
+    return desc_list,count_list                
+
+def get_hub_count(start,end):
+    db=db_operate()
+    sql="select Time,IpAddress,RegName,ServiceName,CurrActiveThreadCount from servicethreadstat where Time between '%s' and '%s' and ServiceName='S.HUBSVR'" %(start,end)
+    result=db.mysql_command(conn, sql)  
+    #print sql,result   
+    desc_list=[]
+    count_list=[]
+    for item in result:
+        str=item['Time']+'-'+item['RegName']+'@'+item['ServiceName']
+        desc_list.append(str.encode('utf-8'))
+        count_list.append(int(item['CurrActiveThreadCount']))
+   # print result  
+    return desc_list,count_list    
+               
+
+if __name__ == '__main__':
+    a,b=get_jms_count('2016-07-27 09:57:41', '2016-07-27 10:00:59')
+    print a,b
+   # print c
+   # print len(a)
+   
+   # print c

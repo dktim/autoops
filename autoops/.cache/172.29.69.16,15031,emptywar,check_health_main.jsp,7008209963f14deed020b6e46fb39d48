@@ -1,0 +1,16 @@
+status: 200
+content-length: 12
+content-location: http://172.29.69.16:15031/emptywar/check_health_main.jsp
+x-powered-by: Servlet/2.5 JSP/2.1
+set-cookie: JSESSIONID=Wvfj30TE0xIvTV0PcUFQ5vD5vFbxAozGjoTLpoyHPeNZOfNCoq1V!-1554321373;
+ path=/; HttpOnly
+bluewareguid: 25394a3c52efe378
+x-blueware-app-data: Olx7QX9jeFoQETA0NUEzBBkPNg0IESw+YQcoH25pMDsRRysdCxwJVgIWJwElDTITUyohPj5eMwMEQD8KEVxuQH58alQeZGV4UQNhW1teZE5TXG4MOz42WhB0YGVYBzNZCVtnHAcbcVV2cAc=
+date: Mon, 26 Jun 2017 10:07:59 GMT
+content-type: text/html; charset=ISO-8859-1
+
+
+
+
+success
+

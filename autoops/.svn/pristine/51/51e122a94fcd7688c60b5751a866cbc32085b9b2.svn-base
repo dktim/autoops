@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>}cc</title> 
+    <script type="text/javascript" src="./jquery.min.js"></script>
+    <script type="text/javascript" src="./highcharts.js"></script>
+   
+
+    <!--[if lt IE 9]>
+			<script src="http://cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+			<script src="http://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+		<![endif]-->
+</head>
+<body>
+ccc
+<div id="container" style="min-width:700px;height:400px"> ss</div>   
+<script>
+
+	$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'column',
+            margin: [ 50, 50, 100, 80]
+        },
+        title: {
+            text: '网站访问数据'
+        },
+        xAxis: {
+            categories: ['www.zhanimei.ml', 'www.aaa.com', '1.htldxhzj.duapp.com', 'www.zhasini.ml', 'www.bing.com', 'gtxapi.cdn.duapp.com', 'www.ccc.net.cn', 'www.baidu.com', 'www.xxx.com', 'www.zhanimei.ga'],   
+            labels: {
+                rotation: 0,
+                align: 'right',
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '访问量'
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: '访问量: <b>{point.y:.1f}</b>',
+        },
+        series: [{
+            name: '今天的日志',
+            data: [40155, 1113101, 9398, 373436, 777, 79496, 922, 1465, 2477070, 29847],
+            dataLabels: {
+                enabled: false,
+                rotation: -90,
+                color: '#FFFFFF',
+                align: 'right',
+                x: 4,
+                y: 10,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif',
+                    textShadow: '0 0 3px black'
+                }
+            }
+        }]
+    });
+});
+</script>
+
+
+  
+ 
+
+</body>
+</html>

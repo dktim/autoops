@@ -1,0 +1,140 @@
+{% extends "base.html" %} {%block container%}
+<script type='text/javascript'>
+
+
+$(document).ready(function(){
+ $('.main').each(function(i,dom){
+    var $obj=$(dom);
+    var status_object=$obj.find('p').text();
+    var a=$obj.find('a')
+    //alert(status_object);
+    if (status_object>1){
+
+$obj.removeClass('bg-green').addClass('bg-red');
+
+    }
+    else{
+
+
+    }
+
+
+
+
+   
+ })
+
+})
+
+  
+
+function update_reg_statue(){
+
+    $.get('/controller/update_reg_status')
+    alert('update success.')
+
+}
+
+//setTimeout('update_reg_statue()',50000);
+
+
+</script>
+
+
+
+
+
+
+<link href="/static/assets/css/style.css"
+	tppabs="http://www.keenthemes.com/preview/metronic_admin/assets/css/style.css"
+	rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<style type="text/css">
+.main {
+	font-size: 120%;
+	color: black;
+	background-color: white;
+}
+</style>
+
+<script 'text/javascript'>
+
+$(document).ready(function(){
+	
+	$('h4').each(function(i,obj){
+		reg=$(obj).text()
+		var bad=$(obj).parents('.tile-body').siblings('.tile-object').find('.bad').text()
+		//alert(bad)
+		if (bad>0){
+			//alert('bad')
+			$(obj).parents('.main').removeClass('bg-blue').addClass('bg-red')
+			
+		}
+		else if (bad==0){
+			//alert('good')
+			$(obj).parents('.main').removeClass('bg-blue').addClass('bg-green')
+		}
+		
+	})
+	
+	
+})
+	
+
+
+
+
+
+</script>
+
+<script>
+	
+function get_reg_list(obj){
+	var base=$(obj)
+	var url=base.find('#url_p').text()
+	//alert(url);
+	window.location.href=url;
+	
+	}
+
+	
+	</script>
+
+<input type='text' class="form-control" value='请输入ip' name='ip'>
+<button type="submit" class="btn btn-default">提交</button>
+</form>
+<div class="tiles"> 
+	{% for item in reg_list %}
+	
+	<div class="tile bg-blue main" onclick=get_reg_list(this)>
+			<p hidden id='url_p'>/monitor/server_list/?reg={{item.reg}}</p>
+		<div class="tile-body">
+		
+			<h4>{{item.reg}}</h4>
+		</div>
+		<div class="tile-object">
+			<div class="name">
+
+			<a href=">/monitor/server_list/?reg={{item.reg}}">
+				</a>
+				<p hidden>{{item.count}}</p>
+			
+			</div>
+
+
+		</div>
+	</div>
+	{% endfor %}
+</div>
+
+
+
+<!-- END PAGE CONTENT--
+  </div>
+  <!-- END CONTENT --> {%endblock%} 

@@ -1,0 +1,462 @@
+{% extends "base1.html"%} {% block title%} server_list {% endblock %} 
+{% block content %}
+
+<!--  <script src="/static/js/server_list.js"></script>-->
+<style type='text/css'>
+.yellow {
+	font-size: 80%;
+	color: black;
+	background-color: green;
+}
+
+.red {
+	font-size: 80%;
+	color: black;
+	background-color: red;
+}
+</style>
+<style>
+.progressBar {
+	width: 200px;
+	height: 8px;
+	border: 1px solid #98AFB7;
+	border-radius: 5px;
+	margin-top: 10px;
+}
+
+.bar {
+	width: 0px;
+	height: 8px;
+	border-radius: 5px;
+	background: #5EC4EA;
+}
+</style>
+<script type='text/javascript'>
+
+
+function get_history_cmd(obj){	
+	reg=$('#regname').text()
+	var ip=$(obj).parent().siblings('.ip').find('.ipaddress').text();
+	$.ajax({
+		url:'/monitor/get_reg_action_history',
+		data:{'reg':reg,'ip':ip},
+		datatype:'json',
+		type:"GET",
+		success:function(data){
+			var len=data.length
+			if(len==0)
+			{alert("no action found...")}
+			else{
+			htmls=""
+			for(i=0;i<len;i++){
+				htmls=htmls+"<tr><td>"+data[i].username+"</td>"+
+					"<td>"+data[i].regname+"</td>"+
+					"<td>"+data[i].cmd+"</td>"+
+					"<td>"+data[i].cmd_time+"</td>"+"</tr>"
+					
+				}
+				$(".history1").html(htmls)
+			}
+			}			
+		})
+	
+	}	
+
+function start_node(obj){
+	var ip=$(obj).parent().siblings('.ip').find('.ipaddress').text();
+	var reg=$('#regname').text()
+	if(window.confirm('sure to start?')){ 
+		$.get('/controller/start_node',{'ip':ip,'reg':reg},function(data){
+			if(data=='success'){
+				alert('open success');
+				$(obj).css("backgroundColor", "green");
+				$(obj).addClass('disabled')
+			}
+			else if(data=='no such file'){
+					alert('no file name open.sh');
+			}
+			else if(data=='other failure')
+			{
+					alert('other error,pls check');
+			}
+			else{
+				alert('exe fail,return string is:'+data);
+			}
+		})
+	}
+	else{ 
+		alert("open cancel"); 
+		return false; 
+		} 
+	}
+	function stop_node(obj){
+		var ip=$(obj).parent().siblings('.ip').find('.ipaddress').text();
+		var reg=$('#regname').text()
+		if(window.confirm('sure to close?')){ 
+			$.get('/controller/stop_node',{'ip':ip,'reg':reg},function(data){
+				if(data=='success'){
+					alert('close success');
+					$(obj).css("backgroundColor", "red");
+					$(obj).addClass('disabled');
+					$(obj).siblings('.start').removeClass('disabled');
+				}
+				else if(data=='no such file'){
+		alert('no file name close.sh');
+				}
+				else if(data=='other failure'){
+		alert('other error：'+data);
+				}
+				else{
+					alert('other fail,the return string is:'+data);
+				}
+				
+				
+			})
+
+			}
+		else{ 
+			alert("close cancel"); 
+			return false; 
+			} 
+	}
+function restart_reg(obj) 
+{
+                var this_obj =$(obj)
+                var reg=$('#regname').text()
+                alert(reg)
+                ip = $(obj).parent().siblings('.ip').find('.ipaddress').text()
+                alert(ip)
+               // appuser = $(obj).parents('td').siblings('.appuser').text()
+                var myDate = Date.parse(new Date());
+                $.ajax({
+                      //  beforeSend : function() 
+                       //{
+                       // 	/this_obj.text("重启中。。。。")
+                     //},
+                        url : '/controller/reg_restart',              
+                        type : 'get',             
+                        dataType : 'json',
+                        data : {
+                                "ip" : ip,
+                                "reg" : reg,
+                                'mydate' : myDate
+
+		    },
+		  success : function(data) {
+			  alert(data)
+			  if(data=='celery error'){
+				  
+			  }
+			  else if(data=='no tgt found'){
+				  
+				  parse_restart_result=setInterval(restart_result(this_obj,data),20000);
+			  }
+			  else{
+				 	parse_restart_result=setInterval(function restart_result(this_obj,data){
+				 		$.ajax({
+				 			beforesend:function(){
+				 			$("#wait").css("display","block");
+				 			alert('start_get_task_result....')
+				 			},
+				 			url:"/controller/restart_result",
+				 			type:"get",
+				 			data:{'id':id},
+				 			datatype:"json",
+				 			success:function(data){
+				 					if(data.context=='no'){
+				 						alert('not yet over...')
+				 						
+				 					}
+				 			        if(data.context=="success")
+				 			        {
+				 			        		//	obj.	html("<div><img src='/static/img/wait.gif' width='50' height='20'/><p>重启中.....</p></div>")
+				 			                        alert("restart success")
+				 			        }
+				 			        else
+				 			        {
+
+				 			                alert("restart_job is failed....")
+				 			        }
+				 			$("#wait").css("display","none");
+
+				 			}
+				 			})
+				 		
+				 	}
+				 			,20000);
+			  }
+			  //	this_obj.html("<div><img src='/static/img/wait.gif' width='50' height='20'/><p>重启中.....</p></div>")
+                       
+                        },
+})
+
+}
+function restart_result(obj,id){
+ 
+	$.ajax({
+beforesend:function(){
+$("#wait").css("display","block");
+alert('start_get_task_result....')
+},
+url:"/controller/restart_result",
+type:"get",
+data:{'id':id},
+datatype:"json",
+success:function(data){
+		if(data.context=='no'){
+			alert('not yet over...')
+			
+		}
+        if(data.context=="success")
+        {
+        		//	obj.	html("<div><img src='/static/img/wait.gif' width='50' height='20'/><p>重启中.....</p></div>")
+                        alert("restart success")
+        }
+        else
+        {
+
+                alert("restart_job is failed....")
+        }
+$("#wait").css("display","none");
+
+}
+})
+
+}
+
+
+
+
+
+	</script>
+
+<div class="modal fade" id="restartmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+					节点重启
+				</h4>
+				
+				任务ID:<span id='task_id'></span>
+				
+<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:50%;left:50%;padding:2px;"><img src='/static/img/wait.gif' width="64" height="64" /><br>Loading..</div>
+
+			</div>
+			<div class="modal-body">
+				
+			
+					
+			</div>
+		<!-- 	<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary">
+					提交更改
+				</button>
+			</div>
+			 -->
+		</div><!-- /.modal-content --> 
+	</div><!-- /.modal -->
+	</div>
+
+
+<div class="modal fade" id="new_task" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+				new_task
+				</h4>
+			</div>
+			<div class="modal-body history" id='history1'>
+
+	<div class="row-fluid">
+		<div class="span12">
+			<div class="row-fluid">
+				<div class="span6">
+				sdfss
+				</div>
+				<div class="span6">
+				ggggg
+				</div>
+			</div>
+		</div>
+	</div>
+					
+			</div>
+			<div class="modal-footer">
+			</div>
+	</div>
+	</div>
+	</div>
+
+
+
+<div class="modal fade" id="history" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+				操作历史
+				</h4>
+				
+				
+				
+<div id="wait" style="display:none;width:69px;height:89px;border:1px solid black;position:absolute;top:0%;left:100%;padding:2px;"><img src='/static/img/wait.gif' width="64" height="64" /><br>Loading..</div>
+
+			</div>
+			<div class="modal-body history" id='history1'>
+<table class="table table-striped table-condensed">
+<thead>
+<tr>
+<td>username</td>
+<td>regname</td>
+<td>cmd</td>
+<td>cmd_time</td>
+</tr>
+</thead>
+
+<tbody class='history1'>
+
+</tbody>
+
+</table>
+	
+					
+			</div>
+			<div class="modal-footer">
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+	</div>
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+
+<span id='regname'>{{regname}}</span>
+<div>
+		<a class='btn btn-link btn-sm' id='jdbc_state'
+			href="/monitor/jdbc_status2/?reg={{regname}}"> JDBC状态 </a> <a
+			class="btn btn-link btn-sm" href="/monitor/jms_state/?reg={{regname}}">JMS状态</a>
+		<a class="btn btn-link btn-sm" href="/monitor/lsn_status/?reg={{regname}}">Listener状态
+		</a> <a href="/monitor/hub_state/?reg={{regname}}" class="btn btn-link btn-sm">Hub状态
+		</a>
+		<button type="button" class="btn btn-link btn-sm" id='get_latest_state'>获取最新状态</button>
+
+	</div>
+
+
+
+
+		<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table table-striped table-condensed table-hover table-bordered">
+				<thead>
+					<tr>
+						<th>
+							ip地址
+						</th>
+						<th>
+							描述
+						</th>
+						<th>
+							开交易
+						</th>
+						<th>
+							关交易
+						</th>
+						<th>
+							重启应用
+						</th>
+							<th>
+							操作历史
+						</th>
+					</tr>
+				</thead>
+				<tbody>
+			{% for item in list %}
+			
+			<tr>
+			<td class='ip' >
+			<a  class='ipaddress btn btn-info' href="/controller/get_server_detail/?ip={{item.ip}}&&reg={{regname}}">{{item.ip}}</a>
+		</td>
+			<td>
+		{{ item.desc }}
+			</td>
+			<td>
+			<a class="btn  btn-sm start" onclick="start_node(this)">开启交易</a>
+			</td>
+			<td>
+				<a class="btn  btn-sm  stop" onclick="stop_node(this)">关闭交易</a>
+			</td>
+			<td>
+				<button class="btn  btn-sm"  onclick="restart_reg(this)">应用重启</button>		
+
+			</td>
+			<td>
+					<button class="btn  btn-sm" onclick="get_history_cmd(this)" >操作历史</button>	
+
+			</td>
+			
+			
+			<tr>
+					{% endfor %}
+				
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+	<div>
+		<iframe id="myFrameId" name="myFrameName" scrolling="yes" frameborder="0" HEIGHT="500" WIDTH="750"></iframe>
+	</div>
+	{{aa}}
+
+</div>
+
+
+
+<script>
+
+$(document).ready(function(){
+	
+	
+	$("#add_file").click(function(){
+        $('#add_modal').modal('show')
+        
+    });
+	
+
+$('.ipaddress').each(function(i,obj){
+	var ip=$(obj).text() 
+	var reg=$('#regname').text()
+	var this_obj=$(obj)
+	$.get('{% url 'get_node_state'%}',{'ip':ip,'reg':reg},function(data){
+	if(data==1){
+		$(obj).addClass("btn btn-danger	");
+	}
+	else if(data==0){
+	 $(obj).addClass("btn btn-success");
+	}
+	else{
+		 $(obj).addClass("btn btn-warning");
+
+
+}
+	})
+})
+})
+
+</script>
+{% endblock %}
+
+

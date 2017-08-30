@@ -1,0 +1,19 @@
+
+from autoops.oracle import oracle_db_operate
+from autoops.settings import oracle_conn
+
+class machineinfo():
+    def __init__(self,db,conn):
+        self.db=oracle_db_operate
+        self.conn=oracle_conn
+    def alert_machine(self,list,aciton):
+        if aciton=="add":
+            sql="insert into machineinfo(hostname,ostype,version,bit,ipaddress,regname,status,description) values('%s','%s','%s','%s','%s','%s',%d,'%s')"%(list[0],
+                                                                                                                                                            
+            list[1],list[2],list[3],list[4],list[5],0,list[6])
+            try:    
+                print sql
+                self.db.oracle_command_update(self.conn,sql)
+            except:                 
+                print "add error"                                                                  
+            

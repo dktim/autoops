@@ -1,0 +1,132 @@
+{% extends "base1.html"%}
+
+{%  block title%}
+server_list
+{% endblock %}
+
+ {% block content%}
+
+<script src="/static/js/server_list.js"></script>
+<style type='text/css'>
+.yellow {
+	font-size: 80%;
+	color: black;
+	background-color: green;
+}
+
+.red {
+	font-size: 80%;
+	color: black;
+	background-color: red;
+}
+</style>
+<style>
+.progressBar {
+	width: 200px;
+	height: 8px;
+	border: 1px solid #98AFB7;
+	border-radius: 5px;
+	margin-top: 10px;
+}
+
+.bar {
+	width: 0px;
+	height: 8px;
+	border-radius: 5px;
+	background: #5EC4EA;
+}
+</style>
+<script>
+function jdbc_state(){
+	
+	alert('ss')
+	
+}
+
+
+</script>
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+当前集群：<span class="label label-primary jiqun" id='regname'><a href='/monitor/server_list/?reg={{regname}}'></a>{{regname}}</span>
+<div aligh='right'>
+	<a class='btn btn-warning' id='jdbc_state' href="/monitor/jdbc_status2/?reg={{regname}}">
+	JDBC状态
+	</a> 
+	
+	<a class="btn btn-success" href="/monitor/jms_state/?reg={{regname}}">JMS状态</a>
+	 <a class="btn btn-warning" href="/monitor/lsn_status/?reg={{regname}}">Listener状态
+	</a>
+	 <a href="/monitor/hub_state/?reg={{regname}}" class="btn btn-success">Hub状态
+	</a>
+	<button type="button" class="btn btn-info" id='get_latest_state'>获取最新状态</button>
+
+</div>
+
+
+<br>
+<br>
+<script>
+$(function(){
+    $("#get_latest_state").click(function(){
+         window.location.reload();
+    });
+});
+</script>
+
+<div class="row">
+	{% for i in list %}
+	<div class="col-sm-6 col-md-2 thumbnail">
+		<div class='main_div'>
+			<img src="/static/img/33.png" alt="150x100">
+
+			<h3 class='h3_ip'>
+			<a href="/contorller/get_server_detail/?ip={{i.ip}}&&reg={{regname}}">{{i.ip}}</a>
+	<p>{{i.desc}}</p>
+			</h3>
+		</div>
+		<div class="caption">
+			<a class="btn btn-primary" target='myFrameName'
+				href="/monitor/get_reg_info/?ip={{i.ip}}&&reg={{regname}}">应用重启</a>
+			
+		</div>
+		<div class="action">
+			<a class="btn btn-danger start" onclick="start_node(this)">开启交易</a> 
+			<a class="btn btn-danger stop" onclick="stop_node(this)">关闭交易</a>
+		</div>
+	</div>
+	{%endfor%}
+</div>
+<div>
+	<iframe id="myFrameId" name="myFrameName" scrolling="yes"
+		frameborder="0" HEIGHT="500" WIDTH="750"></iframe>
+</div>
+{{aa}}
+
+</div>
+<script>
+$(document).ready(function(){
+
+$('.h3_ip').each(function(i,obj){
+	var ip=$(obj).children('a').text() 
+	var reg=$('#regname').text()
+	//alert(reg);
+	$.get('{% url 'get_node_state'%}',{'ip':ip,'reg':reg},function(data){
+	if(data==1){
+		$(obj).parent().css("backgroundColor", "red");
+		$(obj).parents('.main_div').siblings('.action').find('.stop').addClass('disabled')
+		//$(obj).parents('.main_div').siblings('.action').find('.start').removeClass('disabled')
+	}
+	else if(data==0){
+		$(obj).parent().css("backgroundColor", "green");
+	var ssobj=$(obj).parents('.main_div').siblings('.action').find('.start')
+	$(obj).parents('.main_div').siblings('.action').find('.start').addClass('disabled')
+	//$(obj).parents('.main_div').siblings('.action').find('.stop').remove('disabled')
+
+	}
+	})
+})
+})
+
+</script>
+{%endblock%}
+
+

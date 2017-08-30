@@ -1,0 +1,63 @@
+{% load staticfiles %}
+<!DOCTYPE html>  
+<html lang="zh-cn">
+<head>
+ <meta charset="utf-8">
+   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}HisunPay{% endblock %}</title>
+<script src="/static/js/jquery.min.js"></script>
+
+   <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/highcharts.js"></script> 
+     <script src="/static/js/exporting.js"></script>
+      <script src="/static/js/bootstrap-switch.min.js"></script>
+     <script src="/static/js/aa.js"></script>
+    <script src="/static/js/WdatePicker.js"></script>
+    
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+
+
+
+<div class="container">
+	
+	<div class="row">
+		<div class="col-md-12 column">
+			<p >和包Auto_Ops</p>
+			<p ><a href="/account/logout">Welcome {{user}}</a></p>
+			
+			</div>
+			
+		
+		
+		
+		
+		
+		</div>
+	
+	
+	
+	
+	
+	</div>
+
+<ul class="nav nav-tabs navbar navbar-inverse">
+   <li ><a href="/monitor/index">Home</a></li>
+   <li><a href="/monitor/index">代码发布</a></li>
+   <li><a href="/monitor/index">应用监控</a></li>
+   <li><a href="#">系统部署</a></li>
+   <li><a href="/monitor/single_machine">远程执行</a></li>
+   <li><a href="#">系统告警</a></li> 
+</ul>
+
+
+{%block container%}
+{%endblock%}
+
+</body>
+</html>

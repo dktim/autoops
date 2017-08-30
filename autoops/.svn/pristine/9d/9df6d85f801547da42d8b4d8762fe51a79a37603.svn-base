@@ -1,0 +1,16 @@
+import paramiko
+
+
+
+if __name__=="__main__":
+	ssh=paramiko.SSHClient()
+        pkey="/root/.ssh/id_rsa"
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        key=paramiko.RSAKey.from_private_key_file(pkey)
+        ssh.connect('172.29.51.39',22,'veradm1',pkey=key)
+    	command="ls ~/bin/"
+        stdin,stdout,stderr = ssh.exec_command(command)
+        ret_out=stdout.read()
+        ret_err=stderr.read()
+	print ret_out,ret_err
+

@@ -1,0 +1,140 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+from django import forms
+from asset.models import *
+
+
+
+class MACHINEINFO(forms.ModelForm):
+    class Meta:
+        model = MACHINEINFO
+        widgets = {
+          'HostName': forms.TextInput(attrs={'class': 'form-control'}),
+          'OSType': forms.TextInput(attrs={'class': 'form-control'}),
+          'IpAddress': forms.TextInput(attrs={'class': 'form-control'}),
+          'Desc': forms.TextInput(attrs={'class': 'form-control'}),
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }
+        
+class APPREGIONINFO(forms.ModelForm):
+    class Meta:
+        model = APPREGIONINFO
+        widgets = {
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'Desc': forms.TextInput(attrs={'class': 'form-control'}),
+          'AppUser': forms.TextInput(attrs={'class': 'form-control'}),
+          'ConsolePort': forms.TextInput(attrs={'class': 'form-control'}),
+          'HttpPort': forms.TextInput(attrs={'class': 'form-control'}),
+          'HttpsPort': forms.TextInput(attrs={'class': 'form-control'}),
+          
+         
+        }
+class SERVICEINFO(forms.ModelForm):
+    class Meta:
+        model = SERVICEINFO
+        widgets = {
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'ServiceName': forms.TextInput(attrs={'class': 'form-control'}),
+          'Desc': forms.TextInput(attrs={'class': 'form-control'}),
+        
+         
+        }
+class JDBCINFO(forms.ModelForm):
+    class Meta:
+        model = JDBCINFO
+        widgets = {
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'JdbcPoolName': forms.TextInput(attrs={'class': 'form-control'}),
+          'JNDIName': forms.TextInput(attrs={'class': 'form-control'}),
+          'DBName': forms.TextInput(attrs={'class': 'form-control'}),
+          
+            'DBUser': forms.TextInput(attrs={'class': 'form-control'}),
+            'InitSize': forms.TextInput(attrs={'class': 'form-control'}),
+            'MaxSize': forms.TextInput(attrs={'class': 'form-control'}),
+               'MinSize': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }
+class JMSINFO(forms.ModelForm):
+    class Meta:
+        model = JMSINFO
+        widgets = {
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'JmsQueneName': forms.TextInput(attrs={'class': 'form-control'}),
+          'JNDIName': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }
+class RULEINFO(forms.ModelForm):
+    class Meta:
+        model = RULEINFO
+        widgets = {
+          'IpAddress': forms.TextInput(attrs={'class': 'form-control'}),
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'Target': forms.TextInput(attrs={'class': 'form-control'}),
+          'Target': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }
+        
+class JDBCSTAT(forms.ModelForm):
+    class Meta:
+        model = JDBCSTAT
+        widgets = {
+          'Time': forms.TextInput(attrs={'class': 'form-control'}),
+          'IpAddress': forms.TextInput(attrs={'class': 'form-control'}),
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'JdbcPoolName': forms.TextInput(attrs={'class': 'form-control'}),
+           'MaxCapacity': forms.TextInput(attrs={'class': 'form-control'}),
+            'ActiveCurrent': forms.TextInput(attrs={'class': 'form-control'}),
+             'ActiveHighCount': forms.TextInput(attrs={'class': 'form-control'}),
+              'WaitSecondsHighCount': forms.TextInput(attrs={'class': 'form-control'}),
+               'WaitingCurrentCount': forms.TextInput(attrs={'class': 'form-control'}),
+                'State': forms.TextInput(attrs={'class': 'form-control'}),
+                  'TM_SMP': forms.TextInput(attrs={'class': 'form-control'}),
+                    'SEQNUM': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }
+class JMSSTAT(forms.ModelForm):
+    class Meta:
+        model = JMSSTAT
+        widgets = {
+          'Time': forms.TextInput(attrs={'class': 'form-control'}),
+          'IpAddress': forms.TextInput(attrs={'class': 'form-control'}),
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'JMSQueueName': forms.TextInput(attrs={'class': 'form-control'}),
+            'ConsumersHighCount': forms.TextInput(attrs={'class': 'form-control'}),
+              'MessagesCurrentCount': forms.TextInput(attrs={'class': 'form-control'}),
+                'MessagesPendingCoun': forms.TextInput(attrs={'class': 'form-control'}),
+                  'MessagesHighCount': forms.TextInput(attrs={'class': 'form-control'}),
+                    'MessagesReceivedCount': forms.TextInput(attrs={'class': 'form-control'}),
+                      'ConsumersTotalCount': forms.TextInput(attrs={'class': 'form-control'}),
+                        'TM_SMP': forms.TextInput(attrs={'class': 'form-control'}),
+                          'SEQNUM': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }
+class SERVICENTHREADSTAT(forms.ModelForm):
+    class Meta:
+        model = SERVICENTHREADSTAT
+        widgets = {
+          'Time': forms.TextInput(attrs={'class': 'form-control'}),
+          'IpAddress': forms.TextInput(attrs={'class': 'form-control'}),
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'ServiceName': forms.TextInput(attrs={'class': 'form-control'}),
+           'CurrActiveThreadCount': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class GCTSTAT(forms.ModelForm):
+    class Meta:
+        model = SERVICENTHREADSTAT
+        widgets = {
+          'Time': forms.TextInput(attrs={'class': 'form-control'}),
+          'IpAddress': forms.TextInput(attrs={'class': 'form-control'}),
+          'RegName': forms.TextInput(attrs={'class': 'form-control'}),
+          'YGC': forms.TextInput(attrs={'class': 'form-control'}),
+           'YGCT': forms.TextInput(attrs={'class': 'form-control'}),
+            'FGC': forms.TextInput(attrs={'class': 'form-control'}),
+             'FGCT': forms.TextInput(attrs={'class': 'form-control'}),
+              'TM_SMP': forms.TextInput(attrs={'class': 'form-control'}),
+               'SEQNUM': forms.TextInput(attrs={'class': 'form-control'}),
+         
+        }

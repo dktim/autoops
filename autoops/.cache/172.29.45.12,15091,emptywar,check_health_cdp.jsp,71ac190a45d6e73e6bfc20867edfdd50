@@ -1,0 +1,13 @@
+status: 200
+content-length: 11
+content-location: http://172.29.45.12:15091/emptywar/check_health_cdp.jsp
+x-powered-by: Servlet/2.5 JSP/2.1
+set-cookie: JSESSIONID=CfHj30JwNJIHhYg86SNneWzGcHz5RgRChuEvQRFFuZMDsYSoIHGw!-1569546004;
+ path=/; HttpOnly
+date: Mon, 26 Jun 2017 10:07:58 GMT
+content-type: text/html; charset=ISO-8859-1
+
+
+
+success
+

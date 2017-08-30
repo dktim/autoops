@@ -1,0 +1,51 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
+
+cluster={
+         'ips':[],
+        'ipw':[],
+        'web':[],
+        'pay':[],
+        'reg':[]  
+         }
+
+id_clu={
+        '1':'pay',
+        '2':'ips',
+        '3':'web',
+        '4':'ccs',
+        '5':'CCAVER',
+        '6':'CMS',     
+        '7':'CLUB',  
+        '8':'CMS',  
+        '9':'WEBSERVER',  
+        '10':'BKG',  
+        '11':'MAL',  
+        '12':'MCA',  
+        '13':'WAP1',  
+        '14':'WAP2',  
+        '15':'FILSVR',  
+        '16':'RPT',  
+        '17':'POSP',  
+        '18':'FIL',  
+        '19':'BUI',  
+        '20':'CUI',  
+        '21':'MAM',  
+        '22':'PMCOLN',  
+       # '23':'IPS',  
+        '24':'IPW',  
+       # '25':'PAY',  
+       # '26':'IPW',   
+        # '27':'WEB' , 
+          '28':'PTF' , 
+           '29':'PES', 
+           '30':'CGW',
+           '31':'DWGW',
+           '32':'UPGW',
+           '33':'OPEN',
+           '34':'SLINK'
+        
+        
+        }

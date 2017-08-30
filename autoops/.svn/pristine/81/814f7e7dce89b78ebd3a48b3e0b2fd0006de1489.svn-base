@@ -1,0 +1,12 @@
+from django.conf.urls import patterns,url
+from account.views import *
+#from django.contrib.auth.views.login import *
+
+
+urlpatterns=[
+#url(r'^/$',mylogin,name='mylogin'),
+url(r'mylogin',mylogin,name='mylogin'),
+# url(r'^$', views.login, name='login'),
+url(r'logout',mylogout,name='logout'),
+#url(r'changepassword/(?P<username>\w+)/$',changepassword,name = 'changepassword'),
+]

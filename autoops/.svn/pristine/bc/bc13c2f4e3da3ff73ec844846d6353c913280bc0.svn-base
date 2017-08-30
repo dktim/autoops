@@ -1,0 +1,13 @@
+from UAT.settings import conn
+from UAT.mysql import db_operate
+
+
+if __name__ == '__main__':
+    
+    
+    db=db_operate()
+    start_time='2016-07-27 09:58:41'
+    end_time='2016-07-27 09:59:41'
+    sql="select distinct IpAddress from asset_jdbcstat where Time between '%s' and '%s'" % (start_time,end_time)
+    ip_list=db.mysql_command(conn, sql)
+    print ip_list

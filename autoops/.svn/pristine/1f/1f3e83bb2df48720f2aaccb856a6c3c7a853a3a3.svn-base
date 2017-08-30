@@ -1,0 +1,105 @@
+"""UAT URL Configuration
+
+The `urlpatterns` list routes URLs to views. For more information please see:
+    https://docs.djangoproject.com/en/1.9/topics/http/urls/
+Examples:
+Function views
+    1. Add an import:  from my_app import views
+    2. Add a URL to urlpatterns:  url(r'^$', views.home, name='home')
+Class-based views
+    1. Add an import:  from other_app.views import Home
+    2. Add a URL to urlpatterns:  url(r'^$', Home.as_view(), name='home')
+Including another URLconf
+    1. Import the include() function: from django.conf.urls import url, include
+    2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
+"""
+from django.conf.urls import url,include
+from django.contrib import admin
+from monitor.views import get_jdbc_state,code_deploy,cluster_list,highchart,jdbc_active,get_jms_state,service_info_list,jdbc_status2,get_jms_state_ajax,get_lsn_ajax_state,get_jdbc1_state_at_start,start_page_with_jms_state,\
+    start_page_with_lsn_state, single_machine
+from controller.views import node_stop,app_cont,get_minion_status,get_node_state,node_start, get_server_detail,get_server_open_status,restart_reg,stop_reg,\
+    index_page_state,reg_restart_detail
+from monitor.views import service_info,start_page_with_hub_state,get_jdbc_state_by_hour,get_lsn_state_by_hour,get_hub_state_by_hour
+from controller.views import update_reg_status,machineinfo_list
+from autoops.settings import STATIC_URL as static_url
+from monitor.views import get_hub_ajax_state,get_jdbc_state_by_hour,get_jms_state_by_hour,regnames,thread_monitor
+from monitor.views import server_list,get_reg_info,jdbc_status3,get_listener_state,get_hub_state,lsn_status,wls_monitor,logstash_monitor
+from monitor.views import login
+from monitor.views import single_machine_jdbc_state,single_machine_lsn_state,single_machine_jms_state,single_machine_hub_state
+from monitor.views import query_all_server_port_status
+from monitor.views import test_page,salt_client_list
+from backend.views import aa
+urlpatterns = [
+ url(r"^$",login,name="auto_login"),
+ url(r"^login",login,name='index_login'),
+ url(r"^account/",include('account.urls')), 
+ url(r"^execute/",include('execute.urls')),
+  url(r'^admin/', admin.site.urls),
+url(r'^backend/',include('backend.urls')),
+url(r"^monitor/test_page",test_page),
+	url(r"controller/machineinfo/(?P<reg>\w+)/$",machineinfo_list),
+    url(r'^monitor/get_hub_ajax_state',get_hub_ajax_state),
+    url(r"^monitor/start_page_with_hub_state",start_page_with_hub_state,name='start_page_with_hub_state'),
+    url(r'^monitor/index',code_deploy,name='code_deploy'),
+    url(r'^monitor/cluster_list',cluster_list,name='cluster_list'),
+    url(r"^monitor/wls_monitor",wls_monitor),
+	url(r'^monitor/salt_client_list',salt_client_list,name="salt_client_list"),
+	url(r'^monitor/security_port_monitor',query_all_server_port_status),
+	  url(r"monitor/logstash_monitor",logstash_monitor),
+    url(r'^monitor/server_list/',server_list,name='server_list'),
+    url(r'^high/',highchart,name='high'),
+    url(r"^monitor/single_machine_jdbc_state",single_machine_jdbc_state),
+ url(r"^monitor/single_machine_jms_state",single_machine_jms_state),
+ url(r"^monitor/single_machine_lsn_state",single_machine_lsn_state),
+ url(r"^monitor/single_machine_hub_state",single_machine_hub_state),
+    url(r'^controller/reg_restart_detail',reg_restart_detail),
+    url(r'^monitor/start_page_with_lsn_state',start_page_with_lsn_state),
+    url(r'^controller/update_reg_status',update_reg_status),
+    url(r'^controller/reg_restart',restart_reg,name='start_reg'),
+    url(r'^controller/reg_stop',stop_reg,name='stop_reg'),
+    url(r'^monitor/jms_state/',get_jms_state,name='jms_state'),
+    url(r'^monitor/listener_state/',get_listener_state,name='listener_state'),
+    url(r'^monitor/hub_state/',get_hub_state,name='hub_state'),
+    url('^monitor/service_info_list',service_info_list,name='service_info_list'),
+    url('^monitor/jdbc_status2',jdbc_status2,name='jdbc_status2'),
+    url('^controller/app_cont',app_cont,name='app_cont'),
+    url('^controller/service_info',service_info,name='service_info'),
+    url('^controller/get_minion_status',get_minion_status,name='get_minion_status'),
+    url(r'^monitor/get_reg_info/',get_reg_info,name='get_reg_info'),
+    url(r'^monitor/jdbc_status3/',jdbc_status3,name='jdbc_status3'),
+    url(r'^controller/get_node_state',get_node_state,name='get_node_state'),
+    url(r'^controller/start_node',node_start,name='node_start'),
+    url(r'^controller/index_page_state',index_page_state),
+    url(r'^controller/stop_node',node_stop,name='node_stop'),
+    url(r'^contorller/get_server_detail',get_server_detail),
+    url(r'^monitor/get_jdbc_state',get_jdbc_state),
+    url(r'^monitor/single_machine',single_machine),
+    url(r'^monitor/get_jms_state',get_jms_state),
+    url(r'^monitor/get_jms_ajax_state',get_jms_state_ajax),
+    url(r'^monitor/lsn_status',lsn_status,name='lsn_status'),
+    url(r'^monitor/get_lsn_ajax_state',get_lsn_ajax_state,name='get_lsn_ajax_state'),
+    url(r"^controller/get_server_open_status",get_server_open_status,name='get_server_open_status'),
+    url(r"^monitor/get_jdbc1_state_at_start",get_jdbc1_state_at_start,name='get_jdbc1_state_at_start'),
+    url(r"^monitor/start_page_with_jms_state",start_page_with_jms_state,name='start_page_with_jms_state'),
+    url(r"^monitor/hourly_jms_state",get_jms_state_by_hour),
+    url(r"^monitor/hourly_jdbc_state",get_jdbc_state_by_hour),
+    url(r"^monitor/hourly_hub_state",get_hub_state_by_hour),
+    url(r"^monitor/hourly_lsn_state",get_lsn_state_by_hour), 
+  	url(r'^monitor/regname',regnames),
+   	url(r'^monitor/thread_monitor',thread_monitor),
+       url(r"file_download_url/(\d+)/$",aa,name="file_download_url"),
+          url(r"file_download_url",aa,name="personal"),
+          
+             url(r"file_download_url",aa,name="dashboard_summary"),
+              url(r"file_download_url",aa,name="user_login_counts"),
+               url(r"file_download_url",aa,name="dashboard_detail"),
+                  url(r"file_download_url",aa,name="dashboard_summary"),
+              url(r"file_download_url",aa,name="user_login_counts"),
+               url(r"file_download_url",aa,name="multitask_action"),
+                  url(r"file_download_url",aa,name="dashboard_summary"),
+              url(r"file_download_url",aa,name="user_login_counts"),
+               url(r"file_download_url",aa,name="dashboard_detail"),
+             
+          
+]
+

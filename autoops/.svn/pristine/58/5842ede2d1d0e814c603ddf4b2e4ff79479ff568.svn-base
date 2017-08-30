@@ -1,0 +1,14 @@
+from salt.client import LocalClient
+import threading,multiprocessing
+def execute_restart_job(tgt,appuser):
+    client=LocalClient()
+    command="su - %s -c 'sh ~/bin/h_restart.sh'"%(appuser)
+    print command
+    ret=client.cmd(tgt,'cmd.run',[command])
+    return ret
+
+def execute():
+    threads=[]
+    t1=threading.thread(target='execute_restart_job',)
+    t1.append(t1)
+    

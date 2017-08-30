@@ -1,0 +1,179 @@
+#coding:utf-8
+from django.shortcuts import render,render_to_response,HttpResponse
+from asset.models import SERVICEINFO,APPREGIONINFO
+from UAT.mysql import db_operate
+import salt.client
+from UAT import settings
+from django.db import connection
+from cont_util import dictfetchall
+#from cherrypy._cperror import HTTPRedirect
+from django.http.response import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from cont_util import salt_command
+import json,time
+from django.http import JsonResponse
+from regex.regex import *
+import re
+# Create your views here.
+def app_cont(request):
+    # list=APPREGIONINFO.objects.all()
+     cur=connection.cursor()
+     cur.execute('select DISTINCT t1.HostName,t2.IpAddress,t2.RegName,t2.AppUser,t2.status,t2.`Desc` from machineinfo as t1,asset_appregioninfo as t2 where t1.IpAddress=t2.IpAddress;')
+     dic=dictfetchall(cur)
+    
+    # print list
+     return render_to_response('controller/app_cont.html',{'dic':dic})
+ 
+ 
+ 
+ 
+def get_minion_status(request):
+    #str=u'qidongcg!'
+    #if request.method == 'POST':
+       # action=request.get_full_path().split('=')[1]
+        #print action
+   
+    list=[]
+    tgt='*'
+    func='cmd.run'
+    arg=['ps -ef | grep salt']
+    #print salt_command(tgt, func, arg)
+    result=salt_command(tgt,func,arg)
+    print result
+    pattern = re.compile(r'minion')
+    match=pattern.search(str(result))
+    print match
+    if match:
+        list.append('success')
+    else:
+        list.append('fail')
+    """
+    print check_line('^\d$',re)
+    
+    if len(re)==20:
+        list=re
+    #list='str111'
+    else:
+        list='命令执行失败，请检测原因'
+        """
+    return HttpResponse(json.dumps(list),content_type='application/json')
+
+def get_node_state(request):
+    ip=request.GET.get('ip')
+    print ip
+    str='success11'
+    return HttpResponse(str)
+import re
+from controller.config import minion2ip, check_line
+
+import salt.client,logging
+
+import re
+
+
+def node_stop(request):
+   ip=request.GET.get('ip')
+   # ip='192.168.92.133'
+    user=request.GET.get('user')
+    tgt=''
+    ret_str=''
+    print user
+    if user=='':
+      logging.info('cannot get user!')
+    else:
+      for line in minion2ip:
+        if ip==line['ip']:
+          tgt=line['salt_name']
+      print tgt
+    if tgt:
+      client=salt.client.LocalClient()
+      str1="su %s -c 'sh ~/bin/close.sh'"%(user)
+      ret=client.cmd(tgt,'cmd.run',[str1])
+      ret_content=ret[tgt]
+      print ret_content
+      if ret_content=='':
+        ret_str=u'success'
+      elif re.search(r'No such',ret_content):
+        ret_str=u'no such file'
+      elif ret.search(r'did not return',ret_content):
+        ret_str='other failure'
+      elif ret.search(r'No minions matched the target',ret_content):
+        ret_str='can not found salt-minion'
+      else:
+        ret_str=='Error'
+    else:
+      ret='minion not found' 
+    print ret_str
+    return HttpResponse(ret_str)
+
+def node_start(request):
+
+    ip=request.GET.get('ip')
+   # ip='192.168.92.133'
+    user=request.GET.get('user')
+    tgt=''
+    ret_str=''
+    print user
+    if user=='':
+      logging.info('cannot get user!')
+    else:
+      for line in minion2ip:
+        if ip==line['ip']:
+          tgt=line['salt_name']
+      print tgt
+    if tgt:
+      client=salt.client.LocalClient()
+      str1="su %s -c 'sh ~/bin/open.sh'"%(user)
+      ret=client.cmd(tgt,'cmd.run',[str1])
+      ret_content=ret[tgt]
+      print ret_content
+      if ret_content=='':
+        ret_str=u'success'
+      elif re.search(r'No such',ret_content):
+        ret_str=u'no such file'
+      elif ret.search(r'did not return',ret_content):
+        ret_str='other failure'
+      elif ret.search(r'No minions matched the target',ret_content):
+        ret_str='can not found salt-minion'
+      else:
+        ret_str=='Error'
+    else:
+      ret='minion not found' 
+    print ret_str
+    return HttpResponse(ret_str)
+
+
+def get_server_detail(request,ip=None):
+    
+    ip=request.GET.get('ip')
+    print ip
+    db=db_operate()
+    sql_server_detail="select RegName,IpAddress,OSType,Description,HostName from machineinfo where IpAddress='%s'" %ip
+    sql_jms_stat="select Time,RegName,IpAddress,JMSQueueName,MessagesCurrentCount from asset_jmsstat where IpAddress='%s' limit 5" %ip
+    server_detail=db.mysql_command(settings.conn, sql_server_detail)
+    server_jms_detail=db.mysql_command(settings.conn, sql_jms_stat)
+    print server_jms_detail
+    #print re
+    return render_to_response('controller/server_detail.html',{'server_detail':server_detail,'server_jms_detail':server_jms_detail})
+
+
+import httplib2
+import re
+def get_server_open_status(request):
+  htt=httplib2.Http(".cache")
+  ip=request.GET.get("ip")
+  port=request.GET.get("port")
+  url="http://{0}:{1}/emptywar/check_health_main.jsp".format(ip,port)
+  print url
+  ret=''
+  app_state,content= htt.request(url, "GET")
+  #print content
+  if re.search(r'success',content):
+    print '####'
+    ret='success'
+  elif re.search(r'fail',content):
+    ret='fail'
+  else:
+    ret='fail'
+  print ret
+  return HttpResponse(ret)

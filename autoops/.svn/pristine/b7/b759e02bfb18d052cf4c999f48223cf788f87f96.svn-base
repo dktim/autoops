@@ -1,0 +1,85 @@
+#coding:utf-8
+#author:timxie
+import datetime
+from salt.client import LocalClient
+from UAT.mysql import db_operate
+from UAT.settings import conn as Conn
+from controller.monion_config import salt_ip_list
+
+def get_lsn_count():
+        sql_qry_ip_user="select IpAddress,UpdUser from asset_appregioninfo_copy"
+        db=db_operate()
+        ret=db.mysql_command(Conn,sql_qry_ip_user)
+        #print ret
+        restult_dic={}
+        #print restult_dic
+        #print ret
+        ret_list=[]
+        str=''
+        for item in ret:
+            ip=item['IpAddress'].encode('utf-8')
+           # print ip
+            user=item['UpdUser'].encode('utf-8')
+           # print user
+            for item in salt_ip_list:
+                if ip==item['ip']:
+                    ip=item['salt_name']
+                    #print ip
+                    str="su %s -c 'sh ~/bin/getlsnstat.sh'" %(user)
+                    break
+            loc=LocalClient()
+            salt_ret=loc.cmd(ip,'cmd.run',[str])
+            #print salt_ret
+            # salt_ret
+            ret_list.append(salt_ret)
+        print ret_list
+        return ret_list
+
+
+def parse_ret_list(list):
+        list1=[]
+        for item in list:
+            ip=item.keys()
+            content=''.join(item.values())
+            print content
+            #print content
+            con_list=content.split('\n')
+            #print con_list
+            dic={}
+            for item in con_list:
+                
+                c=item.split('|')
+                #c=''.join(c)
+                #print c
+                dic['ip']=''.join(ip)
+                dic['regname']=c[0]
+                dic['time']='2016-'+(c[1][0:14])
+
+                dic['count']=c[2]
+                list1.append(dic)
+        #print list1
+        print list
+        return  list1
+from UAT.settings import conn    
+def salt_ret_insert_db(list):      
+        db=db_operate()
+    #list=[{'count': '0', 'ip': '172.16.49.81_uat-yhmk', 'regname': 'URMBAT', 'time': '09-03 10:28:16,671'}, {'count': '0', 'ip': '172.16.49.81_uat-yhmk', 'regname': 'URMOLN', 'time': '09-03 10:32:40,887'}]
+
+        for item in list:
+            sql_cmd="insert into asset_lsnstat(ip,regname,time,count) values('%s','%s','%s','%s')" % (item['ip'],item['regname'],item['time'],item['count'])
+           # print sql_cmd
+            print sql_cmd
+            db.mysql_command_insert(conn, sql_cmd)
+        #print 'cds'        
+        
+
+#@schedudler.cron_schedule(second='15', day_of_week='0-7', hour='9-12,13-16')
+if __name__ == '__main__':
+    pass
+   # start=datetime.datetime.now()
+    #list=  get_lsn_count()
+    #print list
+    #list1=parse_ret_list(list)
+   # salt_ret_insert_db(list1)
+   # end=datetime.datetime.now()
+    #print end-start

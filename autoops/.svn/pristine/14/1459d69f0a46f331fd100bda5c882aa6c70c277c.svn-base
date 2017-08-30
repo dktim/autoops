@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+
+{%block container%}
+
+<style type="text/css">
+.main{
+font-size:120%;
+color:black;
+background-color:green;
+}
+</style>
+<style type="text/css">
+.main1{
+font-size:120%;
+color:black;
+background-color:red;
+}
+</style>
+
+<!--   <script>
+  var csrf_token = getCookie('csrftoken');
+
+  $(function() {
+      $('.mwui-switch-btn').live("click", function () {
+      }if(window.confirm('确定要执行吗?')){
+              $.ajax({
+                  type: "post",
+                  async: true,
+                  timeout: 0,
+                  url: "{% url 'get_minion_status' %}",
+                  beforeSend:function(xhr){
+                      xhr.setRequestHeader("X-CSRFToken", csrf_token);
+                      xhr.timeout = 0;
+                  },
+                  success:function(msg){
+                
+                	 $('#p').html(msg)
+                	
+                  },
+                  error:function(){
+                      alert("执行失败");
+                  }
+              })
+          }else{
+              //alert("取消删除");
+              return false
+          }
+      });
+  });
+    </script> -->
+ 
+  <script type="text/javascript">
+$(document).ready(function(){
+	
+	
+	$('.start').click(function(){
+	var ip=$(this).parents('tr').find('#ip').text()
+	var Regname=$(this).parents('tr').find('#Regname').text()
+	$.ajax({
+	url:"{% url 'get_minion_status' %}",
+	data:{},
+	dataType:'json',
+	timeout:0,
+	success:function(reg){
+	alert(reg);
+	
+	
+	}
+	
+	
+	});
+
+})
+
+})
+
+	
+</script>
+
+
+  <script type="text/javascript">
+  $(document).ready(function () {
+      $('#example tr').each(function () {
+    	  var status=$(this).children('td').eq(5).text()
+    	 
+    	  if(status==1)
+    	  {
+    			  $(this).children('td').eq(5).toggleClass('main');
+    	  }
+    	  else if(status==0)
+    	  {
+    		  $(this).children('td').eq(5).toggleClass('main1');
+    	  }
+         
+      });
+  });
+	
+	
+</script>
+
+
+<h1 class="h1">执行结果：</h1> <span class="glyphicon" id="p"style="color: red"></span>
+
+<h1 class="h1">服务起停</h1>
+<form>
+{{ csrf_token }}
+<div class="row" style="float: left;margin-left: 1px;">
+   <button type="button" class="btn btn-primary dropdown-toggle" 
+      data-toggle="dropdown">
+      请选择应用类型 <span ></span>
+   </button>
+   <select name="cars">
+<option value="IPS">IPS</option>
+<option value="REG">REG</option>
+<option value="WEB">WEB</option>
+<option value="PAY">PAY</option>
+</select>
+</div>
+
+<div class="row" style="float: left;margin-left: 1px;">
+   <button type="button" class="btn btn-primary dropdown-toggle" 
+      data-toggle="dropdown">
+      请选择操作系统类型 <span class="caret"></span>
+   </button>
+   <select name="cars" class='divider'>
+<option value="Redhat6.5">Redhat6.5</option>
+<option value="Redhat6.5">Redhat6.5</option>
+<option value="Aix5.3">Aix5.3</option>
+<option value="Aix6.1">Aix6.1</option>
+<option value="Redhat6.1">Redhat6.1</option>
+<option value="other">其他类型</option>
+</select>
+</div>
+
+
+<div class="row" style="float: left;margin-left: 1px;">
+   <button type="button" class="btn btn-primary dropdown-toggle" 
+      data-toggle="dropdown">
+      确认： <span class="caret"></span>
+   </button>
+  <input type='submit',name='submit' value='提交查询'>
+</div>
+</form>
+
+
+
+
+<div class="row" style="float: middle;margin-left: 1px;">
+            <div class="col-lg-12">
+                 <div class="panel panel-default">
+                      <div class="panel-body">
+                           {% if dic %}
+                           <table id="example" class="table table-bordered" cellspacing="0" width="100%">
+                               <thead>
+                                   <tr>
+                                    	<th width="200px">RegName</th>
+                                      <th width="200px">HostName</th>
+                                      <th width="200px">IpAddress</th>
+                                        <th width="200px">Desc</th>
+                                      <th width="200px">AppUser</th>
+                                       <th width="200px">当前状态</th>
+                                      <th width="200px">启动or停止</th>
+                                   </tr>
+                               </thead>
+                               <tbody>
+                               {% for i in dic %}
+                                   <tr id='server_list'>
+                                   
+                                      <td id='Regname'>{{ i.RegName}}</td>
+                                      <td>{{ i.HostName}}</td>
+                                       <td id='ip'>{{ i.IpAddress}}</td>
+                                       <td>{{ i.Desc}}</td>
+                                        <td>{{ i.AppUser}}</td>
+                                        
+                                       <td class='server_status'>{{ i.status}}</td>
+                                        
+                                        <td>
+                   <button class='stop'id='stop'onclick='stop()'>停止</button>
+                   <button class='start'id='start' onclick='start()'>开始</button>
+                                        </td>
+                                        
+                                     
+                                   </tr>
+                                    
+                                 
+                               {% endfor %}
+                               </tbody>
+                            </table>
+                           {% endif %}
+
+
+
+
+
+  
+
+
+
+ 
+
+{%endblock%}
+

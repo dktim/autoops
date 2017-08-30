@@ -1,0 +1,115 @@
+
+
+
+{% extends "base1.html" %}
+
+
+{% block content %}
+<div calss='row'>
+
+<div class="col-md-4">
+<a href="/backend/add_machineinfo"><button>zengjia</button></a>
+</div>
+
+<div class="col-md-4">
+
+
+<form action="/contorller/queryMachineInfo" method="POST">
+{% csrf_token %}
+<input type='text' name=''>
+
+<input type='submit' value='submit'>
+
+<form>
+</div>
+
+</div>
+
+<div class="row" style="float: left;margin-left: 1px;">
+            <div class="col-md-12">
+                 <div class="panel panel-default">
+                      <div class="panel-body">
+    <div class="col-md-12">
+<div class="col-md-2">By_RegName</div>
+  {% for cate in category%}
+<div class="col-md-2">
+
+<a href="/controller/machineinfo/{{cate}}"><span class="glyphicon glyphicon-book">{{cate}}</span></a>
+
+
+
+</div>
+
+
+{% endfor %}
+
+
+</div>
+
+
+<table class="table table-striped table-condensed">
+                               <thead>
+                                   <tr>
+                                      <th>ID</th>
+                                      <th>hostname</th>                                    
+                                     
+                                      
+                                      <th>ostype</th>
+                                      <th>version</th>
+                                      <th>bit</th>                                   
+                                      <th>ipaddress</th>
+                                     <th>regname</th>
+                                     <th>desc</th>
+                              </tr>
+                               </thead>
+
+                               <tbody>
+                               {% for item in machine_list %}
+                                   <tr>
+                                      <td class='id'>{{ forloop.counter }}</td>
+                                      <td class='regname'>{{ item.hostname }}</td>
+                  <td class='ip'>{{ item.version}}</td>
+                      
+		<td class='ip'>{{ item.ostype}}</td>
+                                      <td class='upduser'>{{ item.bit }}</td>
+                                      <td class='appuser'>{{ item.ipaddress }}</td>
+
+
+                                      <td class='httpport'>{{ item.regname }}</td>
+                                       <td class='status'>{{item.desc}}</td>
+                        
+
+
+                                   </tr>
+                               {% endfor %}
+                               </tbody>
+                            </table>
+
+<div class="row">
+ 	<div class="col-xs-6">
+          <div class="dataTables_info" id="example_info" role="alert" aria-live="polite" aria-relevant="all"></div>
+        </div>
+	<div class="col-xs-6">
+         <div class="dataTables_paginate paging_simple_numbers" id="exmaple_paginate">
+
+		{% if machine_list.has_previous %}
+ 			<a href="?page={{ machine_list.previous_page_number }}">front_page</a>
+                {% endif %}
+
+<span class="current">
+	curent_page:{{machine_list.number}},totle:{{machine_list.paginator.num_pages}}
+ </span> 
+
+		 {% if machine_list.has_next %}
+                  <a href="?page={{ machine_list.next_page_number }}">next_page</a>
+                 {% endif %}
+                  </div>
+                  </div>
+                   </div> <!--row end-->
+</div>
+</div>
+</div>
+</div>
+
+
+{% endblock %}

@@ -1,0 +1,1199 @@
+﻿{% extends "base1.html" %} {% block content %}
+
+<script>
+	function myfresh() {
+
+		window.location.reload();
+	}
+
+	setTimeout("myfresh()", 600000);
+</script>
+
+
+<center>
+	<!--        <canvas width="1600" height="900" id="canvas" style=" background-color:#EEEEEE; border:1px solid #444;">    
+-->
+	<canvas width="1600" height="900" id="canvas"
+		style="border: 1px solid #444;">
+
+        </canvas>
+</center>
+
+
+<!--<script src="/static/js/jquery.min.js"></script>-->
+<script src="/static/js/jtopo-0.4.7-min.js"></script>
+
+
+<script>
+	$(document).ready(function() {
+		var canvas = document.getElementById('canvas');
+		var stage = new JTopo.Stage(canvas);
+		var scene = new JTopo.Scene();
+		$.get('/monitor/regnames', function(data) {
+
+			var rows = data;
+			var jieruqudao = node(700, 0, '1.png', '接入渠道');
+			var zhifuhoutai = node(700, 300, '1.png', '支付后台');
+			var gonggongfuwu = node(700, 600, '1.png', '公共服务');
+			//var qita=node(0,550,'1.png','其他');
+			if (rows != undefined) {
+				for (var i = 0; i < rows.length; i++) {
+					var row_object = rows[i]
+					row = row_object['reg']
+					if (row == 'IPS') {
+
+						var url = "/monitor/server_list/?reg={0}"
+						var xx = url.template(row)
+						var IPS_APP = node(100, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							IPS_APP.alarm = (row_object['bad']);
+
+						}
+						IPS_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg='{0}'"
+
+							window.open(xx);
+
+						});
+
+					} else if (row == 'WEB') {
+
+						var WEB_APP = node(200, 150, '33.png', row)
+						WEB_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							WEB_APP.alarm = (row_object['bad']);
+
+						}
+						WEB_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WEB"
+
+							window.open(url);
+
+						});
+					} else if (row == 'CHK') {
+
+						var CHK_APP = node(800, 750, '33.png', row)
+						CHK_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							CHK_APP.alarm = (row_object['bad']);
+
+						}
+						CHK_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CHK"
+
+							window.open(url);
+
+						});
+					}
+ else if (row == 'MRS') {
+
+						var MRS_APP = node(1000, 750, '33.png', row)
+						MRS_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							MRS_APP.alarm = (row_object['bad']);
+
+						}
+						MRS_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MRS"
+
+							window.open(url);
+
+						});
+				} else if (row == 'MSG') {
+
+						var MSG_APP = node(1100, 750, '33.png', row)
+						MSG_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							MSG_APP.alarm = (row_object['bad']);
+
+						}
+						MSG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MSG"
+
+							window.open(url);
+
+						});
+					} else if (row == 'PMCCHK') {
+
+						var PMCCHK_APP = node(1200, 750, '33.png', row)
+						PMCCHK_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							PMCCHK_APP.alarm = (row_object['bad']);
+
+						}
+						PMCCHK_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PMCCHK"
+
+							window.open(url);
+
+						});
+					} else if (row == 'RUTBAT') {
+
+						var RUTBAT_APP = node(1300, 750, '33.png', row)
+						RUTBAT_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							RUTBAT_APP.alarm = (row_object['bad']);
+
+						}
+						RUTBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=RUTBAT"
+
+							window.open(url);
+
+						});
+					} else if (row == 'FRM') {
+
+						var FRM_APP = node(1400, 750, '33.png', row)
+						FRM_APP.fontColor = "255.255.255"
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							FRM_APP.alarm = (row_object['bad']);
+
+						}
+						FRM_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=FRM"
+
+							window.open(url);
+
+						});
+					}
+
+					else if (row == 'PESOLN') {
+
+						var PESOLN_APP = node(1500, 750, '33.png', row)
+				
+						//WEB_APP.fillColor="255.255.0"
+
+						if (row_object['bad'] > 0) {
+							PESOLN_APP.alarm = (row_object['bad']);
+
+						}
+						PESOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PESOLN"
+
+							window.open(url);
+
+						});
+					}
+
+					else if (row == 'IPW') {
+
+						var IPW_APP = node(300, 150, '33.png', row)
+						if (row_object['bad'] > 0) {
+							IPW_APP.alarm = (row_object['bad']);
+
+						}
+						IPW_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=IPW"
+
+							window.open(url);
+
+						});
+					} else if (row == 'REG') {
+
+						var REG_APP = node(400, 150, '33.png', row)
+						if (row_object['bad'] > 0) {
+							REG_APP.alarm = (row_object['bad']);
+
+						}
+						REG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=REG"
+
+							window.open(url);
+
+						});
+					} else if (row == 'CSHOLN') {
+
+						var CSHOLN_APP = node(300, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							CSHOLN_APP.alarm = (row_object['bad']);
+
+						}
+						CSHOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CSHOLN"
+
+							window.open(url);
+
+						});
+					} else if (row == 'PES') {
+
+						var PES_APP = node(500, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							PES_APP.alarm = (row_object['bad']);
+
+						}
+						PES_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PES"
+
+							window.open(url);
+
+						});
+
+					} else if (row == 'PRV') {
+
+						var PRV_APP = node(1100, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PRV_APP.alarm = (row_object['bad']);
+
+						}
+						PRV_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PES"
+
+							window.open(url);
+
+						});
+
+					} else if (row == 'URMBAT') {
+
+						var URMBAT_APP = node(200, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							URMBAT_APP.alarm = (row_object['bad']);
+
+						}
+
+						URMBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=URMBAT"
+
+							window.open(url);
+
+						});
+					} else if (row == 'CPSWEB') {
+
+						var CPSWEB_APP = node(600, 150, '33.png', row)
+						if (row_object['bad'] > 0) {
+							CPSWEB_APP.alarm = (row_object['bad']);
+
+						}
+						//CPSWEB_APP.alarm='high'
+						CPSWEB_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CPSWEB"
+
+							window.open(url);
+						});
+
+					} else if (row == 'HREG') {
+
+						var HREG_APP = node(300, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							HREG_APP.alarm = (row_object['bad']);
+
+						}
+						//HREG_APP.alarm='low'
+						HREG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=HREG"
+
+							window.open(url);
+						});
+
+					} else if (row == 'FIL') {
+
+						var FIL_APP = node(400, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							FIL_APP.alarm = (row_object['bad']);
+
+						}
+						FIL_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=FIL"
+
+							window.open(url);
+						});
+
+					} else if (row == 'CUI') {
+
+						var CUI_APP = node(1500, 550, '33.png', row)
+						CUI_APP.fontcolor = "255.255.0"
+						if (row_object['bad'] > 0) {
+							CUI_APP.alarm = (row_object['bad']);
+
+						}
+						//	CUI_APP.alarm='media'
+						CUI_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CUI"
+
+							window.open(url);
+						});
+
+					}
+
+					else if (row == 'IVR') {
+
+						var IVR_APP = node(700, 150, '33.png', row)
+						if (row_object['bad'] > 0) {
+							IVR_APP.alarm = (row_object['bad']);
+
+						}
+						IVR_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=IVR"
+
+							window.open(url);
+						});
+
+					}
+
+					else if (row == 'PMCBAT') {
+
+						var PMCBAT_APP = node(500, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PMCBAT_APP.alarm = (row_object['bad']);
+
+						}
+						PMCBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PMCBAT"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'ISMG') {
+
+						var ISMG_APP = node(600, 750, '33.png', row);
+						if (row_object['bad'] > 0) {
+							ISMG_APP.alarm = (row_object['bad']);
+
+						}
+						ISMG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=ISMG"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'WCH') {
+
+						var WCH_APP = node(800, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							WCH_APP.alarm = (row_object['bad']);
+
+						}
+						WCH_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WCH"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'MKMWEB') {
+
+						var MKMWEB_APP = node(900, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							MKMWEB_APP.alarm = (row_object['bad']);
+
+						}
+						MKMWEB_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MKMWEB"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'WDCBAT') {
+
+						var WDCBAT_APP = node(600, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							WDCBAT_APP.alarm = (row_object['bad']);
+
+						}
+						WDCBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WDCBAT"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'MES') {
+
+						var MES_APP = node(700, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MES_APP.alarm = (row_object['bad']);
+
+						}
+						MES_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MES"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'BKG') {
+
+						var BKG_APP = node(0, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							BKG_APP.alarm = (row_object['bad']);
+
+						}
+						BKG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=BKG"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'URMBSP') {
+
+						var URMBSP_APP = node(800, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							URMBSP_APP.alarm = (row_object['bad']);
+
+						}
+						URMBSP_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=URMBSP"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'WAP1') {
+
+						var WAP1_APP = node(1000, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							WAP1_APP.alarm = (row_object['bad']);
+
+						}
+						WAP1_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WAP1"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'WAP2') {
+
+						var WAP2_APP = node(1100, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							WAP2_APP.alarm = (row_object['bad']);
+
+						}
+						WAP2_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WAP2"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'BSMS') {
+
+						var BSMS_APP = node(900, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							BSMS_APP.alarm = (row_object['bad']);
+
+						}
+						BSMS_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=BSMS"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'WAP') {
+
+						var WAP_APP = node(1200, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							WAP_APP.alarm = (row_object['bad']);
+
+						}
+						WAP_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WAP"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'MPOPSAND') {
+
+						var MPOPSAND_APP = node(0, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							MPOPSAND_APP.alarm = (row_object['bad']);
+
+						}
+						MPOPSAND_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MPOPSAND"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'MKMBAT') {
+
+						var MKMBAT_APP = node(1000, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							MKMBAT_APP.alarm = (row_object['bad']);
+
+						}
+						MKMBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MKMBAT"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'CPSBAT') {
+
+						var CPSBAT_APP = node(1100, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							CPSBAT_APP.alarm = (row_object['bad']);
+
+						}
+						CPSBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CPSBAT"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'WCH1') {
+
+						var WCH1_APP = node(1300, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							WCH1_APP.alarm = (row_object['bad']);
+
+						}
+						WCH1_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WCH1"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'NCGW') {
+
+						var NCGW_APP = node(1200, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							NCGW_APP.alarm = (row_object['bad']);
+
+						}
+						NCGW_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=NCGW"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'PMCOLN') {
+
+						var PMCOLN_APP = node(1300, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							PMCOLN_APP.alarm = (row_object['bad']);
+
+						}
+						PMCOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PMCOLN"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'UPGW') {
+
+						var UPGW_APP = node(800, 250, '33.png', row);
+						if (row_object['bad'] > 0) {
+							UPGW_APP.alarm = (row_object['bad']);
+
+						}
+						UPGW_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=UPGW"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'OPEN') {
+
+						var OPEN_APP = node(1400, 450, '33.png', row);
+						if (row_object['bad'] > 0) {
+							OPEN_APP.alarm = (row_object['bad']);
+
+						}
+						OPEN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=OPEN"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'MPOPATH') {
+
+						var MPOPATH_APP = node(100, 550, '33.png', row);
+						if (row_object['bad'] > 0) {
+							MPOPATH_APP.alarm = (row_object['bad']);
+
+						}
+						MPOPATH_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MPOPATH"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'MPOPWEB') {
+
+						var MPOPWEB_APP = node(1400, 150, '33.png', row);
+						if (row_object['bad'] > 0) {
+							MPOPWEB_APP.alarm = (row_object['bad']);
+
+						}
+						MPOPWEB_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MPOPWEB"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'DKBAT') {
+
+						var DKBAT_APP = node(200, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							DKBAT_APP.alarm = (row_object['bad']);
+
+						}
+						//DKBAT_APP.alarm='Low'
+						DKBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=DKBAT"
+
+							window.open(url);
+						});
+
+					} else if (row == 'CPSOLN') {
+
+						var CPSOLN_APP = node(300, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							CPSOLN_APP.alarm = (row_object['bad']);
+
+						}
+						//       		CPSOLN_APP.alarm='Low'
+						CPSOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CPSOLN"
+
+							window.open(url);
+						});
+					} else if (row == 'PSH') {
+
+						var PSH_APP = node(400, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PSH_APP.alarm = (row_object['bad']);
+
+						}
+						//       		PSH_APP.alarm='Low'
+						PSH_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PSH"
+
+							window.open(url);
+						});
+					} else if (row == 'MPOPAPI') {
+
+						var MPOPAPI_APP = node(500, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MPOPAPI_APP.alarm = (row_object['bad']);
+
+						}
+						//       		MPOPAPI_APP.alarm='Low'
+						MPOPAPI_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MPOPAPI"
+
+							window.open(url);
+						});
+					}
+
+					//其他
+					else if (row == 'MCA') {
+
+						var MCA_APP = node(100, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MCA_APP.alarm = (row_object['bad']);
+
+						}
+						//	MCA_APP.alarm='Low'
+						MCA_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MCA"
+
+							window.open(url);
+						});
+					} else if (row == 'HPAY') {
+
+						var HPAY_APP = node(600, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							HPAY_APP.alarm = (row_object['bad']);
+
+						}
+						HPAY_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=HPAY"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'PAY') {
+
+						var PAY_APP = node(100, 450, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PAY_APP.alarm = (row_object['bad']);
+
+						}
+						PAY_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PAY"
+
+							window.open(url);
+						});
+					} else if (row == 'FUN') {
+
+						var FUN_APP = node(1000, 250, '33.png', row);
+						if (row_object['bad'] > 0) {
+							FUN_APP.alarm = (row_object['bad']);
+
+						}
+						//       				FUN_APP.alarm='Low'
+						FUN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=FUN"
+
+							window.open(url);
+						});
+
+					} else if (row == 'SSMG') {
+
+						var SSMG_APP = node(400, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							SSMG_APP.alarm = (row_object['bad']);
+
+						}
+						//       		SSMG_APP.alarm='Low'
+						SSMG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=SSMG"
+
+							window.open(url);
+						});
+					} else if (row == 'MAL') {
+
+						var MAL_APP = node(700, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MAL_APP.alarm = (row_object['bad']);
+
+						}
+						//       		MAL_APP.alarm='Low'
+						MAL_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MAL"
+
+							window.open(url);
+						});
+					} else if (row == 'DKOLN') {
+
+						var DKOLN_APP = node(200, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							DKOLN_APP.alarm = (row_object['bad']);
+
+						}
+						//DKOLN_APP.alarm='Low'
+						DKOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=DKOLN"
+
+							window.open(url);
+						});
+					} else if (row == 'GME') {
+
+						var GME_APP = node(800, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							GME_APP.alarm = (row_object['bad']);
+
+						}
+						//       		GME_APP.alarm='Low'
+						GME_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=GME"
+
+							window.open(url);
+						});
+					} else if (row == 'WDCOLN') {
+
+						var WDCOLN_APP = node(0, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							WDCOLN_APP.alarm = (row_object['bad']);
+
+						}
+						//       		WDCOLN_APP.alarm='Low'
+						WDCOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WDCOLN"
+
+							window.open(url);
+						});
+					} else if (row == 'WCH2') {
+
+						var WCH2_APP = node(900, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							WCH2_APP.alarm = (row_object['bad']);
+
+						}
+						//    		WCH2_APP.alarm='Low'
+						WCH2_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=WCH2"
+
+							window.open(url);
+						});
+					} else if (row == 'PAYBAT') {
+
+						var PAYBAT_APP = node(800, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PAYBAT_APP.alarm = (row_object['bad']);
+
+						}
+						//       		PAYBAT_APP.alarm='Low'
+						PAYBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PAYBAT"
+
+							window.open(url);
+						});
+					} else if (row == 'BUI') {
+
+						var BUI_APP = node(1400, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							BUI_APP.alarm = (row_object['bad']);
+
+						}
+						//       		BUI_APP.alarm='Low'
+						BUI_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=BUI"
+
+							window.open(url);
+						});
+					} else if (row == 'MPL') {
+
+						var MPL_APP = node(300, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MPL_APP.alarm = (row_object['bad']);
+
+						}
+						//       		MPL_APP.alarm='Low'
+						MPL_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MPL"
+
+							window.open(url);
+						});
+					} else if (row == 'MCA') {
+
+						var MCA_APP = node(1400, 600, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MCA_APP.alarm = (row_object['bad']);
+
+						}
+						//       		MCA_APP.alarm='Low'
+						MCA_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MCA"
+
+							window.open(url);
+						});
+					} else if (row == 'MPOPUI') {
+
+						var MPOPUI_APP = node(900, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							MPOPUI_APP.alarm = (row_object['bad']);
+
+						}
+						//       		MPOPUI_APP.alarm='Low'
+						MPOPUI_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=MPOPUI"
+
+							window.open(url);
+						});
+					} else if (row == 'URMOLN') {
+
+						var URMOLN_APP = node(200, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							URMOLN_APP.alarm = (row_object['bad']);
+
+						}
+						//       		URMOLN_APP.alarm='Low';
+						URMOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=URMOLN"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'PPDOLN') {
+
+						var PPDOLN_APP = node(100, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PPDOLN_APP.alarm = (row_object['bad']);
+
+						}
+						//       		PPDOLN_APP.alarm='Low'
+						PPDOLN_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PPDOLN"
+
+							window.open(url);
+						});
+					} else if (row == 'PPDBAT') {
+
+						var PPDBAT_APP = node(1000, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PPDBAT_APP.alarm = (row_object['bad']);
+
+						}
+						//       		PPDBAT_APP.alarm='Low';
+						PPDBAT_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PPDBAT"
+
+							window.open(url);
+						});
+					} else if (row == 'IPAY') {
+
+						var IPAY_APP = node(1100, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							IPAY_APP.alarm = (row_object['bad']);
+
+						}
+						//       		IPAY_APP.alarm='Low'
+						IPAY_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=IPAY"
+
+							window.open(url);
+						});
+					} else if (row == 'RRS') {
+
+						var RRS_APP = node(1200, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							RRS_APP.alarm = (row_object['bad']);
+
+						}
+						//       		RRS_APP.alarm='Low';
+						RRS_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=RRS"
+
+							window.open(url);
+						});
+					} else if (row == 'PTF') {
+
+						var PTF_APP = node(1300, 550, '33.png', row)
+						if (row_object['bad'] > 0) {
+							PTF_APP.alarm = (row_object['bad']);
+
+						}
+						//       		PTF_APP.alarm='Low';
+						PTF_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=PTF"
+
+							window.open(url);
+						});
+					} else if (row == 'CSMG') {
+
+						var CSMG_APP = node(500, 750, '33.png', row)
+						if (row_object['bad'] > 0) {
+							CSMG_APP.alarm = (row_object['bad']);
+
+						}
+						//       		CSMG_APP.alarm='Low'
+						CSMG_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CSMG"
+
+							window.open(url);
+						});
+					} else if (row == 'CGW') {
+
+						var CGW_APP = node(400, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							CGW_APP.alarm = (row_object['bad']);
+
+						}
+						//       		CGW_APP.alarm='Low'
+						CGW_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CGW"
+
+							window.open(url);
+						});
+					} else if (row == 'DWGW') {
+
+						var DWGW_APP = node(500, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							DWGW_APP.alarm = (row_object['bad']);
+
+						}
+						//       		DWGW_APP.alarm='Low'
+						DWGW_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=DWGW"
+
+							window.open(url);
+						});
+					}
+
+					else if (row == 'POSP') {
+
+						var POSP_APP = node(600, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							POSP_APP.alarm = (row_object['bad']);
+
+						}
+						//       		POSP_APP.alarm='Low'
+						POSP_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=POSP"
+
+							window.open(url);
+						});
+					} else if (row == 'CLUB') {
+
+						var CLUB_APP = node(700, 250, '33.png', row)
+						if (row_object['bad'] > 0) {
+							CLUB_APP.alarm = (row_object['bad']);
+
+						}
+						//       		CLUB_APP.alarm='Low'
+						CLUB_APP.dbclick(function() {
+							var url = "/monitor/server_list/?reg=CLUB"
+
+							window.open(url);
+						});
+					}
+
+				}
+				hostLink(jieruqudao, IPS_APP);
+				hostLink(jieruqudao, WEB_APP);
+				hostLink(jieruqudao, IPW_APP);
+				hostLink(jieruqudao, REG_APP);
+				hostLink(jieruqudao, PES_APP);
+				hostLink(jieruqudao, CPSWEB_APP);
+				hostLink(jieruqudao, IVR_APP);
+				hostLink(jieruqudao, WCH_APP);
+				hostLink(jieruqudao, MKMWEB_APP);
+				hostLink(jieruqudao, WAP1_APP);
+				hostLink(jieruqudao, WAP2_APP);
+				hostLink(jieruqudao, WAP_APP);
+				hostLink(jieruqudao, PRV_APP);
+				hostLink(jieruqudao, WCH1_APP);
+				hostLink(jieruqudao, MPOPWEB_APP);
+				hostLink(jieruqudao, MCA_APP);
+				hostLink(jieruqudao, FUN_APP);
+				hostLink(jieruqudao, DKOLN_APP);
+				hostLink(jieruqudao, MPL_APP);
+				hostLink(jieruqudao, CGW_APP);
+				hostLink(jieruqudao, DWGW_APP);
+				hostLink(jieruqudao, POSP_APP);
+				hostLink(jieruqudao, CLUB_APP);
+				hostLink(jieruqudao, UPGW_APP);
+				hostLink(jieruqudao, WCH2_APP);
+
+				linkNode(gonggongfuwu, WDCOLN_APP);
+				linkNode(gonggongfuwu, PPDOLN_APP);
+				linkNode(gonggongfuwu, URMOLN_APP);
+				linkNode(gonggongfuwu, CSHOLN_APP);
+				linkNode(gonggongfuwu, SSMG_APP);
+				linkNode(gonggongfuwu, CSMG_APP);
+				linkNode(gonggongfuwu, ISMG_APP);
+				linkNode(gonggongfuwu, GME_APP);
+		 	linkNode(gonggongfuwu,CHK_APP);
+		//linkNode(gonggongfuwu,MBT_APP);
+				linkNode(gonggongfuwu,MRS_APP);
+			linkNode(gonggongfuwu,MSG_APP);
+				linkNode(gonggongfuwu, PMCCHK_APP);
+				linkNode(gonggongfuwu, RUTBAT_APP);
+				linkNode(gonggongfuwu, FRM_APP);
+				linkNode(gonggongfuwu, PESOLN_APP);
+
+				linkNode(zhifuhoutai, PAY_APP);
+				linkNode(zhifuhoutai, URMBAT_APP);
+				linkNode(zhifuhoutai, HREG_APP);
+				linkNode(zhifuhoutai, FIL_APP);
+				linkNode(zhifuhoutai, PMCBAT_APP);
+				linkNode(zhifuhoutai, WDCBAT_APP);
+				linkNode(zhifuhoutai, MES_APP);
+				linkNode(zhifuhoutai, URMBSP_APP);
+				linkNode(zhifuhoutai, BSMS_APP);
+				linkNode(zhifuhoutai, MKMBAT_APP);
+				linkNode(zhifuhoutai, CPSBAT_APP);
+				linkNode(zhifuhoutai, NCGW_APP);
+				linkNode(zhifuhoutai, PMCOLN_APP);
+				linkNode(zhifuhoutai, OPEN_APP);
+				linkNode(zhifuhoutai, MPOPATH_APP);
+				linkNode(zhifuhoutai, DKBAT_APP);
+
+				linkNode(zhifuhoutai, CPSOLN_APP);
+				linkNode(zhifuhoutai, PSH_APP);
+				linkNode(zhifuhoutai, MPOPAPI_APP);
+				linkNode(zhifuhoutai, HPAY_APP);
+				linkNode(zhifuhoutai, MAL_APP);
+
+				linkNode(zhifuhoutai, MPOPSAND_APP);
+				linkNode(zhifuhoutai, BKG_APP);
+				linkNode(zhifuhoutai, PAYBAT_APP);
+				linkNode(zhifuhoutai, BUI_APP);
+				linkNode(zhifuhoutai, MPOPUI_APP);
+				linkNode(zhifuhoutai, PPDBAT_APP);
+				linkNode(zhifuhoutai, CUI_APP);
+				linkNode(zhifuhoutai, IPAY_APP);
+				linkNode(zhifuhoutai, RRS_APP);
+				linkNode(zhifuhoutai, PTF_APP);
+
+			}
+
+			stage.add(scene);
+
+		});
+
+		function format(arguments) {
+			if (arguments.length == 0)
+				return null;
+			var str = arguments[0];
+			for (var i = 1; i < arguments.length; i++) {
+
+				var re = new RegExp('\\\\{' + (i - 1) + '\\\\}', 'gm');
+				str = str.replace(re, arguments[i])
+
+			}
+			return str
+
+		}
+		function linkNode(nodeA, nodeZ, f) {
+			var link;
+			if (f) {
+				link = new JTopo.FoldLink(nodeA, nodeZ);
+			} else {
+				link = new JTopo.Link(nodeA, nodeZ);
+			}
+			link.direction = 'vertical';
+			scene.add(link);
+			return link;
+		}
+
+		function node(x, y, img, name) {
+			var node = new JTopo.Node(name);
+			node.setImage('/static/img/' + img, true);
+			node.fontColor = "255.255.0"
+			node.setLocation(x, y);
+			scene.add(node);
+			return node;
+		}
+
+		function hostLink(nodeA, nodeZ) {
+			var link = new JTopo.FlexionalLink(nodeA, nodeZ);
+			link.shadow = false;
+			link.offsetGap = 44;
+			scene.add(link);
+			return link;
+		}
+	});
+</script>
+
+
+
+<script type='text/javascript'>
+	var str;
+	String.prototype.template = function() {
+		var args = arguments;
+		return this.replace(/\{(\d+)\}/g, function(m, i) {
+
+			return args[i];
+		}
+
+		);
+	}
+</script>
+
+
+{%endblock%}

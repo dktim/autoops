@@ -1,0 +1,160 @@
+﻿{% extends "base1.html" %}
+
+
+
+ {% block content %}
+ <div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+<center>
+	<canvas width="1600" height="900" id="canvas"
+		style="border: 1px solid #444;">
+        </canvas>
+        
+</center>
+
+<script src="/static/js/jquery-1.10.2.min.js"></script>
+ <script src='/static/js/jtopo-0.4.8-min.js'></script>
+<script src='/static/js/auto_index.js'></script>
+	<script type='text/javascript'>
+		$(document).ready(function() {
+		var canvas = document.getElementById('canvas');
+		var stage = new JTopo.Stage(canvas);
+		var scene = new JTopo.Scene(stage);
+		//var container1= new JTopo.Container('边界自动变化');
+		//var container2= new JTopo.Container('边界自动变化');
+		//var container3= new JTopo.Container('边界自动变化');
+		//scene.add(container1);
+		$.get('/monitor/regnames', function(data) {
+			var rows=data
+			if (rows != undefined) {
+				for (var i = 0; i < rows.length; i++) {
+					
+					var app_node=build_topo(rows[i])
+				}
+			}
+			})
+
+			stage.add(scene);
+		
+		
+		function build_topo(row_object){
+			var url = "/monitor/server_list/?reg={0}"
+			reg=row_object['reg']
+			var url = url.template(reg)
+			//WEB_APP.fontColor = "255.255.255"
+		    var app="{0}_APP"
+			app=app.template(reg)
+			
+			
+			var app = node('33.png', reg);
+		
+		
+			
+			
+		
+				
+				if (row_object['bad'] > 0) {
+				app.alarm = (row_object['bad']);
+
+				}
+			app.dbclick(function() {
+				//var url = "/monitor/server_list/?reg=WEB"
+
+				window.open(url);
+									}
+			)
+			
+			
+		}	
+		
+		function node(img, name) {
+			var node = new JTopo.Node(name);
+			//container=container
+			node.setImage('/static/img/' + img, true);
+			node.fontColor = "255.255.0"
+			//node.setLocation(x, y);
+			
+				if(name=='PAY'||name=='IPS'||name=='WEB'||name=='IPW'||name=="REG"||name=="PES"||name=='CPSWEB'||name=='IVR'||name=='WCH'||name=='MKMWEB'||name=='WAP1'||name=='WAP2'){
+			//alert(i*50)
+					node.setLocation(Math.random(15)*1000,50);
+			
+				}
+				else if (name=='WAP'||name=='PRV'||name=="WCH1"||name=="MPOPWEB"||name=="MCA"||name=="FUN"||name=="DKOLN"||name=="MPL"||name=="CGW"||name=="DWGW"||name=="POSP"){
+					node.setLocation(Math.random(15)*1000,150);
+					
+				}
+				
+				else if (name=='CLUB'||name=='UPGW'||name=="WCH2"||name=="WDCOLN"||name=="PPDOLN"||name=="URMOLN"||name=="CSHOLN"||name=="SSMG"||name=="CSMG"||name=="ISMG"||name=="GME"){
+					node.setLocation(Math.random(15)*1000,250);
+					
+					
+				}
+				
+				else if (name=='CHK'||name=='MBT'||name=="MRS"||name=="MSG"||name=="PMCCHK"||name=="RUTBAT"||name=="FRM"||name=="PESOLN"||name=="URMBAT"||name=="HREG"||name=="FIL"){
+					node.setLocation(Math.random(15)*1000,350);
+					
+					
+				}
+				
+				else if (name=='PMCBAT'||name=='WDCBAT'||name=="MES"||name=="URMBSP"||name=="BSMS"||name=="MKMBAT"||name=="CPSBAT"||name=="NCGW"||name=="PMCOLN"||name=="OPEN"||name=="MPOPATH"||name=="DKBAT"||name=="CPSOLN"||name=="PSH"||name=="MPOPAPI"){
+					node.setLocation(Math.random(15)*1000,450);
+					
+					
+				}
+				
+				
+				else if (name=='HPAY'||name=='MAL'||name=="MPOPSAND"||name=="BKG"||name=="PAYBAT"||name=="BUI"||name=="MPOPUI"||name=="PPDBAT"||name=="CUI"||name=="IPAY"||name=="RRS"||name=="PTF"){
+					node.setLocation(Math.random(15)*1000,550);
+					
+					
+				}
+				
+				
+				
+			scene.add(node);
+			
+			return node;
+		}
+
+		});
+		
+		
+		
+		
+</script>
+<script type='text/javascript'>
+	var str;
+	String.prototype.template = function() {
+		var args = arguments;
+		return this.replace(/\{(\d+)\}/g, function(m, i) {
+
+			return args[i];
+		}
+
+		);
+	}
+</script>
+
+<script type='text/javascript'>
+function selectFromMess() {
+    return arguments[Math.floor(Math.random() * arguments.length)]
+}
+</script>
+<script type='text/javascript'>
+	var str;
+	String.prototype.template = function() {
+		var args = arguments;
+		return this.replace(/\{(\d+)\}/g, function(m, i) {
+
+			return args[i];
+		}
+
+		);
+	}
+</script>
+
+</div>
+
+
+ 
+{% endblock %}
+

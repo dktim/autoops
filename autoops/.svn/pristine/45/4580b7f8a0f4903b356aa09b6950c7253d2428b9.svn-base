@@ -1,0 +1,479 @@
+#coding:utf-8
+import sys
+reload(sys)
+sys.setdefaultencoding('utf8')
+from django.shortcuts import render,render_to_response,HttpResponse
+from autoops.mysql import db_operate
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+#import salt.client
+import paramiko
+import datetime
+from autoops import settings
+from django.db import connection
+from cont_util import dictfetchall
+from django.http.response import HttpResponseRedirect
+from django.core.urlresolvers import reverse
+from cont_util import salt_command
+import json,time
+from autoops.oracle import oracle_db_operate
+from django.http import JsonResponse
+from regex.regex import *
+import re
+import httplib2
+from urllib2 import Request,urlopen,URLError,HTTPError
+from __builtin__ import str
+import logging
+
+logger=logging.getLogger('django.request')
+def app_cont(request):
+     cur=connection.cursor()
+     cur.execute('select DISTINCT t1.HostName,t2.IpAddress,t2.RegName,t2.AppUser,t2.status,t2.`Desc` from machineinfo as t1,asset_appregioninfo as t2 where t1.IpAddress=t2.IpAddress;')
+     dic=dictfetchall(cur)
+    
+     return render_to_response('controller/app_cont.html',{'dic':dic})
+ 
+ 
+ 
+ 
+def get_minion_status(request):
+    list=[]
+    tgt='*'
+    func='cmd.run'
+    arg=['ps -ef | grep salt']
+    #print salt_command(tgt, func, arg)
+    result=salt_command(tgt,func,arg)
+    print result
+    pattern = re.compile(r'minion')
+    match=pattern.search(str(result))
+    print match
+    if match:
+        list.append('success')
+    else:
+        list.append('fail')
+    """
+    print check_line('^\d$',re)
+    
+    if len(re)==20:
+        list=re
+    #list='str111'
+    else:
+        list='命令执行失败，请检测原因'
+        """
+    return HttpResponse(json.dumps(list),content_type='application/json')
+
+#@login_required
+def machineinfo_list(request,reg=None):
+	db=oracle_db_operate()
+#	//reg=request.GET.get('reg')
+	print reg
+	if reg is not None:
+		reg=reg
+	else:
+		reg="IPS"
+	sql="select hostname,ostype,version,bit,ipaddress,regname,description from machineinfo where regname='%s'" %reg
+	ret=db.oracle_command(settings.oracle_conn,sql)
+	print len(ret)
+	list=[]
+	for item in ret:
+		dic={}
+		dic['hostname']=item[0]
+		dic['ostype']=item[1]
+		dic['version']=item[2]
+		dic['bit']=item[3]
+		dic['ipaddress']=item[4]
+		dic['regname']=item[5]
+		dic['desc']=unicode(item[6],'gbk')
+
+		list.append(dic)
+	paginator=Paginator(list,15)
+	try:
+		page=int(request.GET.get('page',1))
+	except ValueError:
+		page=1
+	try:
+		machine_list=paginator.page(page)
+	except:
+		machine_list=paginator.page(1)
+	
+	
+	#print len(list)
+	sql="select distinct Regname from appregioninfo";
+	query_reg_ret=db.oracle_command(settings.oracle_conn,sql)
+	
+
+	category=[]
+	for item in query_reg_ret:
+		category.append(item[0])
+
+
+
+
+	return render_to_response("controller/machineinfo.html",locals())
+
+def get_node_state(request):
+   
+    ip=request.GET.get('ip')
+    reg=request.GET.get('reg')
+    
+    print ip,reg
+    db=oracle_db_operate()
+    sql_query_ports="select a.HttpPort,a.RegName,b.status from appregioninfo a,machineinfo b where b.IpAddress='%s' and b.RegName='%s' and a.RegName=b.RegName"% (ip,reg)
+    print sql_query_ports
+    query_list=db.oracle_command(settings.oracle_conn,sql_query_ports)
+    print query_list
+    flag=0
+    if int(query_list[0][2])==0:
+        flag=0
+    else:
+        flag=1
+    return HttpResponse(flag)
+
+def index_page_state(request):
+    db=db_operate()
+    reg=request.GET.get('reg')
+    query_ips_sql="select IpAddress from asset_appregioninfo where RegName='%s'"%reg
+    query_ips_ret=db.mysql_command(settings.conn, query_ips_sql)
+    if query_ips_ret:
+        for item in query_ips_ret:
+            ip=item['IpAddress']
+            sql_query_ports="select HttpPort,RegName,status from asset_appregioninfo where IpAddress='%s'" % ip
+            query_list=db.mysql_command(settings.conn,sql_query_ports)
+            print query_list
+            flag=0
+            for item in query_list:
+                if item['RegName']=='WEB' and item['status']==0:
+                    flag=0
+                else:
+                    flag=1
+    else:
+        print 'none ip by %s found' %reg
+    return HttpResponse(flag)
+
+import re
+from controller.config import minion2ip, check_line
+
+#import salt.client,logging
+
+import re
+
+
+def node_stop(request):
+    db=oracle_db_operate()
+    ip=request.GET.get('ip')
+    os_type_sql="select OSType from machineinfo where IpAddress='%s'"%ip
+    print os_type_sql
+    os_type_ret=db.oracle_command_direct(settings.oracle_conn, os_type_sql)
+    print os_type_ret
+    #os_type=os_type_ret[0]['OSType']
+    os_type=os_type_ret[0]
+    reg=request.GET.get('reg')
+    query_user_list_sql="select a.UpdUser from appregioninfo a,machineinfo b where b.IpAddress='%s'and a.RegName='%s' and a.regname=b.regname" %(ip,reg)
+    print query_user_list_sql
+    query_user_ret=db.oracle_command_direct(settings.oracle_conn,query_user_list_sql)
+    ret_str=''
+    sql="select salt_name from salt_ip where ip='%s'"%ip
+    print sql
+    tgt_ret=db.oracle_command_direct(settings.oracle_conn, sql)
+    tgt=tgt_ret[0]
+    print len(tgt)
+    if tgt:
+        if ip.startswith('172.29.51') or ip.startswith('172.16.6'):
+		print os_type
+        	if os_type=='REDHAT':
+			
+            		user=query_user_ret[0]
+            		print user
+            		client=salt.client.LocalClient()
+            		str="su - %s -c 'sh ~/bin/close.sh'"%(user)
+            		jid=client.cmd_async(tgt,'cmd.run',[str])
+                	ret_list={}
+            		while len(ret_list)==0:
+            			ret_list=client.get_cache_returns(jid)
+                		print ret_list
+                	ret_content=ret_list[tgt]['ret']
+            		if ret_content=='':
+                		ret_str='success'
+                		sql_update_reg_status="update machineinfo a set a.status=1 where exists(select 1 from appregioninfo b where a.IpAddress='%s' and b.regname='%s' and a.regname=b.regname)"%(ip,reg)
+                		db.oracle_command_update(settings.oracle_conn, sql_update_reg_status)
+            		elif re.search(r'No such',ret_content):
+                		ret_str='no such file'
+				logger.error('no such file')
+            		else:
+                		ret_str='other error'
+        	elif os_type=='AIX':
+			ssh=paramiko.SSHClient()
+                	pkey="/root/.ssh/id_rsa"
+                	ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+                	key=paramiko.RSAKey.from_private_key_file(pkey)                       
+			ssh.connect(ip,22,query_user_ret[0],pkey=key)
+                	command="sh ~/bin/close.sh"
+                	stdin,stdout,stderr = ssh.exec_command(command)
+                	ret_out=stdout.read()
+                	ret_err=stderr.read()
+                	if ret_err:
+                		ret_str="fail"
+                	else:
+                		ret_str='success'
+    else:
+        ret_str='no user found or no minion found'
+     
+    return HttpResponse(ret_str)
+
+def node_start(request):
+    db=oracle_db_operate()
+    ip=request.GET.get('ip')
+    os_type_sql="select OSType from machineinfo where IpAddress='%s'"%ip
+    os_type_ret=db.oracle_command_direct(settings.oracle_conn, os_type_sql)
+    os_type=os_type_ret[0]
+    reg=request.GET.get('reg')
+    query_user_list_sql="select UpdUser from appregioninfo a,machineinfo b where b.IpAddress='%s'and a.RegName='%s' and a.regname=b.regname" %(ip,reg)
+    query_user_ret=db.oracle_command_direct(settings.oracle_conn,query_user_list_sql)
+    ret_str=''
+    sql="select salt_name from salt_ip where ip='%s'"%ip
+    tgt_ret=db.oracle_command_direct(settings.oracle_conn, sql)
+    tgt=tgt_ret[0]
+    if tgt:
+        if ip.startswith('172.29.51') or ip.startswith('172.16.6'):
+        	if os_type=='REDHAT':
+            		user=query_user_ret[0]
+            		client=salt.client.LocalClient()
+            		str="su - %s -c 'sh ~/bin/open.sh'"%(user)
+            		jid=client.cmd_async(tgt,'cmd.run',[str])
+            		time.sleep(5)
+           		ret_list=client.get_cache_returns(jid)
+			while len(ret_list)==0:
+				ret_list=client.get_cache_returns(jid)
+            		ret_content=ret_list[tgt]['ret']
+            		if ret_content=='':
+                		ret_str='success'
+                		sql_update_reg_status="update machineinfo a set a.status=0 where exists (select 1 from appregioninfo b where a.IpAddress='%s' and a.regname='%s' and a.regname=b.regname)"%(ip,reg)
+                		db.oracle_command_update(settings.oracle_conn, sql_update_reg_status)
+            		elif re.search(r'No such',ret_content):
+                		ret_str='no such file'
+            		else:
+                		ret_str='other error'
+        	elif os_type=='AIX':
+            		ssh=paramiko.SSHClient()
+			pkey="/root/.ssh/id_rsa"
+            		ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+			key=paramiko.RSAKey.from_private_key_file(pkey)
+			ssh.connect(ip,22,query_user_ret[0],pkey=key)
+            		command="sh ~/bin/open.sh"
+            		stdin,stdout,stderr = ssh.exec_command(command)
+           		ret_out=stdout.read()
+			ret_err=stderr.read()
+            	        if ret_err:
+				ret_str="fail"
+			else:
+				ret_str='success'
+				
+    else:
+        ret_str='no user found or no minion found'
+    print ret_str
+    return HttpResponse(ret_str)
+def get_server_detail(request,ip=None):
+    
+    ip=request.GET.get('ip')
+    reg=request.GET.get('reg')
+    print ip
+    db=oracle_db_operate()
+    sql="select Description from machineinfo where ipaddress='%s' and regname='%s'" %(ip,reg)
+    print sql
+    ret=db.oracle_command(settings.oracle_conn,sql)
+    if ret:
+	return_desc=ret[0][0]
+    else:
+	return_desc="no desc matched"
+    return render_to_response('controller/server_detail.html',{'ip':ip,'reg':reg,'desc':unicode(return_desc,'gbk')})
+
+'''
+s代表成功，f代表失败
+'''
+
+def get_server_open_status(request):
+    htt=httplib2.Http(".cache",timeout=10)
+    ip=request.GET.get("ip")
+    port=request.GET.get("port")
+    reg=request.GET.get('regname')
+    print reg
+   
+    #print url
+    content=''
+    web_reg_status=0
+    if reg=='WEB':
+        url="http://{0}:{1}/emptywar/check_health_main.jsp".format(ip,port)
+        try:
+            resp,content=htt.request(url, "GET")
+        except Exception,e:
+            content='fail,other fail'
+            
+        if re.search(r'success',content):
+            ret='s'
+            web_reg_status=0
+        else:
+            ret='f'
+            web_reg_status=1
+    else:
+        url="http://{0}:{1}/emptywar/check_health_main.jsp".format(ip,port)
+        try:
+            resp,content=htt.request(url, "GET")
+        except Exception,e:
+            print 'error'
+        if re.search(r'success',content):
+            print '####'
+            ret='s'
+            web_reg_status=1
+        elif re.search(r'fail',content):
+            ret='f'
+            web_reg_status=1
+        elif re.search(r'error',content):
+        
+            ret='f'
+            web_reg_status=1
+        else:
+            ret='f'
+            web_reg_status=1
+    print ret,web_reg_status
+    
+    ret=ret+str(web_reg_status)
+    print ret
+    
+    return HttpResponse(ret)
+
+
+
+def restart_reg(request):
+    db=oracle_db_operate()
+    start_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    ip=request.GET.get('ip')
+    timestamp=request.GET.get('_')
+    myDate=request.GET.get('mydate')
+    appuser=request.GET.get('appuser')
+    sql="select salt_name from salt_ip where ip='%s'"%ip
+    tgt=db.oracle_command_direct(settings.oracle_conn, sql)
+    os_type_query="select ostype from machineinfo where ipaddress='%s'"%ip
+    os_type_ret=db.oracle_command_direct(settings.oracle_conn,os_type_query)
+    os_type=os_type_ret[0]
+    print tgt
+    if len(tgt)==1 and os_type=='REDHAT':
+      tgt=tgt[0]
+      print tgt
+      client=salt.client.LocalClient()
+      command="su - %s -c 'sh ~/bin/h_restart.sh'"%(appuser)
+      jid=client.cmd_async(tgt,'cmd.run',[command])
+      t=0
+      jid_ret={}
+      print jid_ret
+      while not jid_ret:
+          time.sleep(1)
+	  jid_ret=client.get_cache_returns(jid)
+      ret_str=jid_ret[tgt]['ret']
+      print ret_str
+      if re.search(r'boot succeed',ret_str):
+        str='success'
+	sql_insert="insert into monitor.reg_restart_his values('%s','%s','%s','%s','%s','%s')"%(start_time,'None',unicode(ret_str,'gbk'),appuser,ip,myDate)
+ 	db.oracle_command_update(settings.oracle_conn, sql_insert)
+      elif re.search(r'No such',ret_str):
+        str='no restart file'
+	sql_insert="insert into monitor.reg_restart_his values('%s','%s','%s','%s','%s','%s')"%(start_time,'None',"cannot stat `/app/pmcver/ejbs/emptywar/check_health_main_no_bk.jsp': No such file or directory",appuser,ip,myDate)
+        db.oracle_command_update(settings.oracle_conn, sql_insert)
+      elif re.search(r'fail',ret_str):
+    
+        str='fail'
+	sql_insert="insert into monitor.reg_restart_his values('%s','%s','%s','%s','%s','%s')"%(start_time,'None','fail',appuser,ip,myDate)
+        db.oracle_command_update(settings.oracle_conn, sql_insert)
+
+      elif re.search(r'no minion',ret_str):
+        str='no minion target found'
+	sql_insert="insert into monitor.reg_restart_his values('%s','%s','%s','%s','%s','%s')"%(start_time,'None','no minion target found',appuser,ip,myDate)
+        db.oracle_command_update(settings.oracle_conn, sql_insert)
+      else:
+        str='other fail'
+	sql_insert="insert into monitor.reg_restart_his values('%s','%s','%s','%s','%s','%s')"%(start_time,'None','other fail',appuser,ip,myDate)
+        db.oracle_command_update(settings.oracle_conn, sql_insert)
+    else:
+        str='no minion found'
+        sql_insert1="insert into monitor.reg_restart_his values('%s','%s','%s','%s','%s','%s')"%(start_time,'None','no minion matched.',appuser,ip,myDate)
+        print sql_insert1
+        db.oracle_command_insert(settings.oracle_conn,sql_insert1)
+        print '*****'
+    print str
+    dic={}
+    end_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #waste_time=end_time-start_time
+    dic['flag']=str
+    #dic['progressvalue']=90
+    dic['time']=timestamp.encode('utf-8')
+    print timestamp
+    print dic
+    #dic['time']=waste_time
+    return HttpResponse(json.dumps(dic), content_type='application/json')
+def stop_reg(request):
+    print 'i am stopiing!!&'
+    str='success11'
+    return HttpResponse(str)
+
+import urllib2
+def update_reg_status(request):
+  db=db_operate()
+  http_object=httplib2.Http(".cache",timeout=3)
+  query_reg_list_sql="select DISTINCT RegName from asset_appregioninfo"
+  reg_list=db.mysql_command(settings.conn,query_reg_list_sql)
+  for item in reg_list:
+    reg=item['RegName']
+    sql_query_ip_port="select IpAddress,HttpPort from asset_appregioninfo where RegName='%s'" %reg
+    ip_port_object=db.mysql_command(settings.conn,sql_query_ip_port)
+    print ip_port_object
+    for item in ip_port_object:
+      url="http://{0}:{1}/emptywar/check_health_main.jsp".format(item['IpAddress'],item['HttpPort'])
+      print url
+      try:
+        response= urllib2.urlopen(url)
+        content=response.read()
+        #time.sleep(1)
+        print content
+      except urllib2.HTTPError, e:
+        if hasattr(e,"code"):
+            print e.code
+        if hasattr(e,"reason"):
+            print e.reason
+        else:
+            print "OK"
+      status=0
+      if re.search(r'success',content):
+        status=0
+      else:
+        status=1
+      print status
+      sql="update asset_appregioninfo set status='%s' where IpAddress='%s' and HttpPort='%s'" %(status,item['IpAddress'],item['HttpPort'])
+      print sql
+      db.mysql_command_update(settings.conn,sql)
+  #ip=request.GET.get("ip")
+  #port=request.GET.get("port")
+  #
+  return HttpResponse('ssfsf')
+  
+  
+  
+def reg_restart_detail(request):
+    timestamp=request.GET.get('timestamp')
+    db=oracle_db_operate()
+    
+    
+    
+    
+    sql="select time,content from monitor.reg_restart_his where TM_SMP='%s'"%timestamp
+    
+    sql_ret=db.oracle_command(settings.oracle_conn, sql)
+    print sql_ret
+    if len(sql_ret)>=1:
+    	content=sql_ret[0][1]
+    	time=sql_ret[0][0]
+    	str='重启结束时间:',time,'<br>','任务返回结果:',content
+    else:
+			str='None data matched.'   
+    return HttpResponse(str)
+    
+    
+    

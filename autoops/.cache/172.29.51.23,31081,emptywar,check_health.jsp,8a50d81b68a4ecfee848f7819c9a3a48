@@ -1,0 +1,10 @@
+status: 200
+content-length: 8
+content-location: http://172.29.51.23:31081/emptywar/check_health.jsp
+x-powered-by: Servlet/2.5 JSP/2.1
+set-cookie: JSESSIONID=EXzj3zk9dR1a2v3q0A9l4KeBSkDtUVm2i6RHdbJkq5bftBo5Mpme!-1173006590;
+ path=/; HttpOnly
+date: Mon, 26 Jun 2017 10:07:56 GMT
+content-type: text/html; charset=ISO-8859-1
+
+success

@@ -1,0 +1,113 @@
+{% extends "base1.html" %} {% block content %}
+
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+		<h3>文件上传</h3>
+		--------------------------------------------------------------------
+		</br>
+		</br>
+		</div>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+		<form role='form' id="add_data" action="/filemanage/upload_file" method="POST" enctype="multipart/form-data">
+	<div class='row'>
+		<div class='col-md-6 form-group'>
+			请选择集群：
+			<select  name='regname' id='regname'>
+			{% for reg in regs %}
+			<option>{{reg}}</option>
+			{% endfor %}
+			</select>
+		</div>
+						
+					
+	</div>
+		<div class='row'>
+			<div class='col-md-6 form-group'>
+				<div class='check_all'>
+					请选择主机:
+					<span class='check_all btn' onclick="selectAll(this)">全选</span></br>
+				</div>
+			<div class='ipaddress checkbox-inline'></div>
+			</div>
+			</div>
+						
+		<div class="row">
+		<div class='col-md-6 form-group'>
+			请选择用户:
+			<select name='uploaduser'>
+				<option>appuser</option> 
+				<option>upduser</option> 
+				<option>other</option> 
+			</select>
+			</div>
+			</div>
+						
+			<div class='row'>
+			<div class='col-md-6 form-group'>
+				<input type='file' name='myfile'>
+				<input type='file' name='myfile'>
+			 	<input type='file' name='myfile'>
+				<input type='file' name='myfile'>
+				
+				<input type="submit" value="上传" class="btn btn-xs" />
+				
+				</div>
+				
+		</div>
+		</div>
+		</form>
+	</div>
+</div>
+</div>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	
+	$("#regname").change(function(){
+		//$('.ipaddress').empty()
+		htmls1="<select name='ip' id='ip'>\
+		<option>aa</option>\
+		</select>"
+		var reg=$("#regname").find("option:selected").text()
+		alert(reg)
+		$.ajax({
+			url:"/filemanage/get_host_by_reg/",
+			data:{'reg':reg},
+			type:'get',
+			datatype:'json',
+			success:function(data){
+				l=data.length
+				$('.ipaddress').empty()
+				htmls=""
+				for(i=0;i<l;i++)
+				{
+					htmls=htmls+"<input type='checkbox' name='ip' value='"+data[i]+"'>"+data[i]+"'</input> "
+				}
+				$('.ipaddress').append(htmls);
+			}
+			})
+		})
+	})
+	
+	</script>
+	<script type="text/javascript">
+        function selectAll(obj){
+         var check_obj=$(obj).parents('.check_all').siblings('.ipaddress').find(':checkbox')
+        // l=check_obj.length
+         for(var i=0;i<check_obj.length;i++) {
+        	 check_obj[i].checked = 1;
+          }
+        }
+        </script>
+
+
+
+{% endblock %}

@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+
+
+{%block container%}
+sfsfs
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6" id='container'>
+		</div>
+		<div class="span6" id='list' >
+	  <table id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                               <thead>
+                                   <tr>
+                                    <th>事件</th>
+                                      <th>活动连接数</th>
+                                    
+                                     
+                                   </tr>
+                               </thead>
+                               
+                               <tbody>
+                               {% for key,value in aa.items %}
+                                   <tr>
+                                      <td>{{ key }}</td>
+                                      <td>{{ value  }}</td>
+                                        
+                                        
+                                   </tr>
+                                    
+                                   </tr>
+                               {% endfor %}
+                               </tbody>
+                            </table>
+		
+		</div>
+	</div>
+</div>
+
+
+<script>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'jdbc-conn'
+        },
+        subtitle: {
+            text: 'mysql-salt'
+        },
+        xAxis: {
+            categories: {{cate|safe}}
+        },
+        yAxis: {
+            title: {
+                text: '个'
+            }
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+        series: [{
+            name: '数据库JDBC池实时连接数量',
+            data: {{data}}
+        }
+        ]
+    });
+});
+
+
+</script>
+
+{%endblock%}
+

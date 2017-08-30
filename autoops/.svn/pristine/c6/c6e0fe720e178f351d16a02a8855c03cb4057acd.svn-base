@@ -1,0 +1,42 @@
+# -*- coding: utf-8 -*-
+import MySQLdb
+import UAT.settings
+
+class db_operate:
+    def mysql_command(self,conn,sql_cmd):
+        try:
+            ret = []
+            print conn['host']
+            print conn['name']
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=int(conn["port"]),charset="utf8")
+            print conn
+            cursor = conn.cursor()
+            n = cursor.execute(sql_cmd)
+            for row in cursor.fetchall():
+                for i in row:
+                    ret.append(i)
+        except MySQLdb.Error,e:
+            ret.append(e)
+
+        return ret
+
+    def select_table(self,conn,sql_cmd,parmas):
+        try:
+            ret = []
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=conn["port"],charset="utf8")
+            cursor = conn.cursor()
+            n = cursor.execute(sql_cmd,parmas)
+            for row in cursor.fetchall():
+                for i in row:
+                    ret.append(i)
+        except MySQLdb.Error,e:
+            ret.append(e)
+
+        return ret
+if __name__ == '__main__':
+    import settings
+    c=db_operate()
+   
+    ret=c.mysql_command(settings.conn,'select * from monitor_clusterserver')
+    print ret
+    

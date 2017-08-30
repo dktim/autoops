@@ -1,0 +1,177 @@
+
+<html>
+	
+	<head>
+		<link href="/static/css/jquery-ui-1.8.16.custom.css" rel="stylesheet" type="text/css"/>
+<link href="/static/css/main1.css" rel="stylesheet" type="text/css" />
+		<script  type="text/javascript" src="/static/js/jquery-1.6.2.min.js"></script>
+     <script  type="text/javascript" src='/static/js/jquery-ui-1.10.1.custom.min.js'></script>
+		<script type="text/javascript" src="/static/js/server_reg_detail.js"></script>	
+			
+			<script>
+			
+			$(document).ready(function(){
+	$('.status').each(function(i,obj){
+		
+		var status=$(obj).text();
+		var reg=$(obj).siblings('.regname')
+		//alert(status);
+		
+		if(reg=='WEB'){
+			if(status==0)
+				{
+				$('td').css("backgroundColor", "green");
+				$('.restart).addClass('disabled')
+				}
+			else if (status==1){
+				$('td').css("backgroundColor", "red");
+			}
+		
+		}
+		else {
+			if (status==0)
+				{
+				$(obj).siblings('.regname').css("backgroundColor", "green");
+				}
+			else{
+				$(obj).siblings('.regname').css("backgroundColor", "red");
+		}
+		}
+	})
+})
+			</script>
+			
+			
+			<script>
+			
+			
+function restart_reg(obj){
+	var this_obj=$(obj)
+	alert('开始重启。')
+	aa();
+	var a=true
+	ip=$(obj).parents('td').siblings('.ip').text()
+	appuser=$(obj).parents('td').siblings('.appuser').text()
+	var myDate = Date.parse( new Date());
+	//var a=true
+	//if(a){
+		//a=false
+		$.ajax({
+			beforeSend: function(){$('#YWaitDialog').show();
+			
+			 $(obj).attr({ disabled: "disabled" });
+			 $('#time_span').append(myDate);
+			},
+			url:'/controller/reg_restart',
+			timeout:0,
+			type:'get',
+			cache:false,
+			dataType:'json',
+			data:{"ip":ip,"appuser":appuser,'mydate':myDate},
+			complete: function (XMLHttpRequest, textStatus) {  
+				  $(obj).removeAttr("disabled");
+				  //$('#YWaitDialog').hide();
+				  
+				   //$('#YWaitDialog').anim_progressbar();
+			},  
+			success:function(data){
+				if(data.flag=='success'){
+                               alert('app restart success,return msg is:',data.flag)
+                              // $('#YWaitDialog').anim_progressbar();
+                             bb();
+				}
+
+
+				else if(data.flag=='no restart file'){
+					alert('no restart file,return msg is'+data.flag)
+					//$('#time_span').append(data.time)
+					  $('#YWaitDialog').hide();  
+
+					//alert('应用重启失败，返回信息为'+data.flag)
+					//$('#time_span').append(data.time)
+					  $('#YWaitDialog').hide();  
+				}
+				else if(data.flag=='no minion found'){
+					//$('#time_span').append(data.time)
+					alert('应用重启失败，返回信息为'+data.flag)
+					  $('#YWaitDialog').hide();  
+				}
+				else {
+					alert('目测连接超时！！'+data.flag)
+					//$('#time_span').append(data.time)
+					  $('#YWaitDialog').hide();  
+					  alert('请等待，后台正在重启，重启结果请根据序列号查询。')
+				}
+			},
+			error: function(XMLHttpRequest, textStatus, errorThrown,data) {
+				//#alert(data)
+				//$('#time_span').append(data.time);
+				//alert()
+				$('#YWaitDialog').hide();  
+			//alert('重启成功,正在执行重启，由于重启时镍
+		}
+		
+		
+	});
+}
+			</script>
+			
+		
+		
+		<head/>
+	
+	
+	<body>
+<div class='aa'>
+<div id='YWaitDialog'>
+	<div class='percent'></div>
+	<div class='pbar'></div>
+	<div class='elapsed'></div>
+
+</div>
+
+</div>
+
+
+
+
+<h4 class='glyphicon glyphicon-signal' id='time_span'>任务编号:</h4>
+ <form action="/controller/reg_restart_detail" method="GET">
+
+   <input type='text' value='' name='timestamp'>
+   <input type='submit' value='查询'>
+  </form>
+ <table id="example" class="table table-striped table-condensed" >
+                               <thead>
+                                   <tr>
+                                      <th>ID</th>
+                                      <th>应用名称</th>
+                                      <th>IP</th>
+                                      <th>上传用户</th>
+                                      <th>应用所属</th>
+                                      <th>Http端口</th>
+                                     <th>当前状态</th>
+                                      <th>重启</th>
+                                   </tr>
+                               </thead>
+                               
+                               <tbody>
+                               {% for item in list %}
+                                   <tr>
+                                      <td class='id'>{{ forloop.counter }}</td>
+                                      <td class='regname'>{{ item.regname }}</td>
+                                      <td class='ip'>{{ item.IpAddress }}</td>
+                                      <td class='upduser'>{{ item.UpdUser }}</td>
+                                      <td class='appuser'>{{ item.AppUser }}</td>
+                                     
+
+                                      <td class='httpport'>{{ item.HttpPort }}</td>
+                                       <td class='status'>{{item.status}}</td>
+                                      <td><button class='restart' onclick='restart_reg(this)'>重启</button></td>
+                                   </tr>
+                               {% endfor %}
+                               </tbody>
+                            </table>
+
+<body/>
+<html/>

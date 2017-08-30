@@ -1,0 +1,101 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+
+from UAT.mysql import db_operate
+from UAT.settings import conn,oracle_conn
+from UAT.oracle import oracle_db_operate
+from multiprocessing import Pool
+
+def get_jms_ip_list(start,end,reg):
+    db=oracle_db_operate()
+    sql_cmd="select distinct HOST from monitor_jms where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and RegName='%s'" %(start,end,reg)
+    #sql_cmd="select distinct HOST from monitor.monitor_jms where TM_SMP between to_date('20161101084524','yyyy-mm-dd hh24:mi:ss') and to_date('20161101085024','yyyy-mm-dd hh24:mi:ss') and RegName='IPS'"
+    print sql_cmd
+    #print sql_cmd
+    result=db.oracle_command_direct(oracle_conn, sql_cmd)
+   # print result
+    ip_list=[]
+   # print result
+    for item in result:
+        ip_list.append(item)
+    print ip_list
+    return ip_list
+
+
+from multiprocessing import Pool
+def query_count_for_jms(list):
+	result_data=[]
+	result_ip=[]
+	highchart_ret=[]
+	p=Pool()
+	ret_list=[]
+	print list
+	for item in list:
+		dic={}
+		print item,'sfsfssfs**&'
+		print type(item['sql'])
+		dic['data']=p.apply_async(query_db,(item['sql'],))
+		dic['ip']=item['ip']
+		#ip_list.append(item['ip'])
+		#print dic
+		ret_list.append(dic)
+		p.close()
+		p.join()
+	#print 'end!!@'
+	#print len(highchart_ret)
+	for re in ret_list.items():
+		print re['data'].get()
+		print re(re.get())
+		result_data.append(re['data'].get())
+		result_ip.append(re['ip'])
+	print result_data,result_ip
+	name=['name','data']
+	count=[]
+	ret=[]
+	for item in result:
+            count.append(item)
+            s=[ip,count]
+            dic=dict(zip(name,s))
+            ret.append(dic)
+        return ret
+
+#	return result
+
+
+def get_jms_ajax_count(ip_list,start,end,reg):
+    #db=oracle_db_operate()
+    #name=['name','data']
+    #dic={}
+    list=[]
+    print len( ip_list)
+    for ip in ip_list:
+         #print sql_cmd
+	 sql_cmd="select c.MESSAGESCURRENTCOUNT from appregioninfo a,machineinfo b, monitor_jms c where c.regname ='{0}' and c.host='{1}' and c.host=b.ipaddress and c.regname=b.regname and c.regname=a.regname and c.name = a.DEFAULTJMSQUEUE and c.tm_smp > to_date('{2}', 'yyyy-mm-dd hh24:mi:ss') and c.tm_smp < to_date('{3}', 'yyyy-mm-dd hh24:mi:ss') order by c.seqnum asc".format(reg,ip,start,end)
+	 print sql_cmd
+	 dic={}
+	 dic['ip']=ip
+	 dic['sql']=sql_cmd
+    	 list.append(dic)
+    print list
+    
+    return list
+	
+    #print sql_cmd
+def query_db(sql_cmd):
+	db=oracle_db_operate()
+	print sql_cmd
+	#global highchart_ret
+        ret=db.oracle_command_direct(oracle_conn, sql_cmd)
+        count=[]
+        name=['name','data'] 
+        return ret
+        for item in ret:
+            count.append(item)
+        s=[ip,count]
+        dic=dict(zip(name,s))
+        #highchart_ret.append(dic)
+	return dic
+    	#highchart_ret.append(dic)
+    		#return highchart_ret	 
+	
+	

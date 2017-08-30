@@ -1,0 +1,694 @@
+{% extends "base1.html" %}
+  {% block content %}
+  <div id="page-wrapper">
+     <div class="row">
+         <div class="col-lg-12">
+             <h2 class="page-header">资产管理</h2>
+         </div>
+         <!-- /.col-lg-12 -->
+     </div>
+     <!-- /.row -->
+     <div class="row">
+         <div class="col-lg-12">
+             <div class="panel panel-default">
+                 <div class="panel-heading">
+                     资产管理
+                     <!-- begin action -->
+                     <div class="btn-group" style="float:right">
+                       <button type="button" class="btn  btn-success btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                       选项 <span class="caret"></span>
+                       </button>
+                       <ul class="dropdown-menu">
+                         <li><a id="add_group" href="#"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span> | 添加 </a></li>
+                         <li role="separator" class="divider"></li>
+                         <li><a id="modify_group" href="#"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> | 修改 </a></li>
+                         <li role="separator" class="divider"></li>
+                         <li><a id="delete_group" href="#"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> | 删除 </a></li>
+                       </ul>
+                     </div>
+                     <!-- end action -->
+                       <!-- begin modal  -->
+                       <!-- add modal -->
+                       <div id="add_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-header">
+                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               <h4 class="modal-title" id="exampleModalLabel">Add</h4>
+                             </div>
+                             <div class="modal-body">
+                               <form class="form-horizontal" id="add_data" method="post" action="/hiasset/add_asset/">
+                                 <fieldset>
+                                    <!-- 输入框 -->
+                                   <div class="form-group">
+                                     <label for="AST_NUM" class="col-sm-3 control-label">资产编码</label>
+                                     <div class="col-sm-3">
+                                       <input class="form-control" id="AST_NUM" name="AST_NUM" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="SR_NUM" class="col-sm-1 control-label">序列号</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="SR_NUM" name="SR_NUM" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="DEV_NAME" class="col-sm-3 control-label">设备名</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="DEV_NAME" name="DEV_NAME" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="DEV_ALS" class="col-sm-2 control-label">设备别名</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="DEV_ALS" name="DEV_ALS" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="DEV_TYP" class="col-sm-3 control-label">设备类型</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="DEV_TYP" name="DEV_TYP" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="DEV_MOD" class="col-sm-2 control-label">设备型号</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="DEV_MOD" name="DEV_MOD" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <label for="OS_TYP" class="col-sm-3 control-label">系统类型</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="OS_TYP" name="OS_TYP" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="ADMIN" class="col-sm-2 control-label">管理员</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="ADMIN" name="ADMIN" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="OWN_DPT" class="col-sm-3 control-label">归属部门</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="OWN_DPT" name="OWN_DPT" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="MAN_STE" class="col-sm-2 control-label">维保状态</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="MAN_STE" name="MAN_STE" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="MAN_BGN" class="col-sm-3 control-label">维保开始时间</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="MAN_BGN" name="MAN_BGN" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="MAN_END" class="col-sm-2 control-label">维保结束时间</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="MAN_END" name="MAN_END" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="UP_TME" class="col-sm-3 control-label">入网时间</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="UP_TME" name="UP_TME" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="AST_LAB" class="col-sm-2 control-label">资产标签</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="AST_LAB" name="AST_LAB" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="BUS_DES" class="col-sm-3 control-label">功能描述</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="BUS_DES" name="BUS_DES" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="Location" class="col-sm-2 control-label">物理位置</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="Location" name="Location" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="Area" class="col-sm-3 control-label">机房区域</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="Area" name="Area" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="CAB_LCA" class="col-sm-2 control-label">机柜位置</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="CAB_LCA" name="CAB_LCA" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="DEV_BGN" class="col-sm-3 control-label">设备所在机柜开始位置</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="DEV_BGN" name="DEV_BGN" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="DEV_END" class="col-sm-3 control-label">设备所在机柜结束位置</label>
+                                     <div class="col-sm-4">
+                                       <input class="form-control" id="DEV_END" name="DEV_END" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <label for="DEV_IP" class="col-sm-3 control-label">设备IP</label>
+                                     <div class="col-sm-9">
+                                       <input class="form-control" id="DEV_IP" name="DEV_IP" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <label for="REMARK" class="col-sm-3 control-label">备注</label>
+                                     <div class="col-sm-9">
+                                       <textarea class="form-control" id="REMARK" name="REMARK" minlength="1" required></textarea>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <div class="col-sm-offset-3 col-sm-9">
+                                       <button onclick="submit" id="add_commit" type="submit" class="btn btn-outline btn-success btn-xs"> 提交 </button>
+                                     </div>
+                                   </div>
+                                 </fieldset>
+                               </form>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- end add modal -->
+
+                       <!-- delete modal -->
+                       <div id="delete_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-header">
+                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               <h4 class="modal-title" id="exampleModalLabel">Are You Sure?</h4>
+                             </div>
+                             <div class="modal-body">
+                               <form id="delete_data" class="form-inline" method="POST" action="/hiasset/del_asset/">
+                               <!-- jquery will append content here -->
+                               </form>
+                             </div>
+                             <div class="modal-footer">
+                               <button type="button" class="btn btn-outline btn-warning btn-xs" data-dismiss="modal">Close</button>
+                               <button id="delete_commit" type="button" class="btn btn-outline btn-danger btn-xs" data-dismiss="modal" >Delete</button>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- end delete -->
+                       
+                       <!-- modify modal --> 
+                       <div id="modify_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-header">
+                               <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               <h4 class="modal-title" id="exampleModalLabel">Modify</h4>
+                             </div>
+                             <div class="modal-body">
+
+                               <form id="modify_data" class="form-horizontal" method="POST" action="/hiasset/mod_asset/">
+                                   <!-- 输入框 -->
+                                   <div class="form-group">
+                                     <label for="AST_NUM" class="col-sm-3 control-label">资产编码</label>
+                                     <div class="col-sm-3">
+                                       <input readonly class="form-control" id="AST_NUM" name="AST_NUM" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="SR_NUM" class="col-sm-1 control-label">序列号</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="SR_NUM" name="SR_NUM" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="DEV_NAME" class="col-sm-3 control-label">设备名</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="DEV_NAME" name="DEV_NAME" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="DEV_ALS" class="col-sm-2 control-label">设备别名</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="DEV_ALS" name="DEV_ALS" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="DEV_TYP" class="col-sm-3 control-label">设备类型</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="DEV_TYP" name="DEV_TYP" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="DEV_MOD" class="col-sm-2 control-label">设备型号</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="DEV_MOD" name="DEV_MOD" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <label for="OS_TYP" class="col-sm-3 control-label">系统类型</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="OS_TYP" name="OS_TYP" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="ADMIN" class="col-sm-2 control-label">管理员</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="ADMIN" name="ADMIN" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="OWN_DPT" class="col-sm-3 control-label">归属部门</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="OWN_DPT" name="OWN_DPT" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="MAN_STE" class="col-sm-2 control-label">维保状态</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="MAN_STE" name="MAN_STE" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                    <div class="form-group">
+                                     <label for="MAN_BGN" class="col-sm-3 control-label">维保开始时间</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="MAN_BGN" name="MAN_BGN" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="MAN_END" class="col-sm-2 control-label">维保结束时间</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="MAN_END" name="MAN_END" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="UP_TME" class="col-sm-3 control-label">入网时间</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="UP_TME" name="UP_TME" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="AST_LAB" class="col-sm-2 control-label">资产标签</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="AST_LAB" name="AST_LAB" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="BUS_DES" class="col-sm-3 control-label">功能描述</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="BUS_DES" name="BUS_DES" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="Location" class="col-sm-2 control-label">物理位置</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="Location" name="Location" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="Area" class="col-sm-3 control-label">机房区域</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="Area" name="Area" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="CAB_LCA" class="col-sm-2 control-label">机柜位置</label>
+                                     <div class="col-sm-5">
+                                       <input class="form-control" id="CAB_LCA" name="CAB_LCA" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                  <div class="form-group">
+                                     <label for="DEV_BGN" class="col-sm-3 control-label">设备所在机柜开始位置</label>
+                                     <div class="col-sm-2">
+                                       <input class="form-control" id="DEV_BGN" name="DEV_BGN" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                     <label for="DEV_END" class="col-sm-3 control-label">设备所在机柜结束位置</label>
+                                     <div class="col-sm-4">
+                                       <input class="form-control" id="DEV_END" name="DEV_END" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <label for="DEV_IP" class="col-sm-3 control-label">设备IP</label>
+                                     <div class="col-sm-9">
+                                       <input class="form-control" id="DEV_IP" name="DEV_IP" minlength="1" type="text" placeholder="" required>
+                                     </div>
+                                   </div>
+
+                                   <div class="form-group">
+                                     <label for="REMARK" class="col-sm-3 control-label">备注</label>
+                                     <div class="col-sm-9">
+                                       <textarea class="form-control" id="REMARK" name="REMARK" minlength="1" required></textarea>
+                                     </div>
+                                   </div>
+                               </form>
+                             </div>
+                             <div class="modal-footer">
+                               <button type="button" class="btn btn-outline btn-warning btn-xs" data-dismiss="modal">Close</button>
+                               <button id="modify_commit" type="button" class="btn btn-outline btn-primary btn-xs" data-dismiss="modal" >Save</button>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- end modify modal -->
+
+                       <!-- checkbox error modal -->
+                       <div id="checkbox_error_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-content">
+                               <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               </div>
+                               <div class="modal-body">
+                                 <h4 class="modal-title" id="checkbox_error">There is no item selected</h4>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- end checkbox error modal-->
+
+                       <!-- alert error modal -->
+                       {% if error %}
+                       <div id="error_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-content">
+                               <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               </div>
+                               <div class="modal-body">
+                                 <h4 class="modal-title" id="error">{{ error }}</h4>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       {% endif %}
+                       <!-- end alert error modal  -->
+                       
+                       <!-- alert success modal -->
+                       {% if success %}
+                       <div id="success_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-content">
+                               <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               </div>
+                               <div class="modal-body">
+                                 <h4 id="success" class="modal-title">{{ success }}</h4>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       {% endif %}
+                       <!-- end alert success modal  -->
+                 </div>
+                 <!-- /.panel-heading -->
+                 <div class="panel-body">
+                     <div class="dataTable_wrapper">
+                         <table id="datatable-demo" class="table table-striped table-bordered table-hover">
+                             <thead>
+                                 <tr>
+                                    <th>
+                                      <input id="CHKall" type="checkbox" name="CHKall" value="CHKall"></input>
+                                    </th>
+                                    <th>资产编码</th>
+                                    <th>设备名</th>
+                                    <th>设备型号</th>
+                                    <th style="display:none">AST_LAB</th>
+                                    <th>系统类型</th>
+                                    <th style="display:none">Opearation</th>
+                                     <th style="display:none">show_line</th>
+                                    <th>维保状态</th>
+                                    <th>功能描述</th>
+                                    <th style="display:none">SR_NUM</th>
+                                    <th style="display:none">DEV_ALS</th>
+                                    <th style="display:none">DEV_TYP</th>
+                                    <th style="display:none">ADMIN</th>
+                                    <th style="display:none">OWN_DPT</th>
+                                    <th style="display:none">MAN_BGN</th>
+                                    <th style="display:none">MAN_END</th>
+                                    <th style="display:none">UP_TME</th>
+                                    <th style="display:none">Location</th>
+                                    <th style="display:none">Area</th>
+                                    <th style="display:none">CAB_LCA</th>
+                                    <th style="display:none">DEV_BGN</th>
+                                    <th style="display:none">DEV_END</th>
+                                    <th style="display:none">DEV_IP</th>
+                                    <th style="display:none">REMARK</th>
+                                 </tr>
+                             </thead>
+                             <tbody>
+                               {% if assetinfo %}
+                               {% for g in assetinfo %}
+                               <tr id="{{ g.AST_NUM }}" class="even gradeC"  >
+                                   <td>
+                                     <input  name="CHKlist" type="checkbox" value="{{ g.AST_NUM }}"></input>
+                                   </td>
+                                   <td id="AST_NUM" style="word-break:break-all">{{ g.AST_NUM }}</td>
+                                   <td id="DEV_NAME" style="word-break:break-all">{{ g.DEV_NAME }}</td>
+                                   <td id="DEV_MOD" style="word-break:break-all">{{ g.DEV_MOD }}</td>
+                                   <td id="AST_LAB" style="display:none;word-break:break-all">{{ g.AST_LAB }}</td>
+                                   <td id="OS_TYP" style="word-break:break-all">{{ g.OS_TYP }}</td>
+                                   <td style="display:none"><button id="modify_group" name="modify_button" value="{{ g.AST_NUM }}" type="button" class="btn btn-outline btn-success btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Edit</button></td>
+                                   <td style="display:none"><button id="show_line" name="show_line" value="{{ g.AST_NUM }}" type="button" class="btn btn-outline btn-success btn-xs"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span> Show</button></td>
+                                   <td id="MAN_STE" style="word-break:break-all">{{ g.MAN_STE }}</td>
+                                   <td id="BUS_DES" style="word-break:break-all">{{ g.BUS_DES }}</td>
+                                   <td id="SR_NUM" style="display:none;word-break:break-all">{{ g.SR_NUM }}</td>
+                                   <td id="DEV_ALS" style="display:none;word-break:break-all">{{ g.DEV_ALS }}</td>
+                                   <td id="DEV_TYP" style="display:none;word-break:break-all">{{ g.DEV_TYP }}</td>
+                                   <td id="ADMIN" style="display:none;word-break:break-all">{{ g.ADMIN }}</td>
+                                   <td id="OWN_DPT" style="display:none;word-break:break-all">{{ g.OWN_DPT }}</td>
+                                   <td id="MAN_BGN" style="display:none;word-break:break-all">{{ g.MAN_BGN }}</td>
+                                   <td id="MAN_END" style="display:none;word-break:break-all">{{ g.MAN_END }}</td>
+                                   <td id="UP_TME" style="display:none;word-break:break-all">{{ g.UP_TME }}</td>
+                                   <td id="Location" style="display:none;word-break:break-all">{{ g.Location }}</td>
+                                   <td id="Area" style="display:none;word-break:break-all">{{ g.Area }}</td>
+                                   <td id="CAB_LCA" style="display:none;word-break:break-all">{{ g.CAB_LCA }}</td>
+                                   <td id="DEV_BGN" style="display:none;word-break:break-all">{{ g.DEV_BGN }}</td>
+                                   <td id="DEV_END" style="display:none;word-break:break-all">{{ g.DEV_END }}</td>
+                                   <td id="DEV_IP" style="display:none;word-break:break-all">{{ g.DEV_IP }}</td>
+                                   <td id="REMARK" style="display:none;word-break:break-all">{{ g.REMARK }}</td>
+                               </tr>
+                               {% endfor %}
+                               {% endif %}
+                             </tbody>
+                         </table>
+                     </div>
+                     <!-- /.table-responsive -->
+                 </div>
+                 <!-- /.panel-body -->
+             </div>
+             <!-- /.panel -->
+         </div>
+         <!-- /.col-lg-12 -->
+     </div>
+     <!-- /.row -->
+   </div>
+        <!-- /#page-wrapper -->
+
+  {% endblock %}
+    {% block jquery%}
+    <script type="text/javascript">
+
+      $(document).ready(function(){
+        //全选或全不选 
+        $("#CHKall").click(function(){
+            if(this.checked){    
+                $("input[name='CHKlist']").prop("checked", true);   
+            }else{    
+                $("input[name='CHKlist']").prop("checked", false); 
+            }    
+         });  
+        // end slelect all
+
+
+        //data table
+        $("#datatable-demo").DataTable( {
+           //设置第一列为初始化排序的列
+           "order": [[ 1, "desc" ]],
+           //该值的含义为。初始化datatable，但对序号为0,7列的列不进行排序，别的列均可进行排序 
+           "aoColumnDefs": [ { "bSortable": false, "aTargets": [ 0,6 ] }]  
+           });     
+        // end data table
+        // add //
+        $("#add_group").click(function(){
+            $('#add_modal').modal('show')
+
+            $("#add_commit").click(function(){
+                $("#add_data").submit()
+                /*
+                $.ajax({
+                    type:'POST',
+                    url:'/groups/add_group/',
+                    data:$('form#add_data').serialize(),
+                    beforeSend:function(xhr,settings){
+                        //console.log(data)
+                    },
+                    complete:function(xhr,settings){
+                        //alert(data)
+                    },
+                    success:function(response,status,xhr){
+                        //alert(response)
+                    },
+                    error:function(xhr,errorText, errorStatus){
+                        //alert(errorStatus)
+                    },
+
+                }); 
+                window.location.reload(); 
+                */ 
+            });
+            
+        });
+        // end add //
+
+
+        // delete //
+        $("#delete_group").click(function(){
+           var ids=[];
+           $('input[name="CHKlist"]:checked').each(function(){
+               var id=$(this).val();
+               //tr_index = $(this).parent().parent().index()
+               //td_name = $(this).parent().parent().children("td:eq(2)").text()
+               ids.push(id);
+           }); 
+           if (ids.length >0)
+               {
+               $("#delete_data").empty()
+               for (i in ids){     
+                   $("#delete_data").append(
+                       '<div class="form-group"><label class="control-label">资产编码: </label><input readonly name="AST_NUM" value="'+ ids[i] +'" type="text" class="form-control"></input></div> <br>'
+                       );
+                   };
+                 $('#delete_modal').modal('show')
+               }
+             else 
+                {
+                   $('#checkbox_error_modal').modal('show')
+                }
+           $("#delete_commit").click(function(){
+                 $("#delete_data").submit()
+             });
+      });
+      // end delete //
+      // modify //
+      $("#modify_group").click(function(){
+          var ids=[];
+          $('input[name="CHKlist"]:checked').each(function(){
+              var id=$(this).val();
+              ids.push(id);
+          }); 
+          var tmp_id=ids[0]
+          var tmp_SR_NUM=$("#"+tmp_id).find("#SR_NUM").text();
+          var tmp_DEV_NAME=$("#"+tmp_id).find("#DEV_NAME").text();
+          var tmp_DEV_ALS=$("#"+tmp_id).find("#DEV_ALS").text();
+          var tmp_DEV_TYP=$("#"+tmp_id).find("#DEV_TYP").text();
+          var tmp_DEV_MOD=$("#"+tmp_id).find("#DEV_MOD").text();
+          var tmp_OS_TYP=$("#"+tmp_id).find("#OS_TYP").text();
+          var tmp_ADMIN=$("#"+tmp_id).find("#ADMIN").text();
+          var tmp_OWN_DPT=$("#"+tmp_id).find("#OWN_DPT").text();
+          var tmp_MAN_STE=$("#"+tmp_id).find("#MAN_STE").text();
+          var tmp_MAN_BGN=$("#"+tmp_id).find("#MAN_BGN").text();
+          var tmp_MAN_END=$("#"+tmp_id).find("#MAN_END").text();
+          var tmp_UP_TME=$("#"+tmp_id).find("#UP_TME").text();
+          var tmp_AST_LAB=$("#"+tmp_id).find("#AST_LAB").text();
+          var tmp_BUS_DES=$("#"+tmp_id).find("#BUS_DES").text();
+          var tmp_Location=$("#"+tmp_id).find("#Location").text();
+          var tmp_Area=$("#"+tmp_id).find("#Area").text();
+          var tmp_CAB_LCA=$("#"+tmp_id).find("#CAB_LCA").text();
+          var tmp_DEV_BGN=$("#"+tmp_id).find("#DEV_BGN").text();
+          var tmp_DEV_END=$("#"+tmp_id).find("#DEV_END").text();
+          var tmp_DEV_IP=$("#"+tmp_id).find("#DEV_IP").text();
+          var tmp_REMARK=$("#"+tmp_id).find("#REMARK").text();
+          $('#modify_data').find('input#AST_NUM').val(tmp_id);
+          $('#modify_data').find('input#SR_NUM').val(tmp_SR_NUM);
+          $('#modify_data').find('input#DEV_NAME').val(tmp_DEV_NAME);
+          $('#modify_data').find('input#DEV_ALS').val(tmp_DEV_ALS);
+          $('#modify_data').find('input#DEV_TYP').val(tmp_DEV_TYP);
+          $('#modify_data').find('input#DEV_MOD').val(tmp_DEV_MOD);
+          $('#modify_data').find('input#OS_TYP').val(tmp_OS_TYP);
+          $('#modify_data').find('input#ADMIN').val(tmp_ADMIN);
+          $('#modify_data').find('input#OWN_DPT').val(tmp_OWN_DPT);
+          $('#modify_data').find('input#MAN_STE').val(tmp_MAN_STE);
+          $('#modify_data').find('input#MAN_BGN').val(tmp_MAN_BGN);
+          $('#modify_data').find('input#MAN_END').val(tmp_MAN_END);
+          $('#modify_data').find('input#UP_TME').val(tmp_UP_TME);
+          $('#modify_data').find('input#AST_LAB').val(tmp_AST_LAB);
+          $('#modify_data').find('input#BUS_DES').val(tmp_BUS_DES);
+          $('#modify_data').find('input#Location').val(tmp_Location);
+          $('#modify_data').find('input#Area').val(tmp_Area);
+          $('#modify_data').find('input#CAB_LCA').val(tmp_CAB_LCA);
+          $('#modify_data').find('input#DEV_BGN').val(tmp_DEV_BGN);
+          $('#modify_data').find('input#DEV_END').val(tmp_DEV_END);
+          $('#modify_data').find('input#DEV_IP').val(tmp_DEV_IP);
+          $('#modify_data').find('textarea#REMARK').val(tmp_REMARK);
+          $('#modify_modal').modal('show')
+          $('#modify_commit').click(function(){
+              $('#modify_data').submit();
+              });
+      })
+      // end modify //
+
+      //show all line//
+      $('tbody').on('dblclick', 'tr',function(){
+          //var tmp_id=$(this).button.val();
+          var tmp_id=this.id;
+          var tmp_SR_NUM=$("#"+tmp_id).find("#SR_NUM").text();
+          var tmp_DEV_NAME=$("#"+tmp_id).find("#DEV_NAME").text();
+          var tmp_DEV_ALS=$("#"+tmp_id).find("#DEV_ALS").text();
+          var tmp_DEV_TYP=$("#"+tmp_id).find("#DEV_TYP").text();
+          var tmp_DEV_MOD=$("#"+tmp_id).find("#DEV_MOD").text();
+          var tmp_OS_TYP=$("#"+tmp_id).find("#OS_TYP").text();
+          var tmp_ADMIN=$("#"+tmp_id).find("#ADMIN").text();
+          var tmp_OWN_DPT=$("#"+tmp_id).find("#OWN_DPT").text();
+          var tmp_MAN_STE=$("#"+tmp_id).find("#MAN_STE").text();
+          var tmp_MAN_BGN=$("#"+tmp_id).find("#MAN_BGN").text();
+          var tmp_MAN_END=$("#"+tmp_id).find("#MAN_END").text();
+          var tmp_UP_TME=$("#"+tmp_id).find("#UP_TME").text();
+          var tmp_AST_LAB=$("#"+tmp_id).find("#AST_LAB").text();
+          var tmp_BUS_DES=$("#"+tmp_id).find("#BUS_DES").text();
+          var tmp_Location=$("#"+tmp_id).find("#Location").text();
+          var tmp_Area=$("#"+tmp_id).find("#Area").text();
+          var tmp_CAB_LCA=$("#"+tmp_id).find("#CAB_LCA").text();
+          var tmp_DEV_BGN=$("#"+tmp_id).find("#DEV_BGN").text();
+          var tmp_DEV_END=$("#"+tmp_id).find("#DEV_END").text();
+          var tmp_DEV_IP=$("#"+tmp_id).find("#DEV_IP").text();
+          var tmp_REMARK=$("#"+tmp_id).find("#REMARK").text();
+          $('#modify_data').find('input#AST_NUM').val(tmp_id);
+          $('#modify_data').find('input#SR_NUM').val(tmp_SR_NUM);
+          $('#modify_data').find('input#DEV_NAME').val(tmp_DEV_NAME);
+          $('#modify_data').find('input#DEV_ALS').val(tmp_DEV_ALS);
+          $('#modify_data').find('input#DEV_TYP').val(tmp_DEV_TYP);
+          $('#modify_data').find('input#DEV_MOD').val(tmp_DEV_MOD);
+          $('#modify_data').find('input#OS_TYP').val(tmp_OS_TYP);
+          $('#modify_data').find('input#ADMIN').val(tmp_ADMIN);
+          $('#modify_data').find('input#OWN_DPT').val(tmp_OWN_DPT);
+          $('#modify_data').find('input#MAN_STE').val(tmp_MAN_STE);
+          $('#modify_data').find('input#MAN_BGN').val(tmp_MAN_BGN);
+          $('#modify_data').find('input#MAN_END').val(tmp_MAN_END);
+          $('#modify_data').find('input#UP_TME').val(tmp_UP_TME);
+          $('#modify_data').find('input#AST_LAB').val(tmp_AST_LAB);
+          $('#modify_data').find('input#BUS_DES').val(tmp_BUS_DES);
+          $('#modify_data').find('input#Location').val(tmp_Location);
+          $('#modify_data').find('input#Area').val(tmp_Area);
+          $('#modify_data').find('input#CAB_LCA').val(tmp_CAB_LCA);
+          $('#modify_data').find('input#DEV_BGN').val(tmp_DEV_BGN);
+          $('#modify_data').find('input#DEV_END').val(tmp_DEV_END);
+          $('#modify_data').find('input#DEV_IP').val(tmp_DEV_IP);
+          $('#modify_data').find('textarea#REMARK').val(tmp_REMARK);
+          $('#modify_modal').modal('show')
+          $('#modify_commit').click(function(){
+              $('#modify_data').submit();
+              });
+      })
+      //end show all line//
+
+      //  $('tbody').on('dblclick', 'tr',function(){
+      //    alert(this.id);
+      // })
+
+      //show success and error modal //
+      $('#success_modal').modal('show')
+      $('#error_modal').modal('show')
+      //  end show success and error modal //
+    });  
+    </script>
+    {% endblock %}

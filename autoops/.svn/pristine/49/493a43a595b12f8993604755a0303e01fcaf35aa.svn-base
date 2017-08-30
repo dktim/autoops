@@ -1,0 +1,17 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+import salt.client
+
+class SALTAPI():
+    def __init__(self):
+        pass
+    def get_local(self):
+        return salt.client.LocalClient()
+    
+    
+    def execute(self,tgt,func,args):
+        self.get_local().cmd(tgt,func,args)
+        
+if __name__ == '__main__':
+    sa=SALTAPI()
+    print sa.execute('*', 'cmd.run',['ls /var'])

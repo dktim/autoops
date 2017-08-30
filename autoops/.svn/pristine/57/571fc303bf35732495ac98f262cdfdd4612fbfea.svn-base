@@ -1,0 +1,35 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+#from salt.client import LocalClient
+import time
+     
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+    
+    
+def salt_command(tgt,func,arg):
+    client=LocalClient()
+    jid=client.cmd_async(tgt,func,arg)
+    print jid
+    t=0
+    while not client.get_cache_returns(jid):
+        time.sleep(1)
+        if t==8:
+            re='connection filed'
+            break
+    else:
+        t+=1
+        re=client.get_cache_returns(jid)
+        #print re
+    return re
+    
+if __name__ == '__main__':
+    tgt='*'
+    func='cmd.run'
+    arg=['ps -ef | grep salt']
+    print salt_command(tgt, func, arg)

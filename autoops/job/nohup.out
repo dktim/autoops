@@ -1,0 +1,443 @@
+ssdfs
+Traceback (most recent call last):
+  File "update_reg_status.py", line 89, in <module>
+    update_status()
+  File "update_reg_status.py", line 57, in update_status
+    for item in reg_list:
+TypeError: 'NoneType' object is not iterable
+ssdfs
+[{'HttpPort': 31091L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:31091/emptywar/check_health_main.jsp
+
+
+
+excefailure
+
+
+1
+[{'HttpPort': 16121L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:16121/emptywar/check_health_main.jsp
+404
+Not Found
+1
+[{'HttpPort': 15121L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:15121/emptywar/check_health_main.jsp
+success
+
+0
+[{'HttpPort': 51011L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:51011/emptywar/check_health_main.jsp
+404
+Not Found
+0
+[{'HttpPort': 33104L, 'IpAddress': u'172.16.49.143'}, {'HttpPort': 33104L, 'IpAddress': u'172.16.49.144'}]
+http://172.16.49.143:33104/emptywar/check_health_main.jsp
+404
+Not Found
+0
+http://172.16.49.144:33104/emptywar/check_health_main.jsp
+404
+Not Found
+0
+[{'HttpPort': 32051L, 'IpAddress': u'172.16.49.216'}]
+http://172.16.49.216:32051/emptywar/check_health_main.jsp
+404
+Not Found
+0
+[{'HttpPort': 31081L, 'IpAddress': u'172.16.49.216'}]
+http://172.16.49.216:31081/emptywar/check_health_main.jsp
+
+
+
+excefailure
+
+
+1
+[{'HttpPort': 31051L, 'IpAddress': u'172.16.49.217'}, {'HttpPort': 31051L, 'IpAddress': u'172.16.49.218'}]
+http://172.16.49.217:31051/emptywar/check_health_main.jsp
+
+
+
+success
+
+
+0
+http://172.16.49.218:31051/emptywar/check_health_main.jsp
+Traceback (most recent call last):
+  File "update_reg_status.py", line 89, in <module>
+    update_status()
+  File "update_reg_status.py", line 66, in update_status
+    response= urllib2.urlopen(url)
+  File "/usr/local/lib/python2.7/urllib2.py", line 126, in urlopen
+    return _opener.open(url, data, timeout)
+  File "/usr/local/lib/python2.7/urllib2.py", line 400, in open
+    response = self._open(req, data)
+  File "/usr/local/lib/python2.7/urllib2.py", line 418, in _open
+    '_open', req)
+  File "/usr/local/lib/python2.7/urllib2.py", line 378, in _call_chain
+    result = func(*args)
+  File "/usr/local/lib/python2.7/urllib2.py", line 1207, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/usr/local/lib/python2.7/urllib2.py", line 1180, in do_open
+    r = h.getresponse(buffering=True)
+  File "/usr/local/lib/python2.7/httplib.py", line 1030, in getresponse
+    response.begin()
+  File "/usr/local/lib/python2.7/httplib.py", line 407, in begin
+    version, status, reason = self._read_status()
+  File "/usr/local/lib/python2.7/httplib.py", line 365, in _read_status
+    line = self.fp.readline()
+  File "/usr/local/lib/python2.7/socket.py", line 447, in readline
+    data = self._sock.recv(self._rbufsize)
+KeyboardInterrupt
+ssdfs
+[{'HttpPort': 31091L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:31091/emptywar/check_health_main.jsp
+
+
+
+excefailure
+
+
+1
+[{'HttpPort': 16121L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:16121/emptywar/check_health_main.jsp
+404
+Not Found
+1
+[{'HttpPort': 15121L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:15121/emptywar/check_health_main.jsp
+success
+
+0
+[{'HttpPort': 51011L, 'IpAddress': u'172.16.49.114'}]
+http://172.16.49.114:51011/emptywar/check_health_main.jsp
+404
+Not Found
+0
+[{'HttpPort': 33104L, 'IpAddress': u'172.16.49.143'}, {'HttpPort': 33104L, 'IpAddress': u'172.16.49.144'}]
+http://172.16.49.143:33104/emptywar/check_health_main.jsp
+404
+Not Found
+0
+http://172.16.49.144:33104/emptywar/check_health_main.jsp
+404
+Not Found
+0
+[{'HttpPort': 32051L, 'IpAddress': u'172.16.49.216'}]
+http://172.16.49.216:32051/emptywar/check_health_main.jsp
+404
+Not Found
+0
+[{'HttpPort': 31081L, 'IpAddress': u'172.16.49.216'}]
+http://172.16.49.216:31081/emptywar/check_health_main.jsp
+
+
+
+excefailure
+
+
+1
+[{'HttpPort': 31051L, 'IpAddress': u'172.16.49.217'}, {'HttpPort': 31051L, 'IpAddress': u'172.16.49.218'}]
+http://172.16.49.217:31051/emptywar/check_health_main.jsp
+
+
+
+success
+
+
+0
+http://172.16.49.218:31051/emptywar/check_health_main.jsp
+Traceback (most recent call last):
+  File "update_reg_status.py", line 89, in <module>
+    update_status()
+  File "update_reg_status.py", line 66, in update_status
+    response= urllib2.urlopen(url)
+  File "/usr/local/lib/python2.7/urllib2.py", line 126, in urlopen
+    return _opener.open(url, data, timeout)
+  File "/usr/local/lib/python2.7/urllib2.py", line 400, in open
+    response = self._open(req, data)
+  File "/usr/local/lib/python2.7/urllib2.py", line 418, in _open
+    '_open', req)
+  File "/usr/local/lib/python2.7/urllib2.py", line 378, in _call_chain
+    result = func(*args)
+  File "/usr/local/lib/python2.7/urllib2.py", line 1207, in http_open
+    return self.do_open(httplib.HTTPConnection, req)
+  File "/usr/local/lib/python2.7/urllib2.py", line 1180, in do_open
+    r = h.getresponse(buffering=True)
+  File "/usr/local/lib/python2.7/httplib.py", line 1030, in getresponse
+    response.begin()
+  File "/usr/local/lib/python2.7/httplib.py", line 407, in begin
+    version, status, reason = self._read_status()
+  File "/usr/local/lib/python2.7/httplib.py", line 365, in _read_status
+    line = self.fp.readline()
+  File "/usr/local/lib/python2.7/socket.py", line 447, in readline
+    data = self._sock.recv(self._rbufsize)
+KeyboardInterrupt
+python: can't open file 'lsn_collect.p': [Errno 2] No such file or directory
+Press Ctrl+C to exit
+start_lsn!!
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:36,305|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:36,305|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:19,466|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:30:02,686|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:19,466|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:30:02,686|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:25,157|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:26,007|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:25,157|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:26,007|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}]
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:36,305|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:36,305|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:19,466|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:30:02,686|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:19,466|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:30:02,686|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:25,157|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:26,007|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:25,157|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:26,007|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}]
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+URMBAT|09-23 14:11:31,162|0
+URMOLN|09-23 14:33:36,305|0
+URMBAT|09-23 14:11:31,162|0
+URMOLN|09-23 14:33:36,305|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:19,466|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:30:02,686|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:19,466|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:30:02,686|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:25,157|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:26,007|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:25,157|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:26,007|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:27:17,053|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:27:17,053|0
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:36,305|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:36,305|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:19,466|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:30:02,686|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:19,466|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:30:02,686|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:25,157|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:26,007|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:25,157|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:26,007|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}]
+insert into asset_lsnstat(ip,regname,timPress Ctrl+C to exit
+start_lsn!!
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:58,289|1'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:59,263|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:34,846|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:39,376|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:41,124|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:41,124|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}]
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:58,289|1'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:59,263|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:34,846|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:39,376|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:41,124|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:41,124|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}]
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+URMBAT|09-23 14:11:31,162|0
+URMOLN|09-23 14:33:58,289|1
+URMBAT|09-23 14:11:31,162|0
+URMOLN|09-23 14:33:59,263|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:33,973|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:34,846|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:33,973|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:39,376|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:33,973|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:41,124|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:31:33,973|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:41,124|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:27:17,053|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:27:17,053|0
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:58,289|1'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:11:31,162|0\nURMOLN|09-23 14:33:59,263|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:34,846|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:39,376|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:41,124|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:31:33,973|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:41,124|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:27:17,053|0'}]
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:36','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:36','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:36','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:36','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:30:02','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:26','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+start_lsn!!
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:22,803|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:22,803|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:28,419|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}]
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:22,803|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:22,803|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:28,419|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}]
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+URMBAT|09-23 14:35:35,888|0
+URMOLN|09-23 14:35:22,803|0
+URMBAT|09-23 14:35:35,888|0
+URMOLN|09-23 14:35:22,803|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:12,056|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:50,420|3
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:12,056|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:50,420|3
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:12,056|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:50,420|3
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:28,419|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:50,420|3
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:36:26,571|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:36:26,571|0
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:22,803|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:22,803|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:12,056|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:28,419|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}]
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:22','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:22','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:22','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:22','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:50','3')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172e,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:58','1')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:58','1')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:59','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:33:59','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:34','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:34','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:34','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:34','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:39','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:39','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:39','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:39','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:41','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.84_uat-syt','CSHOLN','2016-09-23 14:27:17','0')
+ss
+start_lsn!!
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:56,385|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:56,385|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:31,581|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:37,689|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:39,657|39'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:37,689|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:40,632|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:42,336|1\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:40,632|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}]
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:56,385|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:56,385|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:31,581|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:37,689|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:39,657|39'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:37,689|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:40,632|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:42,336|1\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:40,632|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}]
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+CPSOLN|09-23 11:14:05,636|0
+URMBAT|09-23 14:35:35,888|0
+URMOLN|09-23 14:35:56,385|0
+URMBAT|09-23 14:35:35,888|0
+URMOLN|09-23 14:35:56,385|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:31,581|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:31:50,420|3
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:37,689|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:33:39,657|39
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:37,689|0
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:33:40,632|0
+PPDBAT|09-23 14:30:29,204|0
+PPDOLN|09-23 14:33:42,336|1
+WDCBAT|09-23 14:19:45,538|0
+WDCOLN|09-23 14:33:40,632|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:36:26,571|0
+CSHBAT|09-23 09:59:52,019|0
+CSHOLN|09-23 14:36:26,571|0
+[{'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.50_RHEL': 'CPSOLN|09-23 11:14:05,636|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:56,385|0'}, {'172.16.49.81_uat-yhmk': 'URMBAT|09-23 14:35:35,888|0\nURMOLN|09-23 14:35:56,385|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:31,581|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:31:50,420|3'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:37,689|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:39,657|39'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:37,689|0\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:40,632|0'}, {'172.16.49.82_uat-czcf': 'PPDBAT|09-23 14:30:29,204|0\nPPDOLN|09-23 14:33:42,336|1\nWDCBAT|09-23 14:19:45,538|0\nWDCOLN|09-23 14:33:40,632|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}, {'172.16.49.84_uat-syt': 'CSHBAT|09-23 09:59:52,019|0\nCSHOLN|09-23 14:36:26,571|0'}]
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.50_RHEL','CPSOLN','2016-09-23 11:14:05','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:56','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:56','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:56','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.81_uat-yhmk','URMOLN','2016-09-23 14:35:56','0')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values('172.16.49.82_uat-czcf','WDCOLN','2016-09-23 14:31:50','3')
+ss
+insert into asset_lsnstat(ip,regname,time,count) values(

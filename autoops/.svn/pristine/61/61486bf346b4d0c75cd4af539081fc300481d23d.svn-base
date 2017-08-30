@@ -1,0 +1,178 @@
+{% extends 'base.html'%}
+
+<div id='aa'>cc</div>
+
+
+{% block container%}
+function getLogTimeStat() {
+	
+$(document).ready(function(){
+	jQuery.ajax({
+		url : "/monitor/jdbc_status2/",
+		data : {},
+		type : "get",
+		dataType : "json",
+		success : function(data) {
+		$('#aa').html(data);
+		
+		}
+	})	
+{% endblock%}
+
+}
+// 			consolo.log(rows)
+// 			consolo.log('!!')
+// 			var logStat = [];
+// 			//windows.console.log(rows)
+// 			//var alertStat = [];
+
+// 			if (rows != null) {
+
+// 				for (var i = 0; i < rows.length; i++) {
+// 					var row = rows[i];
+// 					var logStatArry = [];
+// 					logStatArry=row['value']
+// consolo.log(logStatArry)
+
+// 					logStat.push(logStatArry);
+			//	}
+			
+
+// 			OPTIONSLOGSTATCHART.series.push({
+// 				name : "日志",
+// 				data : logStat,
+// 			});
+
+	
+
+/* function getData() {
+	   
+	   var categories = [];
+	   $.ajax({
+	      type: "POST",
+	      url: "/monitor/jdbc_status2/",    
+	      dataType: "json",
+	      success : function(data){
+			//alert(data);
+	     var d = [];
+	       $(data).each(function(n,item){
+	       d.push(item.data);
+	       categories.push(item.categories);
+	       })
+	      chart.series[0].setData(item);
+	      chart.xAxis[0].setCategories(categories);
+	      }
+	});
+}
+ */
+
+
+
+// OPTIONSLOGSTATCHART = {
+// 		chart : {
+// 			renderTo : 'container',
+// 			height : 425
+// 		},
+// 		colors : [ '#2f7ed8', 'red' ],
+// 		rangeSelector : {
+// 			selected : 0,
+// 			inputEnabled : false
+// 		},
+// 		title : {
+// 			text : 'ssss',
+// 			x : -20
+// 		},
+// 		tooltip : {
+// 			xDateFormat : '%Y-%m-%d %H:%M',
+// 			valueDecimals : 0
+
+// 			dateTimeLabelFormats : {
+// 				second : '%Y-%m-%d<br/>%H:%M:%S',
+// 				minute : '%Y-%m-%d<br/>%H:%M',
+// 				hour : '%Y-%m-%d<br/>%H:%M',
+// 				day : '%Y<br/>%m-%d',
+// 				week : '%Y<br/>%m-%d',
+// 				month : '%Y-%m',
+// 				year : '%Y'
+// 			},
+// 		},
+// 		yAxis : {
+// 			title : {
+// 				text : '个数'
+// 			},
+// 			min : 0,
+// 			plotLines : [ {
+// 				value : 0,
+// 				width : 1,
+// 				color : '#808080'
+// 			} ]
+// 		},
+// 		legend : {
+// 			layout : 'vertical',
+// 			align : 'right',
+// 			verticalAlign : 'middle',
+// 			borderWidth : 0
+// 		},
+	
+// 		series : []
+// 	};
+	
+	
+ /* $(function(){
+    $(document).ready(function() {
+        Highcharts.setOptions({
+          global: {
+            useUTC: false//是否使用世界标准时间
+          }
+        });
+        var chart;
+        chart = new Highcharts.Chart({
+          chart: {
+            renderTo: 'container',
+            type: 'spline',
+            marginRight: 10,
+            events: {
+            	load:getLogTimeStat
+            }
+          },
+          title: {
+            text: 'ssssss'
+          },
+          xAxis: {
+            type: 'datetime',
+            tickPixelInterval: 1500
+          },
+          yAxis: {
+            title: {
+              text: 'Value'
+            },
+            plotLines: [{
+              value: 0,
+              width: 1,
+              color: '#808080'
+            }]
+          },
+          tooltip: {
+            formatter: function () {
+              return '<b>' + this.series.name + '</b><br/>' +
+          Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
+          Highcharts.numberFormat(this.y, 2);
+            }
+          },
+          //图例属性
+          legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'top',
+            borderWidth: 0
+        },
+          exporting: {
+            enabled: false
+          },
+          series:[]
+        });
+      });
+    }); */
+//function loadTime(){
+ //   window.setTimeout(getData1(),5000);
+//}

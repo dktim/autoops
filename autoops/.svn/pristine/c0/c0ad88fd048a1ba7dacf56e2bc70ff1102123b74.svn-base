@@ -1,0 +1,18 @@
+from __future__ import unicode_literals
+
+from django.db import models
+
+# Create your models here.
+class salt_returner(models.Model):
+    ret_id=models.IntegerField()
+    jid=models.CharField(max_length=30)
+    host_id=models.CharField(max_length=50)
+    time=models.DateField()
+    fun=models.CharField(max_length=200)
+    return_content=models.FileField()
+    success=models.IntegerField()
+    
+    def __unicode__(self):
+        return self.ret_id
+    
+    

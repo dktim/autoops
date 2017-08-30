@@ -1,0 +1,16 @@
+
+from autoops.mysql import db_operate
+from autoops.settings import conn as conn
+
+def get_db():
+    db=db_operate()
+    return db
+
+def query_regs_list():
+    db=get_db()
+    list=[]
+    sql_cmd="select distinct RegName from asset_appregioninfo"
+    ret=db.mysql_command(conn, sql_cmd)
+    for item in ret:
+        list.append(item['RegName'].encode('utf-8'))
+    return list

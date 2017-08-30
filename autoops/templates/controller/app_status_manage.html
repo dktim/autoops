@@ -1,0 +1,253 @@
+{% extends "base1.html" %}
+  {% block content %}
+  <div id="page-wrapper">
+     <div class="row">
+         <div class="col-lg-12">
+             <h2 class="page-header">app状态管理</h2>
+         </div>
+         <!-- /.col-lg-12 -->
+     </div>
+     <!-- /.row -->
+     <div class="row">
+         <div class="col-lg-12">
+             <div class="panel panel-default">
+                 <div class="panel-heading">
+                     app状态管理|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+                     ||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||
+                     <!-- begin action -->
+                <form action='/controller/appstatus/1/1/1' method='GET'>
+                     <!-- end action -->
+                     regname:<input type="text" name='regname' class='query_regname' placeholder="请输入regname(目前不支持模糊匹配)">
+                     <input type='submit' value='提交'>
+                     </form>
+                       <div id="checkbox_error_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-content">
+                               <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               </div>
+                               <div class="modal-body">
+                                 <h4 class="modal-title" id="checkbox_error">There is no item selected</h4>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       <!-- end checkbox error modal-->
+
+                       <!-- alert error modal -->
+                       {% if error %}
+                       <div id="error_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-content">
+                               <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               </div>
+                               <div class="modal-body">
+                                 <h4 class="modal-title" id="error">{{ error }}</h4>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       {% endif %}
+                       <!-- end alert error modal  -->
+                       
+                       <!-- alert success modal -->
+                       {% if success %}
+                       <div id="success_modal" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+                         <div class="modal-dialog modal-lg">
+                           <div class="modal-content">
+                             <div class="modal-content">
+                               <div class="modal-header">
+                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                               </div>
+                               <div class="modal-body">
+                                 <h4 id="success" class="modal-title">{{ success }}</h4>
+                               </div>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       {% endif %}
+                       <!-- end alert success modal  -->
+                 </div>
+                 <!-- /.panel-heading -->
+                 
+                 <div class='row'>
+                 
+                 
+                 </div>
+                 <div class="panel-body">
+                     <div class="dataTable_wrapper">
+                     
+                         <table id="datatable-demo" class="table table-striped table-bordered table-hover">
+                             <thead>
+                                 <tr>
+                                    <th>
+                                      <input id="CHKall" type="checkbox" name="CHKall" value="CHKall"></input>
+                                    </th>
+                                    <th>编号</th>
+                                    <th>应用名称</th>
+                                    <th>ip地址</th>
+                                    <th>上小线/预投产</th>
+                                    <th>应用描述</th>
+                                     <th>更改状态</th>
+                                       <th>提交更改</th>
+                                   
+                                 </tr>
+                             </thead>
+                             <tbody>
+                               {% if app_shengchan %}
+                               {% for app in app_shengchan %}
+                               <tr class="even gradeC"  >
+                                   <td></td>
+                                   <td> {{ forloop.counter }}</td>
+                                   <td class='regname'> {{ app.regname }}</td>
+                                     <td class='ipaddress'> {{ app.ipaddress }}</td>
+                                     <td class='in_use'> {{ app.in_use }}</td>
+                                     <td> {{ app.desc }}</td>
+                                     <td class='selected_in_use'> 
+                                          <select class='s1'>
+                                          <option>(1)生产正常</option>
+                                          <option>(3)生产正常下线</option>
+                                          <option>(2)预投产</option>
+                                          </select>
+                                        </td>
+                                      <td><button onclick='modify_app_status(this)'>提交</button></td>
+                                 
+                                
+                               </tr>
+                               {% endfor %}
+                               {% endif %}
+                             </tbody>
+                         </table>
+                         	<div class="row">
+					<div class="col-xs-6">
+						<div class="dataTables_info" id="example_info" role="alert"
+							aria-live="polite" aria-relevant="all"></div>
+					</div>
+					<div class="col-xs-6">
+						<div class="dataTables_paginate paging_simple_numbers"
+							id="exmaple_paginate">
+
+							{% if app_shengchan.has_previous %} <a
+								href="?page={{ app_shengchan.previous_page_number }}">前一页</a>
+							{% endif %} <span class="current">
+								当前页:{{app_shengchan.number}},总共:{{app_shengchan.paginator.num_pages}}
+							</span> {% if app_shengchan.has_next %} <a
+								href="?page={{ app_shengchan.next_page_number }}">后一页</a>
+							{% endif %}
+						</div>
+					</div>
+				</div>
+                     </div>
+                     <!-- /.table-responsive -->
+                 </div>
+                 <!-- /.panel-body -->
+             </div>
+             <!-- /.panel -->
+         </div>
+         <!-- /.col-lg-12 -->
+     </div>
+     
+
+     <!-- /.row -->
+   </div>
+        <!-- /#page-wrapper -->
+
+  {% endblock %}
+    {% block jquery%}
+    <script type="text/javascript">
+    
+    function query_list(){
+    	
+    	var ipaddress=$('.query_ip').text()
+    	var regname=$('regname').text()
+    	$.ajax({
+    		url:'',
+    		data:{'regname':regname,'ipaddress':'ipaddress'},
+    		type:'GET',
+    		dataType:'jsob',
+    		success:function(data)
+    		{
+    			
+    			
+    			
+    		}
+    		
+    		
+    		
+    		
+    	});
+    	
+    	
+    }
+    
+    function modify_app_status(obj){
+    	
+    	var this_obj=$(obj)
+    	var ipaddress=this_obj.parent().siblings('.ipaddress').text();
+    	var regname=this_obj.parent().siblings('.regname').text();
+    	var in_use=this_obj.parent().siblings('.in_use').text();
+    	alert(in_use)
+    	var selected_in_use=this_obj.parent().siblings('.selected_in_use').find('.s1').find("option:selected").text();
+    	alert(selected_in_use)
+    		$.ajax({
+    		url:'controller/modify_app_status',
+    		type:'GET',
+    		data:{'ipaddress':ipaddress,'regname':regname,'in_use':in_use,'selected_in_use':selected_in_use},
+			dataType:'json',
+			success:function(data){
+				alert('sdfsssss');
+				if(data=='success'){
+					alert('更新成功');
+					}
+				else if (data=='nochange'){
+						alert('选定值与当前值相同，请重新选择。');
+						
+					}
+				else{
+					
+					alert('更新失败')
+				}
+			}
+    		
+    	});
+    	
+    	
+    	
+    }
+
+      $(document).ready(function(){
+        //全选或全不选 
+        $("#CHKall").click(function(){
+            if(this.checked){    
+                $("input[name='CHKlist']").prop("checked", true);   
+            }else{    
+                $("input[name='CHKlist']").prop("checked", false); 
+            }    
+         });  
+      $('#success_modal').modal('show')
+      $('#error_modal').modal('show')
+      
+      
+      
+      $('.in_use').each(function(i,e){
+    	  
+    	  if($(this).text()==2){
+    		 $(this).css({ "color": "#ff0011", "background": "blue" });
+    		  
+    	  }
+    	  else{
+    		  $(this).css({ "color": "#ff0011", "background": "yellow" });
+    	  }
+    	  
+    	  
+      })
+      
+    });  
+    </script>
+    {% endblock %}

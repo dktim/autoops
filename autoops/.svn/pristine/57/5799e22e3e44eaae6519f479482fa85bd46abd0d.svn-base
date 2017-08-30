@@ -1,0 +1,77 @@
+﻿{% extends 'base1.html'%} 
+{% block title%}
+
+server_list
+{% endblock %}
+
+ {% block content%}
+ 
+ <script src="/static/js/jquery.treeview.js"></script>       
+  <script src="/static/js/jquery.cookie.js"></script>
+  
+                                                                                               
+<link rel="stylesheet" href="/static/css/jquery.treeview.css"/> 
+<link rel="stylesheet" href="/static/css/screen.css"/> 
+<div id="main">
+
+	
+
+	<ul id="browser" class="filetree treeview-famfamfam">
+		
+		
+			<li><span class="folder">所有机器</span>
+				<ul>
+				
+		{%for item in list%}
+			<li><span class="folder">{{item.reg}}</span>
+					<ul>
+						{%for item1 in item.ip%}
+						<li><span class="file" onclick="aa(this)">{{item1}}</span></li>
+						
+						{%endfor%}
+					</ul>
+		
+		</li>
+		{%endfor%}
+				
+	</ul>
+		</li>
+
+</ul>
+
+	<button id="add">Add!</button>
+
+	
+
+</div>
+
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$("#browser").treeview({
+			toggle: function() {
+				console.log("%s was toggled.", $(this).find(">span").text());
+			}
+		});
+
+		$("#add").click(function() {
+			var branches = $("<li><span class='folder'>New Sublist</span><ul>" +
+				"<li><span class='file'>Item1</span></li>" +
+				"<li><span class='file'>Item2</span></li></ul></li>").appendTo("#browser");
+			$("#browser").treeview({
+				add: branches
+			});
+		});
+	});
+	</script>
+	
+	<script>
+		
+		function aa(obj){
+			var this_value=$(obj).text()
+			alert(this_value)
+			//window.open('http://172.16.21.60:80');
+			}
+		
+		
+		</script>
+{%endblock%}

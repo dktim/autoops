@@ -1,0 +1,97 @@
+ {% extends 'base.html'%} 
+ {% block container%}
+<style type="text/css">
+.main {
+	font-size: 80%;
+	color: black;
+	background-color: yellow;
+}
+
+.main1 {
+	font-size: 80%;
+	color: black;
+	background-color: green;
+}
+</style>
+<div aligh='right'>
+	<a href="{% url 'jdbc_status2'  %}><button type="button" class="btn btn-warning" >JDBC状态</button></a>
+		<a href="{% url 'jms_state'  %}><button type="button" class="btn btn-success" >JMS状态</button></a>
+			<a href="{% url 'listener_state'  %}><button type="button" class="btn btn-warning" >Listener状态</button></a>
+				<a href="{% url 'hub_state'  %}><button type="button" class="btn btn-success" >Hub状态</button></a>
+
+</div>
+
+<br>
+<div class="row">
+	
+	{%for i in result%}
+	<div class="col-sm-6 col-md-3" >
+		<div class="thumbnail">
+			<div id='ip_{{forloop.counter}}' class='ip_class'>{{i.IpAddress}}</div>
+			<div id='ip_{{forloop.counter}}'>{{i.status}}</div>
+			<button type="button" class='start_node'>开启此节点</button>
+	<button type="button" class='stop_node'>关闭此节点</button>
+	<div class='process'></div>
+			<table class='table table-striped table-bordered table-condensed'>
+			应用状态：
+				<thead>
+					<tr>
+						<td width='20%'>应用用户</td>
+						<td width='20%'>应用名称</td>
+						<td width='20%'>应用状态</td>
+						<td width='20%'>开启应用</td>
+						<td width='20%'>关闭应用</td>
+					</tr>
+				</thead>
+				<tbody id='tbody_{{forloop.counter}}'>
+
+				</tbody>
+			</table>
+			</div>
+	</div>
+	
+
+	{% endfor %} 
+</div>
+
+<script src="/static/js/server_list.js"></script>
+<script>
+
+$('.start_node').click(function(){
+	alert('!!!')
+	var ip=$(this).parent().find('.ip_class').text()
+	var user=$()
+	alert(ip)
+	var locate=$(this).parent().find('.process')
+	alert(locate)
+	alert(ip);
+	$.get('/controller/get_node_state/',{ip:ip},function(data){
+		alert(data);
+		if(data=='success'){  
+			
+			alert(locate)
+			//locate.append(
+				//	"
+				//	<div class="progress">
+				//	 <div class="progress-bar" role="progressbar" aria-valuenow="60" 
+					//	      aria-valuemin="0" aria-valuemax="100" style="width: 40%;">
+					//	      <span class="sr-only">40% 完成</span>
+					//	   </div>
+					//	</div>")
+			
+	}
+		//consolo.log(data);
+		
+		
+	})
+	
+	
+	
+	
+})
+
+
+</script>
+{% endblock %}
+
+

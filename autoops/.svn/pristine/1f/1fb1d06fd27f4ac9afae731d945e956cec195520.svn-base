@@ -1,0 +1,23 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+from salt.client import LocalClient
+from monitor.util import get_lsn_count
+
+
+class lsn(object):
+    def __init__(self,):
+        
+        pass
+    def get_lsn_state_from_server(self,host,cmd):
+        loc=LocalClient()
+        
+        ret=loc.cmd(host,'cmd.run',cmd)
+        return ret
+        print ret
+        
+if __name__ == '__main__':
+    c=lsn()
+    tgt='salt-033'
+    cmd=['ls /var']
+    ret=c.get_lsn_state_from_server(tgt,cmd)
+    print ret

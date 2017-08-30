@@ -1,0 +1,87 @@
+#coding:utf=8
+from __future__ import unicode_literals
+
+from django.db import models
+#from netaddr.ip import IPAddress
+
+
+        
+        
+class APPREGIONINFO1(models.Model):
+    IpAddress=models.CharField(max_length=14)
+    RegName=models.CharField(max_length=10,primary_key=True)
+    
+    AppUser=models.CharField(max_length=10,db_index=True)
+    ConsolePort=models.IntegerField(null=False)
+    HttpPort=models.IntegerField(null=False)
+    HttpsPort=models.IntegerField(null=False)
+    MiddlewareType=models.CharField(max_length=20)
+    Version=models.CharField(max_length=20)
+    Desc=models.TextField()
+    
+
+        
+class JDBCINFO(models.Model):
+    RegName=models.CharField(max_length=10)
+    JdbcPoolName=models.CharField(max_length=20)
+    JNDIName=models.CharField(max_length=15)
+    DBName=models.CharField(max_length=10)
+    DBUser=models.CharField(max_length=10)
+    InitSize=models.IntegerField()
+    MaxSize=models.IntegerField()
+    MinSize=models.IntegerField()
+    class Meta:
+        unique_together=('RegName','JdbcPoolName')
+        
+        
+        
+class JMSINFO(models.Model):
+    RegName=models.CharField(max_length=10)
+    JmsQueneName=models.CharField(max_length=20)
+    JNDIName=models.CharField(max_length=15)
+    class Meta:
+        unique_together=('RegName','JmsQueneName')
+        
+
+#to-do
+"""
+IpAddress    char(15)    唯一索引    
+RegName    char(10)    联合索引    
+Target    varchar(20)    联合索引
+"""
+    
+class JDBCSTAT(models.Model):
+    Time=models.CharField(max_length=20)
+    IpAddress=models.CharField(max_length=15)
+    RegName=models.CharField(max_length=10)
+    JdbcPoolName=models.CharField(max_length=20)
+    MaxCapacity=models.IntegerField(null=False)
+    ActiveCurrent=models.IntegerField()
+    ActiveHighCount=models.IntegerField()
+    WaitSecondsHighCount=models.IntegerField()
+    WaitingCurrentCount=models.IntegerField()
+    State=models.CharField(max_length=10)
+    TMSMP=models.DateField()
+    SEQNUM=models.IntegerField()
+    class Meta:
+        unique_together=('Time','IpAddress','RegName','JdbcPoolName','TMSMP')    
+        
+
+class JMSSTAT(models.Model):
+    Time=models.CharField(max_length=20)
+    IpAddress=models.CharField(max_length=15)
+    RegName=models.CharField(max_length=15)
+    JMSQueueName=models.CharField(max_length=40)
+    ConsumersHighCount=models.IntegerField()
+    MessagesCurrentCount=models.IntegerField()
+    MessagesPendingCount=models.IntegerField()
+    MessagesHighCount=models.IntegerField()
+    MessagesReceivedCount=models.IntegerField()
+    ConsumersTotalCount=models.IntegerField()
+    TMSMP=models.DateField()
+    SEQNUM=models.IntegerField()
+    class Meta:
+        unique_together=('Time','IpAddress','RegName','JMSQueueName','TMSMP')
+
+    
+    

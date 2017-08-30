@@ -1,0 +1,112 @@
+from django.shortcuts import render, render_to_response
+from saltcore.salt_core import SaltAPI
+
+# Create your views here.
+
+def shell_cmd(request):
+    aa="sdf"
+    g=[1,2,3,4,4]
+    h=['a','b','c','d']
+    all={'groups':g,'hosts':h}
+    return render(request,"execute/minions_shell_runcmd.html",{"list_groups":all})
+
+
+def shell_result(request):
+    #sapi = SaltAPI()
+    _u = request.user
+    _host_list=request.POST.get('hosts_name')
+    _cmd=request.POST.get('cmd')
+    result = {}
+    minion_id_list = []
+    line = "################################################################"
+    for _h in _host_list:
+            try:
+                minion_id_list.append(_h)
+            except:
+                minion_id_list.append(_h)
+    host_str = ",".join(minion_id_list)
+    #result = sapi.shell_remote_execution(host_str, _cmd)
+    #minion_count = 'Total: ' + str(len(minion_id_list))
+    #cmd_succeed = 'Succeed: ' + str(len(result))
+    #cmd_failure = 'Failure: ' + str(len(minion_id_list)-len(result))
+    cmd = 'Command: ' + _cmd
+    succeed_minion = []
+    #for i in result:
+    #        succeed_minion.append(i)
+     #       failure_minion = 'Failure_Minion: ' + ','.join(list(set(minion_id_list).difference(set(succeed_minion))))
+
+
+    return render(request, 'execute/minions_shell_result.html', {'result': 'sdfsdfs',
+                                                                     'cmd': 'lsdfs',
+                                                                     'line': line,
+                                                                     'minion_count': 4,
+                                                                     'cmd_succeed': 2,
+                                                                     'cmd_failure': 2,
+                                                                     'failure_minion': 'sdfs'
+                                                                     })
+    #return render(request, 'execute/minions_shell_result.html')
+    
+    #return render(request, "execute/minions_shell_result.html",{'a':aa})
+
+
+def salt_runcmd(request):
+   # _u = request.user
+    #_user = User.objects.get(username=_u)
+    h=[1,2,3,4]
+    g=[1,2,3,4]
+    #list_group=[]
+    #_businesses = []
+    all = {'hosts':h,'groups':g}
+    modindex=[{'module_name':'a','content':'dd'},{'module_name':'b','content':'dd'},{'module_name':'c','content':'dd'}]
+    
+    #modindex = Modindex.objects.all()
+    return render(request, 'execute/minions_salt_runcmd.html', {'list_groups': all, 'modindex': modindex})
+
+
+def salt_result(request):
+   # _u = request.user
+    line = "################################################################"
+   # sapi = SaltAPI()
+    if request.POST:
+        host_list = request.POST.getlist("hosts_name")
+      #  logger.info(host_list)
+        salt_fun = request.POST.get('salt_fun')
+        salt_arg = request.POST.get('salt_arg').strip()
+        cmd = str(salt_fun) + '.' + str(salt_arg)
+
+        host_str = ",".join(host_list)
+       # logger.info(host_str)
+       # if salt_arg == '':
+       #     result = sapi.remote_noarg_execution_notgt(host_str, salt_fun)
+       # else:
+       #     result = sapi.remote_execution_notgt(host_str, salt_fun, salt_arg)
+
+
+        minion_count = 'Total: ' + str(len(host_list))
+        #cmd_succeed = 'Succeed: ' + str(len(result))
+        #cmd_failure = 'Failure: ' + str(len(host_list)-len(result))
+        cmd = 'Command: ' + cmd
+        succeed_minion = []
+        #for i in result:
+        #    succeed_minion.append(i)
+        #failure_minion = 'Failure_Minion: ' + ','.join(list(set(host_list).difference(set(succeed_minion))))
+
+        return render(request, 'execute/minions_salt_result.html', {'result': 'sdfsf',
+                                                                     'cmd': cmd,
+                                                                     'line': line,
+                                                                     'minion_count': minion_count,
+                                                                     'cmd_succeed': 1,
+                                                                     'cmd_failure': 2,
+                                                                     'failure_minion': 'sdfs'
+                                                                     })
+
+
+
+
+
+def jobs_his(request):
+   # sapi = SaltAPI()
+    #jids = sapi.runner("jobs.list_jobs")
+    jids={'jids':[1,2,2,3],'info':['s','d','d','g']}
+    return render(request, 'execute/jobs_history.html', {'jids': jids})
+    

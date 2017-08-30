@@ -1,0 +1,1 @@
+ ps -ef | grep uwsgi | awk '{print "kill -9 " $2}' | sh

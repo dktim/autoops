@@ -1,0 +1,58 @@
+﻿ {% extends 'base1.html'%} 
+{% block title%}
+
+wls_monitor
+{% endblock %}
+
+ {% block content%}
+<div class="row" style="float: left;margin-left: 1px;">
+            <div class="col-md-12">
+                 <div class="panel panel-default">
+                      <div class="panel-body">
+<table  id="example" class="table table-striped table-bordered" cellspacing="0" width="100%">
+<thead>
+	<tr>
+		<td width="200px">ip</td>
+		<td width="200px">wls进程数量</td>
+		</tr>
+	</thead>	
+<tbody>
+	{% for item in server_list %}
+	<tr>
+		<td>{{item.ip}}</td>
+		<td>{{item.logstash}}</td>
+		
+		
+		</tr>
+	
+	
+	</tbody>	
+	
+	{% endfor%}
+	</table>
+	       <div class="row">
+                                 <div class="col-xs-6">
+                                       <div class="dataTables_info" id="example_info" role="alert" aria-live="polite" aria-relevant="all"></div>
+                                 </div>
+                                 <div class="col-xs-6">
+                                      <div class="dataTables_paginate paging_simple_numbers" id="exmaple_paginate">
+                                          
+                                           {% if server_list.has_previous %}
+                                                <a href="?page={{ server_list.previous_page_number }}">上一页</a>
+                                           {% endif %}
+                                           <span class="current">
+
+                                                第{{ server_list.number }}页，共{{ server_list.paginator.num_pages }}页
+                                           </span> 
+                                           {% if server_list.has_next %}
+                                                <a href="?page={{ server_list.next_page_number }}">下一页</a>
+                                           {% endif %}
+                                      </div>
+                                 </div>
+                           </div> <!--row end-->
+</div>
+</div>
+</div>
+</div>
+
+{%endblock%}

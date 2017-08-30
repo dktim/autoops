@@ -1,0 +1,9 @@
+from __future__ import unicode_literals
+
+from django.apps import AppConfig
+
+
+class AssetConfig(AppConfig):
+    name = 'asset'
+  #  def ready(self):
+  #      from .models import *

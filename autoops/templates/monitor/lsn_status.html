@@ -1,0 +1,126 @@
+ {% extends "base1.html" %} {% block title%} LSN_Status {% endblock%}
+
+
+
+
+{%block content%}
+
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+<!-- 
+<script>
+function myfresh(){
+
+window.location.reload();
+}
+
+setTimeout("myfresh()",120);
+
+</script> -->
+
+<script src="/static/js/lsn_status.js"></script>
+current-reganem：
+<span class="label label-primary" id='regname'>{{regname}}</span>
+<span style="display: none" id='lsn'>lsn</span>
+<div aligh='right'>
+	<a class='btn btn-link' id='jdbc_state'
+		href="/monitor/jdbc_status2/?reg={{regname}}"> JDBC-state </a> <a
+		class="btn btn-link" href="/monitor/jms_state/?reg={{regname}}">JMS-state</a>
+	<a class="btn btn-link" href="/monitor/lsn_status/?reg={{regname}}">Listener-state
+	</a> <a href="/monitor/hub_state/?reg={{regname}}" class="btn btn-link">Hub-state
+	</a>
+	<button type="button" class="btn btn-link" id='get_latest_state'>latest state</button>
+
+	<div style="">
+		<h3>single-date-listener</h3>
+		PLS choose date:<input aligh='right' type="text" id="d30"
+			onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /> </>
+		<button type="button" class="btn btn-info"
+			onclick="get_lsn_state_by_hour()">query</button>
+	</div>
+
+
+</div>
+<div>
+	<h3>single-node-listener</h3>
+	begin: <input type="text" id="d28"
+		onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" /> end: <input
+		type="text" id="d29"
+		onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" /> pls choose node： <select
+		id="ipaddress" runat="ipaddress" name="ipaddress"> 
+		{% for item in ret%}
+
+		<option value={{forloop.counter}}>{{item}}</option> {% endfor %}
+	</select>
+	<button type='button' id='btn' onclick='query_lsn_status()'>query</button>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	setInterval("start_page_with_lsn_state()",60000);
+})
+
+</script>
+
+<script type="text/javascript">
+	function get_lsn_state_by_hour(){
+		var reg=$('#regname').text()
+		var time=$('#d30').val()
+		//alert(reg)
+		//alert(time)
+		//alert('ssfsss!!@s')
+		$.ajax({
+			url:'/monitor/hourly_lsn_state',
+			data:{'reg':reg,'time':time},
+			  type:"get",
+        dataType:"json",
+        success: function(data){
+        	
+        		if (data.count.length==0 ||data.time.length==0){
+        		alert('no data')
+        		options_cpu.xAxis.categories =[];
+                options_cpu.series=[];
+                var chart_cpu = new Highcharts.Chart(options_cpu);
+        	}
+        	else{
+        		var time_list=data["time"]
+                var count = data["count"]
+                options_cpu.xAxis.categories = time_list;
+                options_cpu.series=count;
+                var chart_cpu = new Highcharts.Chart(options_cpu);
+        	}
+            
+        },
+        failure : function(messages) {
+            alert(message);
+        	alert('fail');
+        	
+        	
+        	
+        	
+        }
+        	
+        	
+			
+			
+			})		
+		
+		
+		}
+	</script>
+<!--js鍒濆鍖栧嚱鏁�-->
+<script type="text/javascript"> 
+setup() 
+</script>
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6" id='container1'></div>
+
+	</div>
+</div>
+
+</div>
+{%endblock%}
+

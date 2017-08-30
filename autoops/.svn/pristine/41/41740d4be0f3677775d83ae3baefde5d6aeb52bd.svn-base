@@ -1,0 +1,1 @@
+uwsgi --http :8006 --module autoops.wsgi:application --daemonize=/var/log/autoops.log --enable-threads --threads 6 --processes 6

@@ -1,0 +1,1 @@
+uwsgi --http :8006 --module UAT.wsgi:application --enable-threads  --processes 2 --threads 2

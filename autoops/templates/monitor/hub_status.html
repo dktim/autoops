@@ -1,0 +1,108 @@
+ {% extends "base1.html" %}
+ {% block title %}HUB-status {% endblock %} 
+ {% block content %}
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+current_regname：
+<span class="label label-primary" id='regname'>{{regname}}</span>
+<script src="/static/js/hub_status.js"></script>
+<div aligh='right'>
+	<a class='btn btn-link' id='jdbc_state'
+		href="/monitor/jdbc_status2/?reg={{regname}}"> JDBC-state </a> <a
+		class="btn btn-link" href="/monitor/jms_state/?reg={{regname}}">JMS-state</a>
+	<a class="btn btn-link" href="/monitor/lsn_status/?reg={{regname}}">Listener-state
+	</a> <a href="/monitor/hub_state/?reg={{regname}}" class="btn btn-link">Hub-state
+	</a>
+	<button type="button" class="btn btn-link" id='get_latest_state'>latest state</button>
+
+	<div style="">
+		<h3>single-date hub status</h3>
+		PLS choose Date:<input aligh='right' type="text" id="d30"
+			onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" /> </>
+		<button type="button" class="btn btn-info"
+			onclick="get_hub_state_by_hour()">check-hourly-state</button>
+	</div>
+</div>
+<div>
+	<h3>single-node-hub-status</h3>
+	begin: <input type="text" id="d28"
+		onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" /> end: <input
+		type="text" id="d29"
+		onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" /> PLS choose node： <select
+		id="ipaddress" runat="ipaddress" name="ipaddress"> 
+		{% for item in ret %}
+
+		<option value={{forloop.counter}}>{{item}}</option> 
+		
+		{% endfor %}
+	</select>
+	<button type='button' id='btn' onclick='query_hub_status()'>Query</button>
+</div>
+
+
+
+<script type="text/javascript"> 
+setup() 
+</script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	setInterval("get_hub_state_at_start()",60000);
+})
+
+</script>
+<script type="text/javascript">
+	function get_hub_state_by_hour(){
+		var reg=$('#regname').text()
+		var time=$('#d30').val()
+		$.ajax({
+			url:'/monitor/hourly_hub_state',
+			data:{'reg':reg,'time':time},
+			  type:"get",
+        dataType:"json",
+        success: function(data){
+        	
+        		if (data.count.length==0 ||data.time.length==0){
+        		options_cpu.xAxis.categories =[];
+                options_cpu.series=[];
+                var chart_cpu = new Highcharts.Chart(options_cpu);
+        	}
+        	else{
+        		var time_list=data["time"]
+                var count = data["count"]
+                options_cpu.xAxis.categories = time_list;
+                options_cpu.series=count;
+                var chart_cpu = new Highcharts.Chart(options_cpu);
+        	}
+            
+        },
+        failure : function(messages) {
+            alert(message);
+        	alert('fail');
+        	
+        	
+        	
+        	
+        }
+        	
+        	
+			
+			
+			})		
+		
+		
+		}
+	</script>
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6" id='container1'></div>
+
+	</div>
+</div>
+
+</div>
+{%endblock%}
+

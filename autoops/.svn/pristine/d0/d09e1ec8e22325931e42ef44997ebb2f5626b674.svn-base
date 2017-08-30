@@ -1,0 +1,601 @@
+
+<script type="text/javascript">
+	$(document)
+			.ready(
+					function() {
+
+						//   $(".task_res_div,.host_list_div,.recent_tasks_div").draggable({handle:'div.pannel-heading'});
+						//
+						//$("input[type='checkbox']").prop('checked','false');
+						
+					/* 	$("input[type='checkbox']").each(function(i,obj){
+							
+							$(obj).attr('checked',false);
+							
+							
+						}) */
+
+						//show tasks detailsdraggable
+						$("#finished_tasks").click(
+								function() {
+									$(".task_result b .task_res_status")
+											.filter(".badge-success").parent()
+											.fadeIn();
+									$(".task_result b .task_res_status").not(
+											".badge-success").parent()
+											.fadeOut();
+									$(".task_result b .task_res_status").not(
+											".badge-success").parent().next()
+											.fadeOut();
+
+									ChangeBadgeSize("#finished_tasks");
+								});
+						$("#failed_tasks")
+								.click(
+										function() {
+											$(".task_result b .task_res_status")
+													.filter(".badge-danger")
+													.parent().fadeIn();
+											$(".task_result b .task_res_status")
+													.not(".badge-danger")
+													.parent().fadeOut();
+											$(".task_result b .task_res_status")
+													.not(".badge-danger")
+													.parent().next().fadeOut();
+											ChangeBadgeSize("#failed_tasks");
+										});
+						$("#unkown_tasks").click(
+								function() {
+									$(".task_result b .task_res_status")
+											.filter(".badge-warning").parent()
+											.fadeIn();
+									$(".task_result b .task_res_status").not(
+											".badge-warning").parent()
+											.fadeOut();
+									$(".task_result b .task_res_status").not(
+											".badge-warning").parent().next()
+											.fadeOut();
+									ChangeBadgeSize("#unkown_tasks");
+
+								});
+						$("#total_tasks").click(function() {
+							$(".task_result b ").next().fadeOut();
+							$(".task_result b ").fadeIn();
+							ChangeBadgeSize("#total_tasks");
+						});
+						//end show task details
+
+						// $("label[input_label='host']").fadeOut();
+						$("#unfold-all").click(function() {
+							$("label[input_label='host']").fadeIn();
+						});
+						$("#collapse-all").click(function() {
+							$("label[input_label='host']").fadeOut();
+						});
+						$("#show-all-checked").click(
+								function() {
+									$("label[input_label='host']").fadeOut();
+									$("label[input_label='host']").filter(
+											".active").fadeIn();
+								});
+						$("#show-all-unchecked").click(
+								function() {
+									$("label[input_label='host']").fadeOut();
+									$("label[input_label='host']:not(.active)")
+											.fadeIn();
+								});
+						$("#check-all")
+								.click(
+										function() {
+											$(".host-list label:not(.active)")
+													.addClass("active");
+											var total_hosts = $("label[input_label='host']").length;
+											$("#total_chosen_hosts").html(
+													total_hosts);
+											//$("label[input_label='host']:not(.active)").fadeIn();
+										});
+						$("#uncheck-all")
+								.click(
+										function() {
+											$(".host-list label").removeClass(
+													"active");
+											var total_hosts = $("label[input_label='host']").length;
+											$("#total_chosen_hosts").html(0);
+											//$("label[input_label='host']:not(.active)").fadeIn();
+										});
+
+						$("span[data_label='group']").click(
+								function() {
+									var btn_val = $(this).html();
+									alert(btn_val);
+									if (btn_val == '全选') {
+										var hosts = $(this).parent().parent()
+												.nextAll().addClass("active");
+										$(this).html("取消");
+
+									} else {
+										var hosts = $(this).parent().parent()
+												.nextAll()
+												.removeClass("active");
+										$(this).html("全选");
+									}
+
+									TotalChosenHosts()
+								});//end span[data_label='group
+
+						$(".")
+
+					/* 			
+						$('input[type='checked']').("input:checked").function(){
+									
+									@(this).parent().addClass('active');
+									
+									
+									
+								} */
+						$("#search-host").change(
+										function() {
+											
+											var search_text = $(this).val();
+											alert(search_text);
+											$("label[input_label='host']").fadeOut();
+											var host_nodes = $("label[input_label='host']:contains("+ search_text + ")")
+											host_nodes.fadeIn();
+											if (host_nodes.length == 0) {
+												$(this)
+														.val(
+																search_text
+																		+ ":找不到主机!");
+											}
+											//console.log(host_nodes);
+										});
+
+						$("button[data-toggle='collapse']").click(function() {
+							$(this).parent().parent().next().fadeToggle(300)
+						});//end button toggle
+
+						 $('.selectpicker').selectpicker({
+					       style: 'btn-info',
+						        size: 4
+						   });
+
+
+						$("#task-exec-btn").click(function() {
+							var cmd = $.trim($("#cmd").val());
+							//alert(cmd)
+							consolo.log(cmd)
+							var task_expire_time = $("select[name='task_expire_time']").val();
+
+							postDic = {
+								'selected_hosts' : [],
+								'expire_time' : task_expire_time,
+								'cmd' : cmd
+							}
+							var err_msg = [];
+							//run form submistion check before submit
+
+							var selected_hosts = $("label[input_label='host']").filter(".active");
+
+							if (selected_hosts.length == 0) {
+								err_msg.push("未选中任何主机执行任务！");
+							}
+							$(selected_hosts).children().each(function() {
+								postDic["selected_hosts"].push($(this).attr("id"));
+							});
+							postDic["selected_hosts"] = JSON.stringify(postDic["selected_hosts"]);
+							if (cmd.length == 0) {
+								err_msg.push("输入的命令不能为空!");
+							}
+							;
+
+							if (err_msg.length == 0) { // passed form submition check
+								//console.log(postDic);
+								$("#taskRunConfirmModal").modal('show');
+
+							} else {
+							//	console.log(err_msg + err_msg.length);
+								//console.log(selected_hosts.length);
+								show_alert(err_msg);
+							}
+
+						})
+						
+						
+					});
+					
+					
+/////////////////////////////////////////////////////
+
+	$("#task-exec-btn").click(function() {
+		var cmd = $.trim($("#cmd").val());
+		//alert(cmd)
+		var task_expire_time = $("select[name='task_expire_time']").val();
+
+		postDic = {
+			'selected_hosts' : [],
+			'expire_time' : task_expire_time,
+			'cmd' : cmd
+		}
+		var err_msg = [];
+		//run form submistion check before submit
+
+		var selected_hosts = $("label[input_label='host']").filter(".active");
+
+		if (selected_hosts.length == 0) {
+			alert("未选中任何主机执行任务！");
+		}
+		$(selected_hosts).children().each(function() {
+			postDic["selected_hosts"].push($(this).attr("id"));
+		});
+		postDic["selected_hosts"] = JSON.stringify(postDic["selected_hosts"]);
+		if (cmd.length == 0) {
+			alert("输入的命令不能为空!");
+		}
+		;
+
+		if (err_msg.length == 0) { // passed form submition check
+			//console.log(postDic);
+			$("#taskRunConfirmModal").modal('show');
+
+		} else {
+			console.log(err_msg + err_msg.length);
+			console.log(selected_hosts.length);
+		//	show_alert(err_msg);
+		}
+
+	})
+
+/* 	$("input[type='checkbox']").click(function(){
+		//alert($(this).prop('checked'))
+		
+		if($(this).is(":checked")){
+			
+			$(this).prop('checked',false);
+			$(this).parent().addClass('active');
+		alert('checked');
+			
+		}
+		else if(!$(this).is(":checked"))
+			{
+			$(this).prop('checked',true);
+			$(this).parent().removeClass('active');
+			alert('unchecked')
+			}
+		else{
+			alert('other')
+		}
+		
+		TotalChosenHosts();
+	}) */
+	
+	$('#test_input').click(function(){
+		
+		if($(this).prop("checked")==true){
+			$(this).prop('checked',false)
+			alert('aa')
+			
+		}
+		else{
+			alert('bb')
+		}
+	})
+	
+	
+	/* $("label[input_label='host']").click(function(){
+		alert($(this).children('input').prop('checked'))
+		
+		if($(this).children('input').prop('checked')=='false'){
+			
+			$(this).children('input').prop('checked','true');
+			$(this).addClass('active');
+			
+		}
+		
+		TotalChosenHosts();
+	}) */
+	
+	
+	
+	function search_host(){
+
+				var search_text = $("#search-host").val();
+				alert(search_text);
+				$("label[input_label='host']").fadeOut();
+				var host_nodes = $("label[input_label='host']:contains("+ search_text + ")")
+				host_nodes.fadeIn();
+				if (host_nodes.length == 0) {
+					$("#search-host").val(
+									search_text
+											+ ":找不到主机!");
+				}
+		
+	
+}
+	function task_exec(obj){
+	
+		var cmd = $.trim($("#cmd").val());
+		//alert(cmd)
+		var task_expire_time = $("select[name='task_expire_time']").val();
+
+		postDic = {
+			'selected_hosts' : [],
+			'expire_time' : task_expire_time,
+			'cmd' : cmd
+		}
+		var err_msg = [];
+		//run form submistion check before submit
+
+		var selected_hosts = $("label[input_label='host']").filter(".active");
+		alert(selected_hosts.length)
+		
+
+		if (selected_hosts.length == 0) {
+			alert("未选中任何主机执行任务！");
+		}
+		$(selected_hosts).children().each(function() {
+			postDic["selected_hosts"].push($(this).attr("id"));
+		});
+		postDic["selected_hosts"] = JSON.stringify(postDic["selected_hosts"]);
+		if (cmd.length == 0) {
+			alert("输入的命令不能为空!");
+		}
+		;
+
+		if (err_msg.length == 0) { // passed form submition check
+			//console.log(postDic);
+			$("#taskRunConfirmModal").modal('show');
+
+		} else {
+			console.log(err_msg + err_msg.length);
+			console.log(selected_hosts.length);
+		//	show_alert(err_msg);
+		}
+
+	
+	
+	
+}
+		function host_checked(obj){
+		
+		//alert($(obj).children('input').prop('checked'))
+		//alert($(obj).children('input').prop('checked'))
+			//alert($(obj).children('input').attr('checked'))
+			//var aa=$(obj).children('input').is(':checked')
+		//alert(aa)
+		ch_obj=$(obj).children('input')
+				if($(obj).children('input').is(':checked')==true){
+					
+					ch_obj.attr('checked',false)
+					$(obj).removeClass('active')
+					//alert('add')
+					TotalChosenHosts()
+					
+				}
+				else if($(obj).children('input').is(':checked')==false)
+				{
+					ch_obj.prop('checked',true)
+							$(obj).addClass('active')
+							//alert('remove')
+							TotalChosenHosts()
+				}
+				else{
+					
+					
+					alert('else')
+				}
+				
+				//TotalChosenHosts()
+	}
+				
+		
+			/* 	$(obj).children('input').attr('checked',True);
+									if($(obj).children('input').attr('checked')=="True"){
+										
+										alert('checked');
+										
+									}
+									else{
+										alert('not checked');
+									}
+								} */
+	function show_alert(msg_list) {
+		var err_msg = "";
+		for (msg_index in msg_list) {
+			err_msg += msg_index + ". " + msg_list[msg_index] + "<br/>";
+		}
+
+		$.niftyNoty({
+					type : 'danger',
+					container : '#alert-panel',
+					html : '<h4 class="alert-title">验证错误!</h4>'
+							+ '<p class="alert-message">'
+							+ err_msg
+							+ '</p>'
+							+ '<div class="mar-top">'
+							+ '<button type="button" class="btn btn-danger" data-dismiss="noty">知道了</button>'
+							+ '</div>',
+					closeBtn : false
+				}); 
+	}
+
+	function show_alert_info(msg_list) {
+		var err_msg = "";
+		for (msg_index in msg_list) {
+			err_msg += msg_index + ". " + msg_list[msg_index] + "<br/>";
+		}
+
+		$
+				.niftyNoty({
+					type : 'info',
+					container : '#alert-panel',
+					html : '<h4 class="alert-title">Message</h4>'
+							+ '<p class="alert-message">'
+							+ err_msg
+							+ '</p>'
+							+ '<div class="mar-top">'
+							+ '<button type="button" class="btn btn-info" data-dismiss="noty">知道了</button>'
+							+ '</div>',
+					closeBtn : false
+				});
+	}
+	function show_alert_warning(msg_list) {
+		var err_msg = "";
+		for (msg_index in msg_list) {
+			err_msg += msg_index + ". " + msg_list[msg_index] + "<br/>";
+		}
+
+		$
+				.niftyNoty({
+					type : 'warning',
+					container : '#alert-panel',
+					html : '<h4 class="alert-title">Warning</h4>'
+							+ '<p class="alert-message">'
+							+ err_msg
+							+ '</p>'
+							+ '<div class="mar-top">'
+							+ '<button type="button" class="btn btn-warning" data-dismiss="noty">知道了</button>'
+							+ '</div>',
+					closeBtn : false
+				});
+	}
+	//------------------
+
+	function task_detail_toggle(action_type, ele) {
+		if (action_type == 'all') {
+			$(".task_result b").fadeIn(); //derprecated
+			$(".task_result b").next().fadeIn();
+
+		} else {
+			$(".task_result b").filter(function() {
+				return $(this).css("display") == "block"
+			}).next().fadeToggle();
+			console.log($(ele).children());
+
+		}
+
+		if ($(ele).html().search("down") > 0) { // found it
+			$(ele).html('<i class="fa fa-chevron-circle-up"></i> 收缩/展开');
+
+		} else {
+			$(ele).html('<i class="fa fa-chevron-circle-down"></i> 收缩/展开')
+
+		}
+	}
+
+	function CheckAllHostInGroup(g_id) {
+
+		var group_ele = $("#group_" + g_id);
+		var all_host_eles = group_ele.parent().nextAll();
+
+		if (group_ele.parent().hasClass("active")) {
+			all_host_eles.removeClass("active");
+		} else {
+			all_host_eles.addClass("active");
+		}
+
+		TotalChosenHosts();
+
+	}
+
+	function ToggleGroup(g_id) {
+		var group_ele = $("#group_toggle_" + g_id);
+		var all_host_eles = group_ele.parent().parent().parent();
+		all_host_eles.nextAll().fadeToggle(300);
+		//console.log('ttt');
+	}
+
+	function HostCheckCounter(ele) {
+
+		var notChecked = $(ele).parent().hasClass("active");// here is reversed... don't ask why
+		TotalChosenHosts();
+
+	}
+	function TotalChosenHosts() {
+		var total_chosen_hosts = $(".host-list label").filter(".active").length;
+		$("#total_chosen_hosts").html(total_chosen_hosts);
+	}
+
+	function submit_task(ele, post_url) {
+		//console.log(ele);
+		//$(ele).attr('disabled', 'true');
+		$.post(post_url, postDic, function(callback) {
+			if (callback != 'TaskCreatingError') {
+				$("#modal_content").html("任务创建成功! 任务编号:" + callback);
+				$("#modal_content").attr("style", "color:green;font:bold");
+				$(".task_result").html("");
+				$("#file-download-to-local").attr("task_id", callback); // only works when task_type = file_get
+				GetTaskResult(callback, 'refresh');
+			} else {
+				$("#modal_content").html("任务创建失败，请查看相关日志进行调试！");
+				$("#modal_content").attr("style", "color:red;font:bold")
+
+			}
+		});
+	}
+
+	function PrintTaskResult(task_id) {
+		var tbody="<table class='table table-striped table-condensed'><thead><tr><th>aa</th><th>bb</th><th>cc</th><th>dd</th></tr></thead><tbody>"
+		$.get(
+						'/backend/multitask_res/',
+						{
+							'task_id' : task_id
+						},
+						function(data) {
+							var ret=$.parseJSON(data); 
+					 		var len=ret.length
+					 		for(var i=0;i<len;i++){
+					 			str=""
+					 			str+="<tr><td>"+ret[i].j_id+"</td><td>"+ret[i].id+"</td><td>"+ret[i].host+"</td> <td>"+ret[i].ret+"</td></tr>"
+					 			tbody+=str
+					 			
+					 		}
+					 		str1="</tbody></table>"
+					 		tbody+=str1
+					 		$(".task_result").html(tbody);
+					        });//end getJSON
+	}
+
+	function TerminateTask() {
+		var current_task_id = $("#current_task_id span").text();
+		if (current_task_id != '') {
+			$.post("{% url 'multitask_action' %}", {
+				'action' : 'terminate_task',
+				'task_id' : current_task_id
+			}, function(callback) {
+
+				if (callback.indexOf("has terminated") > -1) { //task got terminated..
+					clearInterval(ResultRefresh);
+
+					show_alert_info([ callback ]);
+					$("#submit_task_confirm").prop("disabled", false);
+				} else {
+
+					show_alert_warning([ callback ]);
+				}
+
+			});//end post
+		} else {
+			show_alert([ '当前无任务运行，停止个毛线？' ]);
+		}
+
+	}
+	function GetTaskResult(task_id, run_type) {
+		if (run_type == 'refresh') {
+			PrintTaskResult(task_id);
+			ResultRefresh = setInterval(function() {
+				PrintTaskResult(task_id);
+			}, 30000);
+		} else {
+			var one_time_run = null;
+		}
+	}
+	function ToggleSingleResult(ele) {
+		$(ele).parent().next().fadeToggle();
+	}
+
+	function ChangeBadgeSize(ele) {
+		$(".task_summary_panel span").css("font-size", "15px")
+		$(ele).css("font-size", "20px");
+
+	}
+</script>

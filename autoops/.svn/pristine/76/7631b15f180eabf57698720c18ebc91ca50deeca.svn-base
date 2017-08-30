@@ -1,0 +1,1015 @@
+#!coding=utf-8
+from django.shortcuts import render, render_to_response,HttpResponseRedirect
+from django.template.context import RequestContext
+#RequestContext
+import time
+import json
+#from monitor.models import clusterserver
+from django.core.paginator import Paginator
+#from asset.models import MACHINEINFO,JMSSTAT
+#from cherrypy._cperror import HTTPRedirect
+from autoops import mysql, settings
+from django.template import RequestContext
+#from asset.mysql import db_operate
+from autoops.settings import conn
+from autoops import settings
+# Create your views here.
+#from asset.models import JDBCSTAT,SERVICEINFO
+#import json,os,salt
+import os
+#from pyatspi.Accessibility import setTimeout
+from django.http.response import HttpResponse
+from util import get_jms_count,get_hub_count,get_lsn_count
+from autoops.oracle import oracle_db_operate
+from django.shortcuts import render_to_response
+from django.contrib.auth.decorators import login_required
+
+def login(request):
+	return render_to_response("common_service/login.html",locals())
+#def logout(request):
+#	pass
+
+
+#def register(request):
+#	pass
+def regnames(request):
+	db=oracle_db_operate()
+	sql="select distinct regname from appregioninfo"
+	ret=db.oracle_command(settings.oracle_conn,sql)
+	#list=[]
+	ret_list=[]
+
+	#sql="select RegName,sum(status) as bad,COUNT(*) as sum from machineinfo GROUP BY RegName"
+        sql="select b.RegName,sum(status) as bad,count(status) as sum from (select * from machineinfo a where in_use=1) b group by b.regname" 
+   	ret=db.oracle_command(settings.oracle_conn, sql)
+   	print ret
+    	for item in ret:
+        	dic={}
+       		dic['reg']=item[0]
+        	dic['bad']=int(item[1])
+        	dic['good']=int(item[2]-item[1])
+        	dic['sum']=int(item[2])
+#       	#dic['description']=item[3]
+        	ret_list.append(dic)
+
+	#for item in ret:
+	#	list.append(item[0])
+	return HttpResponse(json.dumps(ret_list),content_type="application/json")
+
+def salt_client_list(request):
+	client=salt.Client.LocalClient()
+	c.cmd_async()
+
+
+def test_page(request):
+	#after_range_num=5
+	#before_range_num=4
+	list=[1,2,2,3,234,234,323,32,21,43,323,12,231,231321,31231,23,1212,1313,12313,23123434,121]
+	try:
+		page=int(request.GET.get("page",1))
+		if page<1:
+			page=1
+	except ValueError:
+		page=1
+	paginator=Paginator(list,5)
+	try:
+		server_list=paginator.page(page)
+	except:
+		server_list=paginator.page(1)
+	#if page>=after_range_num:
+	#	page_range=paginater.page_range[page-after_range_num:page+before_range_num]
+	#else:
+	#	page_range=paginator.page_range[0:page+before_range_num]
+	return render_to_response("monitor/xx.html",locals())
+		
+
+
+def wls_monitor(request):
+	
+	client=salt.client.LocalClient()
+	jid=client.cmd_async('*','wls_monitor.wls_moni')
+	time.sleep(5)
+	lst=[]
+	ret=client.get_cache_returns(jid)
+	for key in ret.keys():
+		dic={}
+		aa=key.split('_')
+		if isinstance(ret[key]['ret'],str):
+			value=ret[key]['ret']
+		else:
+			value=int(ret[key]['ret'][0])
+		dic['ip']=aa[0]
+		dic['logstash']=value
+		lst.append(dic)
+	paginator = Paginator(lst,50)
+
+	try:
+        	page = int(request.GET.get('page','1'))
+    	except ValueError:
+        	page = 1
+	
+    	try:
+        	server_list = paginator.page(page)
+    	except :
+        	server_list = paginator.page(1)
+	return render_to_response('monitor/wls_monitor.html',locals())
+
+def logstash_monitor(request):
+	client=salt.client.LocalClient()
+	jid=client.cmd_async('*','logstash_monitor.logstash_monitor')
+	time.sleep(5)
+	ret=client.get_cache_returns(jid)
+	lst=[]
+        for key in ret.keys():
+                dic={}
+                aa=key.split('_')
+                if isinstance(ret[key]['ret'],list):
+                        value=int(ret[key]['ret'][0])
+                else:
+                        value=ret[key]['ret']
+                #value=ret[key]['ret']
+                dic['ip']=aa[0]
+                dic['logstash']=value
+                lst.append(dic)
+	
+        rginator = Paginator(lst,50)
+        try:
+                page = int(request.GET.get('page','1'))
+        except ValueError:
+                page = 1
+
+        try:
+                server_list = paginator.page(page)
+        except :
+                server_list = paginator.page(1)
+        return render_to_response('monitor/logstash_monitor.html',locals())
+
+import time
+def query_all_server_port_status(request):
+	client=salt.client.LocalClient()
+	jid=client.cmd_async('*','thread_check.port_check')
+	time.sleep(20)
+	ret=client.get_cache_returns(jid)
+	lst=[]
+	sql_list=[]
+	for key,value in ret.items():
+		dic={}
+		dic['ip']=key.split("_")[0]
+		ff=value['ret']
+		ora_ret=[]
+		for item in ff:
+			#ora_ret=[]
+			ora_ret.append(item)
+		dic['content']=ora_ret
+		lst.append(dic)
+	print lst
+	for item in lst:
+		list=[]
+		ip=item['ip']
+		for i in item['content']:
+			list=[]
+			list.append(ip)
+			xx_list=i.split("|")
+			for j in xx_list:
+				list.append(j)
+			sql_list.append(list)
+	db=oracle_db_operate()
+	rk_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+	f_list=[]	
+	print sql_list
+	for item in sql_list:
+		try:
+			print item[0]
+		except:
+			item.insert(0,'')
+		try:
+			print item[1]
+		except:
+			item.insert(1,'')
+		try:
+			print item[2]
+		except: 
+                        item.insert(2,'')
+		try:
+			print item[3]
+		except: 
+                        item.insert(3,'')
+		try:
+			print item[4]
+		except: 
+                        item.insert(4,'')
+		sql="insert into securi_port(ip,port,status,p_user,p_name,p_path,rk_date) values('%s','%s','%d','%s','%s','%s','%s')"%(item[0],item[1],0,item[2],item[3],item[4],rk_time)
+		db.oracle_command_update(settings.oracle_conn,sql)
+	clean_command="delete from SECURI_PORT where p_path is null "
+	db.oracle_command_update(settings.oracle_conn,clean_command)
+	return render_to_response("monitor/port_monitor.html",{'ret':sql_list})
+
+def get_hub_ajax_state(request):
+    start_time=request.GET.get('start')
+    reg=request.GET.get('reg')
+    ip=request.GET.get('ip')
+    end_time=request.GET.get('stop')
+    ip_list=[ip]
+    dic={}
+    time_list1=get_time_with_ajax(ip_list,start_time,end_time,'hub',reg)
+    highchart_data_list=get_hub_ajax_count(ip_list,start_time,end_time,reg)
+    dic['count']=highchart_data_list
+    dic['time']=time_list1
+    return HttpResponse(json.dumps(dic))
+
+
+def thread_monitor(request):
+	ret_list=[]
+	db=oracle_db_operate()
+	sql="select distinct regname from machineinfo"
+	reg_ret=db.oracle_command(settings.oracle_conn,sql)
+	for item in reg_ret:
+		dic={}
+		dic['reg']=item[0]
+		sql_1="select IPADDRESS from machineinfo where regname='%s'"%item[0]
+		ip_ret=db.oracle_command(settings.oracle_conn,sql_1)
+		ip_list=[]
+		for item in ip_ret:
+			ip_list.append(item[0])
+		dic['ip']=ip_list
+		ret_list.append(dic)
+	return render_to_response('monitor/thread_monitor.html',{'list':ret_list})
+
+#def asset_list(request):
+#    ret='cssfss'
+#    return render_to_response('asset_list.html',{'ret':ret})
+
+
+from controller.index_util import query_regs_list
+@login_required
+def code_deploy(request):
+    user=request.user if request.user.is_authenticated() else None
+    db=oracle_db_operate()
+    ret_list=[]
+    #sql="select RegName,sum(status) as bad,COUNT(*) as sum from machineinfo GROUP BY RegName"
+    sql="select b.RegName,sum(status) as bad,count(status) as sum from (select * from machineinfo a where in_use=1) b group by b.regname"
+    ret=db.oracle_command(settings.oracle_conn, sql)
+    print ret
+    #if len(ret)==0:
+    #		ret=['a',1,1,2]
+    ret=[['a',1,1,2],]
+    for item in ret:
+        dic={}
+        dic['reg']=item[0]
+        dic['bad']=int(item[1])
+        dic['good']=int(item[2]-item[1])
+        dic['sum']=int(item[2])
+#	dic['description']=item[3]
+        ret_list.append(dic)
+    print ret_list
+    return render_to_response('index.html',{'reg_list':ret_list,'user':user})
+
+def cluster_list(request):
+    all_server = MACHINEINFO.objects.all()
+    paginator = Paginator(all_server,10)
+
+    try:
+        page = int(request.GET.get('page','1'))
+    except ValueError:
+        page = 1
+
+    try:
+        all_server = paginator.page(page)
+    except :
+        all_server = paginator.page(paginator.num_pages)
+
+    return render_to_response('monitor/cluster_server_list.html', {'all_server_list': all_server, 'page': page, 'paginator':paginator})
+
+
+def main(request):
+    return render_to_response('index.html')
+
+
+
+def highchart(request):
+    d={'aa':1,
+       'bb':2,
+       'cc':3,
+       'dd':4}
+        
+    
+    categories = d.keys()
+    data = d.values()
+    return render_to_response('monitor/high.html',{'categories':categories,'data':data})
+
+
+def jdbc_active(request):
+    
+ 
+    
+    time=[]
+    count=[]
+    dic=JDBCSTAT.objects.filter(JdbcPoolName__contains='mprac_ds_01',IpAddress__contains='172.16.6.164')
+    for d in dic:
+        print isinstance(d.Time,unicode)
+        time.append(d.Time.encode('utf-8'))
+        count.append(int(d.ActiveCurrent))
+    result=dict(zip(time,count))
+   # re=json.dumps(result)
+    #for key,value in result.items():
+    time = result.keys()
+    data = result.values()
+    
+    return render_to_response('monitor/jdbc_status1.html',{'time':time,'data':data})
+
+def longToInt(value):
+    if value > 2147483647 :
+        return (value & (2 ** 31 - 1))
+    else :
+        return value
+
+
+def jms_status_list(request):
+    #str='i amd here'
+    #if request.method=='POST':
+    print request.method
+    if request.method=='POST':
+        start_time=request.POST.get('start_time')
+        end_time=request.POST.get('end_time')
+        threshold=request.POST.get('threshold')
+    else:
+        start_time=request.GET.get('start_time')
+        end_time=request.GET.get('end_time')
+        threshold=request.GET.get('threshold')
+    dic=JMSSTAT.objects.filter(Time__range=('2016-07-27 09:56:35','2016-07-27 19:09:11'),MessagesCurrentCount__gte=0)[:10]
+    str=dic
+    #str=start_time
+    return render_to_response('monitor/jms_status_list.html',{'str':str},context_instance=RequestContext(request))
+
+def service_info_list(request):
+    str='ccc'
+    return render_to_response('monitor/service_info_list.html',{'str':str})
+    
+from django.views.decorators.csrf import csrf_exempt , csrf_protect
+
+from monitor.util import get_ip_list, get_count_with_ip, parse_ip_count,\
+    get_lsn_count, get_time_with_ajax
+import datetime
+@csrf_exempt
+def jdbc_status2(request):
+    reg=request.GET.get('reg')
+    db=oracle_db_operate()
+    sql="select distinct b.IpAddress from appregioninfo a,machineinfo b where a.RegName='%s' and a.RegName=b.RegName"%reg
+    ret=db.oracle_command_direct(settings.oracle_conn, sql)
+   # start_time='2016-01-01 19:00:01'
+    #now=datetime.datetime.now()
+    #end_time=now.strftime("%Y-%m-%d %H:%M:%S")
+    
+   # ip_list=get_ip_list(start_time, end_time,reg)
+    #dic=get_count_with_ip(ip_list,start_time,end_time)
+    #count,content,ip_list1,time_list=parse_ip_count(dic)
+    return render_to_response( 'monitor/jdbc_status.html',{'regname':reg,'ret':ret}) 
+def jdbc_status3(request):
+    count=[]
+    content=[]
+    start_time='2016-07-27 09:58:41'
+    end_time='2016-07-27 09:59:41'
+    ip_list=get_ip_list(start_time, end_time)
+    dic=get_count_with_ip(ip_list,start_time,end_time)
+    count,content,ip_list1,time_list=parse_ip_count(dic)
+    data=[1,2,2,4,5]
+    list=[]
+    
+    
+    
+    
+    cn_json={'title': {'text': '',},
+             'xAxis': {'categories': time_list,'tickInterval': 1 },
+             'yAxis': {'title': {'text': 'Missing SLA Silo number'},
+                       'min':0,
+                       'max':60,
+                       'plotLines': [{'value': 0,'width': 1,'color': '#808080',}]},
+             'legend': {'layout': 'vertical','align': 'right','verticalAlign': 'middle','borderWidth': 0},
+             'series': {'name':'cc','data':[1,2,3,4,5]}
+                         }
+    cn_json = json.dumps(cn_json)
+    return HttpResponse(cn_json,content_type='application/json')
+    
+def get_jms_state_by_hour(request):
+	reg=request.GET.get('reg')
+	list=[]
+	time_list=[]
+	db=oracle_db_operate()
+	request_time=request.GET.get('time')
+	default_pool_sql="select distinct defaultjmsqueue from appregioninfo where regname='%s'"%reg
+	default_pool=db.oracle_command_direct(settings.oracle_conn,default_pool_sql)
+	if not request_time:
+		end_time=datetime.datetime.now()
+		tag_str=str(end_time.time()).split(':')[0]
+		tag=int(tag_str)
+  		start_time = end_time+datetime.timedelta(hours=-tag)
+  		start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+  		end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+  		for i in range(tag):
+  			time_list.append('{0}:00:01'.format(i))
+  	else:
+  		start_time=request_time+'00:00:01'
+  		end_time=request_time+'23:59:59' 
+  		for i in range(23):
+  			time_list.append("{0}:00:01".format(i))
+  	
+  	ip_list=get_ip_list(reg,start_time, end_time)
+  	for ip in ip_list:
+  		sql="""
+  select host,
+
+       regname,
+
+       NAME,
+
+       trunc(tm_smp, 'hh24'),
+
+       max(MESSAGESCURRENTCOUNT) max
+
+  from monitor_jms
+ where host = '{0}'
+
+   and regname = '{1}'
+
+   and NAME = '{2}'
+
+   and tm_smp between to_date('{3}', 'yyyy-mm-dd hh24:mi:ss') and
+
+       to_date('{4}', 'yyyy-mm-dd hh24:mi:ss')
+
+ group by host, regname, name, trunc(tm_smp, 'hh24')
+
+ order by 1, 2, 3, 4
+  """.format(ip,reg,default_pool[0],start_time,end_time,ip)
+		ret=db.oracle_command(settings.oracle_conn,sql)
+		dic={}
+		ret_list=[]
+		for item in ret:
+			ret_list.append(item[4])
+		dic['name']=ip
+		dic['data']=ret_list
+		list.append(dic)
+	var={'name','data'}
+	#time_list=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+	
+	dic_totle={}
+	dic_totle['count']=list
+	dic_totle['time']=time_list
+	return HttpResponse(json.dumps(dic_totle))
+   
+def get_jdbc_state_by_hour(request):
+	reg=request.GET.get('reg')
+	list=[]
+	time_list=[]
+	db=oracle_db_operate()
+	request_time=request.GET.get('time')
+	if not request_time:
+		end_time=datetime.datetime.now()
+		tag_str=str(end_time.time()).split(':')[0]
+		tag=int(tag_str)
+  		start_time = end_time+datetime.timedelta(hours=-tag)
+  		start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+  		end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+  		for i in range(tag):
+  			time_list.append('{0}:00:01'.format(i))
+  	else:
+  		start_time=request_time+'00:00:01'
+  		end_time=request_time+'23:59:59' 
+  		for i in range(23):
+  			time_list.append("{0}:00:01".format(i))
+  	
+  	ip_list=get_ip_list(reg,start_time, end_time)
+  	for ip in ip_list:
+  		sql="""
+  		select host, 
+      		 regname,
+       		jdbcpoolname,
+       trunc(tm_smp, 'hh24'),
+       
+       max(activecurrent) max
+
+  from monitor_jdbc
+
+ where 
+      
+regname = '{0}'
+and host='{3}'
+      
+   and jdbcpoolname = 'mprac_ds_01'
+      
+   and tm_smp between to_date('{1}', 'yyyy-mm-dd hh24:mi:ss') and
+      
+       to_date('{2}', 'yyyy-mm-dd hh24:mi:ss')
+
+ group by host, regname, jdbcpoolname, trunc(tm_smp, 'hh24')
+
+ order by 1, 2, 3, 4
+  """.format(reg,start_time,end_time,ip)
+		ret=db.oracle_command(settings.oracle_conn,sql)
+		dic={}
+		ret_list=[]
+		for item in ret:
+			ret_list.append(item[4])
+		dic['name']=ip
+		dic['data']=ret_list
+		list.append(dic)
+	var={'name','data'}
+	#time_list=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+	
+	dic_totle={}
+	dic_totle['count']=list
+	dic_totle['time']=time_list
+	return HttpResponse(json.dumps(dic_totle))
+
+
+def get_hub_state_by_hour(request):
+	reg=request.GET.get('reg')
+	list=[]
+	time_list=[]
+	db=oracle_db_operate()
+	request_time=request.GET.get('time')
+	if not request_time:
+		end_time=datetime.datetime.now()
+		tag_str=str(end_time.time()).split(':')[0]
+		tag=int(tag_str)
+  		start_time = end_time+datetime.timedelta(hours=-tag)
+  		start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+  		end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+  		for i in range(tag):
+  			time_list.append('{0}:00:01'.format(i))
+  	else:
+  		start_time=request_time+'00:00:01'
+  		end_time=request_time+'23:59:59' 
+  		for i in range(23):
+  			time_list.append("{0}:00:01".format(i))
+  	
+  	ip_list=get_ip_list(reg,start_time, end_time)
+  	for ip in ip_list:
+  		sql="""
+select host,
+
+       regname,
+
+       trunc(tm_smp, 'hh24'),
+
+       max(curractivethreadcount) max
+
+  from hubstat
+ where host = '{0}'
+
+   and regname = '{1}'
+
+   and tm_smp between to_date('{2}', 'yyyy-mm-dd hh24:mi:ss') and
+
+       to_date('{3}', 'yyyy-mm-dd hh24:mi:ss')
+
+ group by host, regname, trunc(tm_smp, 'hh24')
+
+ order by 1, 2, 3
+  """.format(ip,reg,start_time,end_time)
+		ret=db.oracle_command(settings.oracle_conn,sql)
+		dic={}
+		ret_list=[]
+		for item in ret:
+			ret_list.append(item[3])
+		dic['name']=ip
+		dic['data']=ret_list
+		list.append(dic)
+	var={'name','data'}
+	#time_list=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+	
+	dic_totle={}
+	dic_totle['count']=list
+	dic_totle['time']=time_list
+	return HttpResponse(json.dumps(dic_totle))
+	
+def get_lsn_state_by_hour(request):
+	reg=request.GET.get('reg')
+	list=[]
+	time_list=[]
+	db=oracle_db_operate()
+	request_time=request.GET.get('time')
+	if not request_time:
+		end_time=datetime.datetime.now()
+		tag_str=str(end_time.time()).split(':')[0]
+		tag=int(tag_str)
+  		start_time = end_time+datetime.timedelta(hours=-tag)
+  		start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+  		end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+  		for i in range(tag):
+  			time_list.append('{0}:00:01'.format(i))
+  	else:
+  		start_time=request_time+'00:00:01'
+  		end_time=request_time+'23:59:59' 
+  		for i in range(23):
+  			time_list.append("{0}:00:01".format(i))
+  	
+  	ip_list=get_ip_list(reg,start_time, end_time)
+  	for ip in ip_list:
+  		sql="""
+  		select host,
+
+       regname,
+
+       trunc(tm_smp, 'hh24'),
+
+       max(curractivethreadcount) max
+
+  from lsnstat
+ where host = '{0}'
+
+   and regname = '{1}'
+
+   and tm_smp between to_date('{2}', 'yyyy-mm-dd hh24:mi:ss') and
+
+       to_date('{3}', 'yyyy-mm-dd hh24:mi:ss')
+
+ group by host, regname, trunc(tm_smp, 'hh24')
+
+ order by 1, 2, 3
+  """.format(ip,reg,start_time,end_time)
+		ret=db.oracle_command(settings.oracle_conn,sql)
+		dic={}
+		ret_list=[]
+		for item in ret:
+			ret_list.append(item[3])
+		dic['name']=ip
+		dic['data']=ret_list
+		list.append(dic)
+	var={'name','data'}
+	#time_list=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24]
+	
+	dic_totle={}
+	dic_totle['count']=list
+	dic_totle['time']=time_list
+	return HttpResponse(json.dumps(dic_totle))
+
+def service_info(request):
+
+    list=SERVICEINFO.objects.all()[:30]
+    return render_to_response('controller/app_cont.html',{'list':list})
+
+from autoops.mysql import db_operate
+from controller.cont_util import dictfetchall
+
+from cluster_settings import id_clu
+@login_required
+def server_list(request,ip=None):
+    regName=request.GET.get('reg')
+    db=oracle_db_operate()
+    sql="select b.IpAddress,b.description from appregioninfo a,machineinfo b where a.RegName='%s' and a.RegName=b.RegName" % (regName)
+    ret=db.oracle_command(settings.oracle_conn, sql)
+    ip_list=[]
+    #try:
+     #   user=request.COOKIES['username']
+    #except:
+    #    return HttpResponseRedirect('/account/mylogin/')
+
+    for item in ret:
+    		dic={}
+        	dic['ip']=item[0].strip()
+        	dic['desc']=unicode(item[1],'gbk').strip()
+        	ip_list.append(dic)
+    return render_to_response('monitor/server_list1.html',{'list':ip_list,'regname':regName})
+
+def get_reg_info(request):
+    db=oracle_db_operate()
+    ip=request.GET.get('ip')
+    reg=request.GET.get('reg')
+    sql="select a.regname,a.ipaddress,b.appuser,b.upduser,a.status,b.httpport,a.description from machineinfo a,appregioninfo b where a.ipaddress='%s' and b.regname='%s' and a.regname=b.regname"%(ip,reg)
+    re=db.oracle_command(settings.oracle_conn,sql)
+    list=[]
+    for item in re:
+        dic={}
+        dic['regname']=item[0]
+        dic['IpAddress']=item[1]
+        dic['AppUser']=item[2]
+        dic['UpdUser']=item[3]
+        dic['status']=item[4]
+        dic['HttpPort']=item[5]
+	dic['desc']=unicode(item[6],'gbk')
+        list.append(dic)
+    return render_to_response('monitor/server_list_detail.html',{'list':list})
+
+from django.http import JsonResponse
+from monitor.jms_util import get_jms_ip_list
+from monitor.util import get_count_with_ip
+def get_jms_state(request):
+    reg=request.GET.get('reg')
+    print 'reg***&&&**'
+    db=oracle_db_operate()
+    sql="select distinct b.IpAddress from appregioninfo a,machineinfo b where a.RegName='%s' and a.RegName=b.RegName"%reg
+    ret=db.oracle_command_direct(settings.oracle_conn, sql)
+    print ret
+    #ip_list=get_jms_ip_list('2016-07-01 23:59:11','2016-07:02 00:11:10','PAY')
+    #count=get_jms_ajax_count(ip_list,'2016-07-01 23:59:11','2016-07-02 00:11:10')
+    return render_to_response("monitor/jms_state.html",{'regname':reg,'ret':ret})
+
+from django.core.context_processors import csrf
+@csrf_protect
+def single_machine(request):
+    ip=request.GET.get('ip')
+    return render_to_response('monitor/11.html',{'ip':ip})
+from monitor.jms_util import get_jms_ajax_count
+def get_jms_state_ajax(request):
+    start_time=request.GET.get('start')
+    end_time=request.GET.get('stop')
+    if end_time=="":
+        end_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if start_time=='':
+        start_time=datetime.datetime.now()+datetime.timedelta(days=-1)
+        start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    reg=request.GET.get('reg')
+    type=request.GET.get('type')
+    ip=request.GET.get('ip')
+    ip_list=[]
+    ip_list.append(ip)
+    dic={}
+    time_list=get_time_with_ajax(ip_list,start_time,end_time,type,reg)
+    highchart_data_list=get_jms_ajax_count(ip_list,start_time,end_time,reg)
+    dic['count']=highchart_data_list
+    dic['time']=time_list
+    return HttpResponse(json.dumps(dic))
+
+def get_listener_state(request):
+   # start='2016-07-27 09:59:41'
+    #send='2016-07-27 10:59:41'
+   # desc_list,count_list=get_lsn_count(start,end)
+    #count_list=[1,2,3,]
+   # num=len(count_list)
+    reg=request.GET.get('reg')
+    
+    print reg
+    return render_to_response('monitor/listener_state.html',{'regname':reg})
+
+from job.saltjob import get_lsn_count,parse_ret_list,salt_ret_insert_db
+"""
+ss
+"""
+def lsn_status(request):
+    end_time=datetime.datetime.now()
+    start_time=end_time+datetime.timedelta(hours=-1)
+    start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    reg=request.GET.get('reg')
+    print '&&&*&'
+    db=oracle_db_operate()
+   # sql="select distinct host from monitor.lsnstat where RegName='%s' and TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss')"%(reg,start_time,end_time)
+    sql="select b.IpAddress from appregioninfo a,machineinfo b where a.RegName='%s' and a.RegName=b.RegName"%reg
+    ret=db.oracle_command_direct(settings.oracle_conn, sql)
+    
+    #d1 = datetime.datetime.now()
+    #end_time = start_time+datetime.timedelta(days=-1)
+    #start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    #end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    #start_time='2013-09-09 12:00:01'
+    #end_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    #ip_list=get_lsn_ip_list(start_time,end_time,reg)
+    #list=  get_lsn_count()
+    #list1=parse_ret_list(list)
+    #salt_ret_insert_db(list1)
+    #count=get_jms_ajax_count(ip_list,'2016-07-01 12:00:11','2016-08:11 10:11:10')
+    return render_to_response("monitor/lsn_status.html",{"regname":reg,'ret':ret})
+
+from monitor.lsn_util import get_lsn_ip_list,get_lsn_ajax_count
+from monitor.hub_util import get_hub_ip_list,get_hub_ajax_count
+
+def start_page_with_hub_state(request):
+    reg=request.GET.get('reg')
+    end_time=datetime.datetime.now()
+    start_time =end_time+datetime.timedelta(hours=-0.5)
+    start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    ip_list=get_hub_ip_list(start_time,end_time,reg)
+    dic={}
+    time_list1=get_time_with_ajax(ip_list,start_time,end_time,'hub',reg)
+    highchart_data_list=get_hub_ajax_count(ip_list,start_time,end_time,reg)
+    dic['count']=highchart_data_list
+    dic['time']=time_list1
+    print dic
+    return HttpResponse(json.dumps(dic))
+#from monitor.jms_util import query_count_for_jms    
+def start_page_with_jms_state(request):
+    reg=request.GET.get('reg')
+    end_time=datetime.datetime.now()
+    start_time = end_time+datetime.timedelta(hours=-0.5)
+    start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    ip_list=get_jms_ip_list(start_time,end_time,reg)
+    dic={}
+    jms_time_list=get_time_with_ajax(ip_list,start_time,end_time,'jms',reg)
+    highchart_data=get_jms_ajax_count(ip_list,start_time,end_time,reg)
+    dic['count']=highchart_data
+    dic['time']=jms_time_list
+    return HttpResponse(json.dumps(dic))
+def start_page_with_lsn_state(request):
+    reg=request.GET.get('reg')
+    end_time=datetime.datetime.now()
+    start_time=end_time+datetime.timedelta(hours=-0.5)
+    start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    ip_list=get_lsn_ip_list(start_time,end_time,reg)
+    dic={}
+    time_list=get_time_with_ajax(ip_list,start_time,end_time,'lsn',reg)
+    highchart_data_list=get_lsn_ajax_count(ip_list, start_time, end_time,reg)
+    dic['count']=highchart_data_list
+    dic['time']=time_list
+    return HttpResponse(json.dumps(dic))
+def get_lsn_ajax_state(request):
+    start_time=request.GET.get('start')
+    reg=request.GET.get('reg')
+    ip=request.GET.get('ip')
+    end_time=request.GET.get('stop')
+    ip_list=[ip]
+    dic={}
+    time_list1=get_time_with_ajax(ip_list,start_time,end_time,'lsn',reg)
+    highchart_data_list=get_lsn_ajax_count(ip_list,start_time,end_time,reg)
+    dic['count']=highchart_data_list
+    dic['time']=time_list1
+    return HttpResponse(json.dumps(dic))
+
+def get_hub_state(request):
+    reg=request.GET.get('reg') 
+    db=oracle_db_operate()
+    sql="select distinct b.IpAddress from appregioninfo a,machineinfo b where a.RegName='%s' and a.RegName=b.RegName"%reg
+    ret=db.oracle_command_direct(settings.oracle_conn, sql)
+    
+    end_time=datetime.datetime.now()
+    start_time=datetime.datetime.now()+datetime.timedelta(hours=-1)
+    end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    return render_to_response('monitor/hub_state.html',{'regname':reg,'ret':ret})
+
+
+
+def get_jdbc_state(request):
+    start_time=request.GET.get('start')
+    end_time=request.GET.get('stop')
+    if end_time=="":
+        end_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    if start_time=='':
+        start_time=datetime.datetime.now()+datetime.timedelta(days=-1)
+        start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+  
+
+    ip=request.GET.get('ip')
+    reg=request.GET.get('reg')
+    type=request.GET.get('type')
+    dic={}
+    ip_list=[]
+    ip_list.append(ip)
+    ip_count_dic=get_count_with_ip(ip_list,start_time,end_time,reg)
+    time_list1=get_time_with_ajax(ip_list,start_time,end_time,type,reg)
+    dic['count']=ip_count_dic
+    dic['time']=time_list1
+    return HttpResponse(json.dumps(dic))
+
+
+def get_jdbc1_state_at_start(request):
+    ip=request.GET.get("ip")
+    end_time=datetime.datetime.now()
+    start_time = end_time+datetime.timedelta(hours=-0.5)
+    start_time=start_time.strftime("%Y-%m-%d %H:%M:%S")
+    end_time=end_time.strftime("%Y-%m-%d %H:%M:%S")
+    reg=request.GET.get('reg')
+    dic={}
+    ip_list=get_ip_list(reg,start_time, end_time)
+    ip_count_dic=get_count_with_ip(ip_list,start_time,end_time,reg)
+    time_list1=get_time_with_ajax(ip_list,start_time,end_time,'jdbc',reg)
+    dic['count']=ip_count_dic
+    dic['time']=time_list1
+
+
+
+    print dic
+
+
+
+    return HttpResponse(json.dumps(dic))
+
+
+
+def single_machine_jdbc_state(request):
+	ip=request.GET.get('ip')
+	reg=request.GET.get('reg')
+	end=datetime.datetime.now()
+	start=end+datetime.timedelta(hours=-1)
+	end=end.strftime("%Y-%m-%d %H:%M:%S")
+	start=start.strftime("%Y-%m-%d %H:%M:%S")
+	sql="select TM_SMP,ACTIVECURRENT from monitor.monitor_jdbc where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and HOST='%s' and REGNAME='%s' and jdbcpoolname in(select defaultjdbcpool from appregioninfo where regname='%s')" %(start,end,ip,reg,reg)
+	print sql
+	db=oracle_db_operate()
+	ret=db.oracle_command(settings.oracle_conn,sql)
+	#print ret
+	dic={}
+	dic1={}
+	count=[]
+	time=[]
+	for item in ret:
+		count.append(item[1])
+		time.append(item[0].strftime("%Y-%m-%d %H:%M:%S"))
+	#dic1['data']=count
+	name=['name','data']
+	s=[ip,count]
+	dic1=dict(zip(name,s))
+	#dic1['name']="jdbc"
+	dic['time']=time
+	dic['count']=[dic1]
+	print dic
+	return HttpResponse(json.dumps(dic))	
+
+
+
+def single_machine_lsn_state(request):
+        ip=request.GET.get('ip')
+        end=datetime.datetime.now()
+        start=end+datetime.timedelta(hours=-0.05)
+        end=end.strftime("%Y-%m-%d %H:%M:%S")
+        start=start.strftime("%Y-%m-%d %H:%M:%S")
+        sql="select TM_SMP,CURRACTIVETHREADCOUNT from monitor.LSNSTAT where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and HOST='%s'" %(start,end,ip)
+        print sql
+        db=oracle_db_operate()
+        ret=db.oracle_command(settings.oracle_conn,sql)
+        #print ret
+        dic={}
+        dic1={}
+        count=[]
+        time=[]
+        for item in ret:
+                count.append(item[1])
+                time.append(item[0].strftime("%Y-%m-%d %H:%M:%S"))
+        #dic1['data']=count
+        name=['name','data']
+        s=[ip,count]
+        dic1=dict(zip(name,s))
+        #dic1['name']="jdbc"
+        dic['time']=time
+        dic['count']=[dic1]
+        print dic
+        return HttpResponse(json.dumps(dic))
+
+
+
+
+def single_machine_hub_state(request):
+        ip=request.GET.get('ip')
+        end=datetime.datetime.now()
+        start=end+datetime.timedelta(hours=-0.05)
+        end=end.strftime("%Y-%m-%d %H:%M:%S")
+        start=start.strftime("%Y-%m-%d %H:%M:%S")
+        sql="select TM_SMP,CURRACTIVETHREADCOUNT from monitor.HUBSTAT where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and HOST='%s'" %(start,end,ip)
+        print sql
+        db=oracle_db_operate()
+        ret=db.oracle_command(settings.oracle_conn,sql)
+        #print ret
+        dic={}
+        dic1={}
+        count=[]
+        time=[]
+        for item in ret:
+                count.append(item[1])
+                time.append(item[0].strftime("%Y-%m-%d %H:%M:%S"))
+        #dic1['data']=count
+        name=['name','data']
+        s=[ip,count]
+        dic1=dict(zip(name,s))
+        #dic1['name']="jdbc"
+        dic['time']=time
+        dic['count']=[dic1]
+        print dic
+        return HttpResponse(json.dumps(dic))
+
+
+
+
+
+
+
+def single_machine_jms_state(request):
+        ip=request.GET.get('ip')
+        reg=request.GET.get('reg')
+        end=datetime.datetime.now()
+        start=end+datetime.timedelta(hours=-1)
+        end=end.strftime("%Y-%m-%d %H:%M:%S")
+        start=start.strftime("%Y-%m-%d %H:%M:%S")
+        sql="select TM_SMP,MESSAGESCURRENTCOUNT from monitor.monitor_jms where TM_SMP between to_date('%s','yyyy-mm-dd hh24:mi:ss') and to_date('%s','yyyy-mm-dd hh24:mi:ss') and HOST='%s' and regname='%s' and name in(select defaultjmsqueue from appregioninfo where regname='%s')" %(start,end,ip,reg,reg)
+        print sql
+        db=oracle_db_operate()
+        ret=db.oracle_command(settings.oracle_conn,sql)
+        #print ret
+        dic={}
+        dic1={}
+        count=[]
+        time=[]
+        for item in ret:
+                count.append(item[1])
+                time.append(item[0].strftime("%Y-%m-%d %H:%M:%S"))
+        #dic1['data']=count
+        name=['name','data']
+        s=[ip,count]
+        dic1=dict(zip(name,s))
+        #dic1['name']="jdbc"
+        dic['time']=time
+        dic['count']=[dic1]
+        print dic
+        return HttpResponse(json.dumps(dic))

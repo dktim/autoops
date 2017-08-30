@@ -1,0 +1,108 @@
+{% extends "base1.html"%} {% block content%}
+<script>
+
+function add_machine(){
+	
+	var hostname=$("#hostname").val();
+	alert(hostname);
+	var ostype=$("#ostype").find("option:selected").val();
+	var bit=$("#bit").find("option:selected").val();
+	var version=$("#version").val();
+	var ipaddress=$("#ipaddress").val();
+	var regname=$("#regname").val();
+	var desc=$("#desc").val();
+
+	
+	jQuery.ajax({
+		
+		 url: "/backend/update_machine_info",
+	    data: {'hostname':hostname,'version':version,'ostype':ostype,'bit':bit,
+	        	'ipaddress':ipaddress,'regname':regname,'desc':desc},
+	    type:"POST",
+	    //dataType:"json",
+	    success:function(data){
+	    	
+	    	alert(data.flag);
+	    },
+	})
+	
+	
+	
+	
+}
+</script>
+
+
+
+<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<form role="form">
+				<div>
+					hostname:<input id='hostname' type=text />
+				</div>
+				<div>
+					ostype: <select id="ostype" name="ostype">
+						<option value="redhat">redhat</option>
+						<option value="aix">aix</option>
+
+					</select>
+				</div>
+
+				<div>
+					bit: <select name="bit" id='bit'>
+						<option value="64">64</option>
+						<option value="32">32</option>
+
+					</select>
+				</div>
+
+				<div id>
+
+					version:<input id='version' type=text />
+
+
+				</div>
+				<div>
+
+					ipaddress:<input id='ipaddress' type=text />
+
+
+				</div>
+				<div>
+
+					regname:<input id='regname' type=text />
+
+
+				</div>
+				<div>
+
+					descrition:<input id='desc' type=text />
+
+
+				</div>
+				<button type="submit" onclick="add_machine()">Submit</button>
+			</form>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+<!--  
+<div>
+<div >machineinfo</div>
+<div class="col-md-3">hostname<input type='text'/></div>
+<div class="col-md-3">ostype:<input type='text'></div>
+<div class="col-md-3">version:<input type='text'></div>
+<div class="col-md-3">bit:<input type='text'></div>
+<div class="col-md-3">ipaddress:<input type='text'></div>
+<div class="col-md-3">regname:<input type='text'></div>
+<div class="col-md-3">desc:<input type='text'></div>
+
+
+</div>
+-->
+{% endblock%}

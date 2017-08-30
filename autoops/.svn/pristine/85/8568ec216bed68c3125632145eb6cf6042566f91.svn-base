@@ -1,0 +1,29 @@
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+
+
+conn={
+      
+         'ENGINE': 'django.db.backends.oracle',
+        'name': 'monitor',
+        'host':'172.16.21.71',
+        'user':'monitor',
+        'passwd':'M0#ni#tor',
+        'port':'1521'
+      }
+from salt.client import LocalClient
+import MySQLdb
+import cx_Oracle
+        
+
+
+
+
+
+
+

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+
+<body>
+{%block container%}
+
+<ul class="list-group">
+   <li class="list-group-item"><a href="{% url 'index' %}">用户登陆集群</a></li>
+   <li class="list-group-item">核心支付集群</li>
+   <li class="list-group-item">WAP集群</li>
+   <li class="list-group-item">
+      <span class="badge">新</span>
+      24*7 支持
+   </li>
+   <li class="list-group-item">网管集群</li>
+   <li class="list-group-item">
+      <span class="badge">新</span>
+      新增集群
+   </li>
+</ul>
+
+
+{%endblock%}
+

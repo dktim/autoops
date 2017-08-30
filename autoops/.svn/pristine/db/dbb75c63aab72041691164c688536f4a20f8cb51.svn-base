@@ -1,0 +1,23 @@
+
+from multiprocessing import Pool
+import time
+import multiprocessing
+
+def func(msg):
+    print 'msg:',msg
+    time.sleep(3)
+    print 'end'
+    
+
+
+if __name__ == '__main__':
+    
+    pool=multiprocessing.Pool(4)
+    for i in range(5):
+        msg='hello %s'%i
+        pool.apply(func,(msg,))
+        
+    print 'start'
+    pool.close()
+    pool.join()
+    

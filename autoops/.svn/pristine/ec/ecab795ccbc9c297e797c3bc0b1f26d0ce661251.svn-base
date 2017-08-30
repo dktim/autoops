@@ -1,0 +1,59 @@
+
+
+import paramiko
+from salt.client import LocalClient
+import cx_Oracle
+from autoops.oracle import *
+from autoops.settings import oracle_conn
+from autoops import oracle
+
+
+
+if __name__ == '__main__':
+    
+    sql_parse_ip_user="select a.ipaddress,a.ostype,a.regname b.upduser,b.appuser from machineinfo a,appregioninfo b where a.regname=b.regname"
+    
+    db=oracle_db_operate()
+    ret=db.oracle_command(oracle_conn, sql_parse_ip_user)
+    f=file('/opt/list.txt','a+')
+    list=[]
+    for item in ret:
+        dic={}
+        dic['ip']=item[0]
+        dic['os']=item[1]
+        dic['upduser']=item[3]
+        dic['appuser']=item[4]
+        list.append(dic)
+        
+    for item in list:
+        salt_name_ip="select salt_name from salt_ip where ip='%s'"%item['ip']
+        ret=db.oracle_command_direct(oracle_conn, salt_name_ip)
+        if ret:
+            salt_name=ret[0]
+        else:
+            salt_name='None'
+        
+        if item['os']=='AIX':
+            ssh=paramiko.SSHClient()
+            pkey="/root/.ssh/id_rsa"
+            ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            key=paramiko.RSAKey.from_private_key_file(pkey)
+            ssh.connect(item['ip'],22,item['upduser'],pkey=key)
+            command="ls ~/bin/"
+            stdin,stdout,stderr = ssh.exec_command(command)
+            f.write(item['ip']+':'+stdout.read()+'\n')
+        else:
+            client=LocalClient()
+            str="su - %s -c 'ls ~/bin'"%(item['upduser'])
+            
+            jid=client.cmd_async(salt_name,'cmd.run',[str])
+            #time.sleep(5)
+            ret_list=client.get_cache_returns(jid)
+            ret_list
+            while len(ret_list)==0:
+                ret_list=client.get_cache_returns(jid)
+            ret_content=ret_list[salt_name]['ret']
+            f.write(item['ip']+':'+ret_content+'\n')
+
+        
+    

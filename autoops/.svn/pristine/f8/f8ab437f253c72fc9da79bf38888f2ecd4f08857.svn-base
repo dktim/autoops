@@ -1,0 +1,14 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+from datetime import datetime
+from salt.client import LocalClient
+if __name__ == '__main__':
+    start=datetime.now()
+    f=open('cc.txt','w')
+    cli=LocalClient()
+    re=cli.cmd('*','cmd.run',['ps -ef|grep salt'])
+    stop=datetime.now()
+    
+    f.write(str(re))
+    print (stop-start)
+    f.close()

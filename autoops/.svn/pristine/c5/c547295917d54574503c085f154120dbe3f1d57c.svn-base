@@ -1,0 +1,74 @@
+# -*- coding: utf-8 -*-
+import MySQLdb
+import settings
+from controller.cont_util import dictfetchall
+
+class db_operate:
+    def mysql_command(self,conn,sql_cmd):
+        try:
+            ret = []
+            #print conn['host']
+           # print conn['name']
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=int(conn["port"]),charset="utf8")
+            cursor = conn.cursor()
+           # dictfetchall(cursor)
+            cursor.execute(sql_cmd)
+        
+
+            return dictfetchall(cursor)
+          #  for row in cursor.fetchall():
+          #      for i in row:
+          #          ret.append(i)
+
+        except MySQLdb.Error,e:
+            ret.append(e)
+
+    def mysql_command_update(self,conn,sql_cmd):
+        try:
+            ret = []
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=int(conn["port"]),charset="utf8")
+            cursor = conn.cursor()
+           
+            cursor.execute(sql_cmd)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except MySQLdb.Error,e:
+            ret.append(e)
+           
+    def mysql_command_insert(self,conn,sql_cmd):
+        try:
+            ret = []
+            #print conn['host']
+           # print conn['name']
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=int(conn["port"]),charset="utf8")
+            cursor = conn.cursor()
+           # dictfetchall(cursor)
+            cursor.execute(sql_cmd)
+            #sreturn dictfetchall(cursor)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except MySQLdb.Error,e:
+            ret.append(e)
+
+    def select_table(self,conn,sql_cmd,parmas):
+        try:
+            ret = []
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=conn["port"],charset="utf8")
+            cursor = conn.cursor()
+            n = cursor.execute(sql_cmd,parmas)
+            for row in cursor.fetchall():
+                for i in row:
+                    ret.append(i)
+        except MySQLdb.Error,e:
+            ret.append(e)
+
+        return ret
+if __name__ == '__main__':
+    import settings
+    c=db_operate()
+   
+    ret=c.mysql_command(settings.conn,'select * from machineinfo')
+    print ret
+    

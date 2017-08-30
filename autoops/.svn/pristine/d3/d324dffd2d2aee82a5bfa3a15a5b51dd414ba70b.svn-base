@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{%block container%}
+
+
+
+
+
+
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-3">
+			
+		</div>
+		<div class="col-xs-6 col-sm-3" >
+
+		
+		</div>
+		<div class="col-xs-6 col-sm-3" >
+
+		共有<span class='glyphicon'><a  href='{% url 'jms_state'%}'>{{num}}</a>条记录</span>
+		</div>
+	
+	</div>
+		<div class="span12" id='container'>
+
+		
+		</div>
+	
+</div>
+		<script>
+$(function () {
+    $('#container').highcharts({
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'jms-conn'
+        },
+        subtitle: {
+            text: 'mysql-salt'
+        },
+        xAxis: {
+            categories: {{cate|safe}}
+        },
+        yAxis: {
+            title: {
+                text: '个'
+            }
+        },
+        plotOptions: {
+            line: {
+                dataLabels: {
+                    enabled: true
+                },
+                enableMouseTracking: false
+            }
+        },
+        series: [{
+            name: 'JMS实时连接数量',
+            data: {{data}}
+        }
+        ]
+    });
+});
+
+
+</script>
+
+{%endblock%}
+
+	
+
+
+
+
+

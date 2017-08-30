@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title%}
+
+JDBC-status
+{% endblock%}
+
+
+ {%block container%}
+当前集群：<span class="label label-primary" id='regname'>{{regname}}</span>
+
+<script src="/static/js/jdbc_status.js"></script>
+<span style="display:none" id='jdbc'>jdbc</span>
+<div aligh='right'>
+	<a class='btn btn-warning' id='jdbc_state' href="/monitor/jdbc_status2/?reg={{regname}}">
+	JDBC状态
+	</a> 
+	
+	<a class="btn btn-success" href="/monitor/jms_state/?reg={{regname}}">JMS状态</a>
+	 <a class="btn btn-warning" href="/monitor/lsn_status/?reg={{regname}}">Listener状态
+	</a>
+	 <a href="/monitor/hub_state/?reg={{regname}}" class="btn btn-success">Hub状态
+	</a>
+	<button type="button" class="btn btn-info" id='get_latest_state'>获取最新状态</button>
+	<button type="button" class="btn btn-info" onclick="get_jdbc_state_by_hour()">获取最新状态</button>
+
+
+</div>
+开始时间:
+<input type="text" id="d28"
+	onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" />
+结束时间:
+<input type="text" id="d29"
+	onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" />
+请选择主机：
+<select id="ipaddress" runat="ipaddress" name="ipaddress">
+{% for item in ret%}
+
+  <option value={{forloop.counter}}>{{item}}</option>
+           
+{% endfor %}
+</select>
+<button type='button' id='btn' onclick='queryFirewallState()'>查询状态</button>
+
+
+<!--js鍒濆鍖栧嚱鏁�-->
+<script type="text/javascript"> 
+setup() 
+</script>
+
+<script type="text/javascript">
+	function get_jdbc_state_by_hour(){
+		var reg=$('#regname').text()
+		$.ajax({
+			url:'/monitor/get_jdbc_state_by_hour',
+			data:{'reg':reg},
+			  type:"get",
+        dataType:"json",
+        success: function(data){
+        	
+        	
+			
+			
+			})		
+		
+		
+		}
+	
+	
+	
+	</>
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	get_jdbc_state_at_start()
+})
+
+</script>
+<!-- <script>
+$('#btn').click(function(){
+	var start=$('#d28').val();
+	var stop=$('#d29').val();
+	$.get('/monitor/jdbc_status4',{'start':start,'stop':stop},function(data){
+		//alert(data);
+	})
+	
+})
+
+</script> -->
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6" id='container'></div>
+
+	</div>
+</div>
+
+
+{%endblock%}
+

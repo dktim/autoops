@@ -1,0 +1,38 @@
+
+
+# Create your tests here.
+import django
+django.setup()
+from asset.models import Book,JMSINFO,JMSSTAT
+
+
+if __name__ == '__main__':
+    re=JMSINFO.objects.all()
+    print type(re)
+    for obj in re:
+        print obj.id,obj.RegName,obj.JmsQueneName,obj.JNDIName
+    re1=JMSINFO.objects.filter(id=1)
+    print re,re1
+   # django.setup()
+'''
+    new_book = Book(
+                    id=2,
+                name='cc',
+                author='zz',
+                category='mm',
+                price='17.1',
+                publish_date='2012-12-09'
+        )
+    new_book.save()
+    m=JMSINFO(
+                  id=1,
+                  RegName='cc',
+                  JmsQueneName='zz',
+                  JNDIName='csss'
+                  
+                  
+                  )
+    m.save()
+    '''
+ 
+    

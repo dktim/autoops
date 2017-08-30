@@ -1,0 +1,31 @@
+#/usr/bin/python
+# -*- coding: utf-8 -*-
+
+import salt.client
+from controller.models import salt_returner
+
+
+
+
+class saltapi():
+    def getclient(self):
+        return salt.client.LocalClient()
+    
+    
+    def execute(self,tgt,fun,args):
+        loc=salt.client.LocalClient()
+        re=loc.cmd_async(tgt,fun,[args])
+        
+        
+if __name__ == '__main__':
+    import django
+    if django.VERSION>=(1,7):
+        django.setup()
+    aa=salt.client.LocalClient()
+    re=aa.cmd('*','cmd.run',['ps -ef | grep salt'])
+    print re
+   # print re
+    list=[]
+    for i in list:
+        list.append(salt_returner(id=1,return_content=re))
+    salt_returner.objects.bulk_create(list)

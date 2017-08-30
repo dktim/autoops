@@ -1,0 +1,121 @@
+﻿{% extends "base1.html" %} {% block content %}
+<div id="page-wrapper" xmlns="http://www.w3.org/1999/html">
+	<center>
+		<canvas width="1400" height="700" id="canvas"
+			style="border: 1px solid #444;">
+        </canvas>
+
+	</center>
+
+
+
+	<script src='/static/js/jtopo-0.4.8-min.js'></script>
+	<script src='/static/js/auto_index.js'></script>
+	<script>
+function myfresh(){
+
+window.location.reload();
+}
+
+setTimeout("myfresh()",60000);
+
+</script>
+	<script type='text/javascript'>
+		$(document).ready(function() {
+			var canvas = document.getElementById('canvas');
+			var stage = new JTopo.Stage(canvas);
+			var scene = new JTopo.Scene(stage);
+			//scene.background = '/static/img/11111.jpeg';
+			//var container3= new JTopo.Container('边界自动变化');
+			center_node=node('1.png',"自动化运维平台",50,360);
+			//center_node.setLocation(50,600)
+			$.get('/monitor/production_index', function(data) {
+				var rows = data
+				if (rows != undefined) {
+					for (var i = 0; i < rows.length; i++) {
+						var app_node = build_topo(rows[i])
+					}
+				}
+			})
+
+			
+		
+			stage.add(scene);
+
+			function build_topo(row_object) {
+				var url = "/monitor/server_list/?reg={0}&type=production"
+				reg = row_object['reg']
+				wide = row_object.wide
+				high = row_object.high
+				var url = url.template(reg)
+				var app = "{0}_APP"
+				app = app.template(reg)
+				general_img="{0}.png"
+				reg_img=general_img.template(reg)
+				//alert(reg_img)
+				var app = node('1111.png', reg, wide, high);
+			
+				//var app = node('33.png', reg, wide, high);
+				if (row_object['bad'] > 0) {
+					app.alarm = (row_object['bad']);
+					app.fillColor="233,0,0"
+				}
+				app.dbclick(function() {
+					window.open(url);
+				})
+			}
+			function node(img, name, wide, high) {
+				var node = new JTopo.CircleNode(name);
+				//container=container
+				//node.setImage('/static/img/' + img, true);
+				node.fontColor = "255.255.0"
+				node.fillColor='0,255,0'
+				//node.setLocation(x, y);
+				node.setSize(30,26);
+				
+				node.setLocation(wide,high)
+				node.layout={'type':'circle',radius:60};
+				scene.add(node);
+
+				return node;
+			}
+
+		});
+	</script>
+	<script type='text/javascript'>
+		var str;
+		String.prototype.template = function() {
+			var args = arguments;
+			return this.replace(/\{(\d+)\}/g, function(m, i) {
+
+				return args[i];
+			}
+
+			);
+		}
+	</script>
+
+	<script type='text/javascript'>
+		function selectFromMess() {
+			return arguments[Math.floor(Math.random() * arguments.length)]
+		}
+	</script>
+	<script type='text/javascript'>
+		var str;
+		String.prototype.template = function() {
+			var args = arguments;
+			return this.replace(/\{(\d+)\}/g, function(m, i) {
+
+				return args[i];
+			}
+
+			);
+		}
+	</script>
+
+</div>
+
+
+
+{% endblock %}
+

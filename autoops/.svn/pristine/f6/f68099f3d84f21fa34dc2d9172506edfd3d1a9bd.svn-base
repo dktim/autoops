@@ -1,0 +1,134 @@
+
+{% extends "base1.html" %}
+{% block title%}
+LSN_Status
+{% endblock%}
+
+
+
+
+{%block content%}
+
+
+
+<script>
+function myfresh(){
+
+window.location.reload();
+}
+
+setTimeout("myfresh()",60000);
+
+</script>
+
+ <script src="/static/js/lsn_status.js"></script>
+ 当前集群：<span class="label label-primary" id='regname'>{{regname}}</span>
+ <span style="display:none" id='lsn'>lsn</span>
+<div aligh='right'>
+		<a class='btn btn-warning' id='jdbc_state' href="/monitor/jdbc_status2/?reg={{regname}}">
+	JDBC状态
+	</a> 
+	
+	<a class="btn btn-success" href="/monitor/jms_state/?reg={{regname}}">JMS状态</a>
+	 <a class="btn btn-warning" href="/monitor/lsn_status/?reg={{regname}}">Listener状态
+	</a>
+	 <a href="/monitor/hub_state/?reg={{regname}}" class="btn btn-success">Hub状态
+	</a>
+	<button type="button" class="btn btn-info" id='get_latest_state'>获取最新状态</button>
+		
+	<div style="margin-right"><h3>独立日期listener</h3>请选择日期:<input aligh='right' type="text" id="d30"
+	onClick="WdatePicker({dateFmt:'yyyy-MM-dd'})" />
+	</><button type="button" class="btn btn-info" onclick="get_lsn_state_by_hour()">查看分时状态</button></div>
+
+
+</div>
+</div>
+<div>
+<h3>独立主机listener</h3>
+开始时间:
+<input type="text" id="d28"
+	onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" />
+结束时间:
+<input type="text" id="d29"
+	onClick="WdatePicker({dateFmt:'yyyy-MM-dd HH-mm-ss'})" />
+请选择主机：
+<select id="ipaddress" runat="ipaddress" name="ipaddress">
+{% for item in ret%}
+
+  <option value={{forloop.counter}}>{{item}}</option>
+           
+{% endfor %}
+</select>
+<button type='button' id='btn' onclick='query_lsn_status()'>查询状态</button>
+</div>
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+
+	start_page_with_lsn_state()
+})
+
+</script>
+
+<script type="text/javascript">
+	function get_lsn_state_by_hour(){
+		var reg=$('#regname').text()
+		var time=$('#d30').val()
+		//alert(reg)
+		//alert(time)
+		//alert('ssfsss!!@s')
+		$.ajax({
+			url:'/monitor/hourly_lsn_state',
+			data:{'reg':reg,'time':time},
+			  type:"get",
+        dataType:"json",
+        success: function(data){
+        	
+        		if (data.count.length==0 ||data.time.length==0){
+        		alert('无查询数据')
+        		options_cpu.xAxis.categories =[];
+                options_cpu.series=[];
+                var chart_cpu = new Highcharts.Chart(options_cpu);
+        	}
+        	else{
+        		var time_list=data["time"]
+                var count = data["count"]
+                options_cpu.xAxis.categories = time_list;
+                options_cpu.series=count;
+                var chart_cpu = new Highcharts.Chart(options_cpu);
+        	}
+            
+        },
+        failure : function(messages) {
+            alert(message);
+        	alert('fail');
+        	
+        	
+        	
+        	
+        }
+        	
+        	
+			
+			
+			})		
+		
+		
+		}
+	</script>
+<!--js鍒濆鍖栧嚱鏁�--> 
+<script type="text/javascript"> 
+setup() 
+</script> 
+
+
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span6" id='container1'>
+		</div>
+		
+	</div>
+</div>
+{%endblock%}
+

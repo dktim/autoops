@@ -1,0 +1,16 @@
+import multiprocessing
+from salt.client import LocalClient
+def print_it(tgt,appuser):
+    client=LocalClient()
+    command="su - %s -c 'sh ~/bin/h_restart.sh'"%(appuser)
+    print command
+    ret=client.cmd(tgt,'cmd.run',[command])
+    return ret
+
+
+def execute():
+    jobs=[]
+    for i in range(5):
+        p=multiprocessing.Process(target=print_it,)
+        jobs.append(p)
+        p.start()

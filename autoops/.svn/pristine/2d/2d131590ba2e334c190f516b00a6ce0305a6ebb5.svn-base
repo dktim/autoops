@@ -1,0 +1,139 @@
+# -*- coding: utf-8 -*-
+import MySQLdb
+import cx_Oracle
+import django
+oracle_conn={
+     'ENGINE': 'django.db.backends.oracle',
+        'name': 'uatsrv1',
+        'host':'172.16.49.200',
+        'user':'monitor',
+        'passwd':'mon#2016',
+        'port':'1521'
+    }
+conn={
+      
+         'ENGINE': 'django.db.backends.mysql',
+        'name': 'autoops',
+        'host':'172.16.49.170',
+        'user':'root',
+        'passwd':'Root15()',
+        'port':'3306'
+      }
+class mysql_db_operate:
+    def mysql_command_insert(self,conn,sql_cmd):
+        try:
+            ret = []
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=int(conn["port"]),charset="utf8")
+            cursor = conn.cursor()
+            cursor.execute(sql_cmd)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except MySQLdb.Error,e:
+            ret.append(e)
+def dictfetchall(cursor):
+    "Returns all rows from a cursor as a dict"
+    desc = cursor.description
+    return [
+        dict(zip([col[0] for col in desc], row))
+        for row in cursor.fetchall()
+    ]
+class db_operate:
+    def oracle_command_direct(self,conn,sql_cmd):
+        try:
+            ret = []
+            conn_str="{0}/{1}@{2}:{3}/{4}".format(conn['user'],conn['passwd'],conn['host'],conn['port'],conn['name'])
+            conn=cx_Oracle.connect(conn_str)
+            cursor = conn.cursor()
+            n = cursor.execute(sql_cmd)
+            for row in cursor.fetchall():
+                    ret.append(row)
+        except cx_Oracle.Error,e:
+            ret.append(e)
+
+        return ret
+    def oracle_command(self,conn,sql_cmd):
+        try:
+            ret = []
+            #print conn['host']
+            conn_str="{0}/{1}@{2}:{3}/{4}".format(conn['user'],conn['passwd'],conn['host'],conn['port'],conn['name'])
+            conn=cx_Oracle.connect(conn_str)
+            cursor = conn.cursor()
+           # dictfetchall(cursor)
+            cursor.execute(sql_cmd)
+        
+
+            return dictfetchall(cursor)
+          #  for row in cursor.fetchall():
+          #      for i in row:
+          #          ret.append(i)
+
+        except cx_Oracle.Error,e:
+            ret.append(e)
+
+    def mysql_command_update(self,conn,sql_cmd):
+        try:
+            ret = []
+            conn_str="{0}/{1}@{2}:{3}/{4}".format(conn['user'],conn['passwd'],conn['host'],conn['port'],conn['name'])
+            conn=cx_Oracle.connect(conn_str)
+            cursor = conn.cursor()
+           
+            cursor.execute(sql_cmd)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except cx_Oracle.Error,e:
+            ret.append(e)
+           
+    def mysql_command_insert(self,conn,sql_cmd):
+        try:
+            ret = []
+            #print conn['host']
+           # print conn['name']
+            conn_str="{0}/{1}@{2}:{3}/{4}".format(conn['user'],conn['passwd'],conn['host'],conn['port'],conn['name'])
+            conn=cx_Oracle.connect(conn_str)
+            cursor = conn.cursor()
+           # dictfetchall(cursor)
+            cursor.execute(sql_cmd)
+            #sreturn dictfetchall(cursor)
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except cx_Oracle.Error,e:
+            ret.append(e)
+
+    def select_table(self,conn,sql_cmd,parmas):
+        try:
+            ret = []
+            conn=MySQLdb.connect(host=conn["host"],user=conn["user"],passwd=conn["passwd"],db=conn["name"],port=conn["port"],charset="utf8")
+            cursor = conn.cursor()
+            n = cursor.execute(sql_cmd,parmas)
+            for row in cursor.fetchall():
+                for i in row:
+                    ret.append(i)
+        except MySQLdb.Error,e:
+            ret.append(e)
+
+        return ret
+import time,datetime
+if __name__ == '__main__':
+    oracle_db=db_operate()
+    mysql_db=mysql_db_operate()
+    
+    #print oracle_db
+    ret=oracle_db.oracle_command_direct(oracle_conn,"select TIME,HOST,RegName,JdbcPoolName,MaxCapacity,ActiveCurrent,ActiveHighCount,WaitSecondsHighCount,WaitingCurrentCount,State,TM_SMP,SEQNUM from monitor.monitor_jdbc where rownum<2000")
+    start=datetime.datetime.now()
+    print ret
+    for item in ret:
+        print item
+        sql="insert into asset_jdbcstat(Time,IpAddress,RegName,JdbcPoolName,MaxCapacity,ActiveCurrent,ActiveHighCount,WaitSecondsHighCount,WaitingCurrentCount,State,TMSMP,SEQNUM) values('%s','%s','%s','%s',%s,%s,%s,%s,%s,'%s','%s',%s)"%(item[0],item[1],item[2],item[3],item[4],item[5],item[6],item[7],item[8],item[9],item[10],item[11])
+        print sql
+        #print '&'
+        mysql_db.mysql_command_insert(conn, sql)
+    end=datetime.datetime.now()
+    print end-start
+    #print ret
+    
+
+
+
