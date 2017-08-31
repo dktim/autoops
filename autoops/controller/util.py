@@ -23,9 +23,9 @@ def cmd_history(**kwargs):
     sql="insert into cmd_history values('%s','%s','%s','%s','%s')"%(regname,ipaddress,cmd_time,cmd,user)
     try:
         db.execute_update(sql)
+        return True
     except:
-        pass
-
+        False
 
 def dictfetchall(cursor):
     "Returns all rows from a cursor as a dict"

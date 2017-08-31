@@ -30,6 +30,7 @@ import httplib2
 from urllib2 import Request,urlopen,URLError,HTTPError
 import logging
 from autoops.celery import app
+from controller.util import cmd_history
 @login_required
 def app_cont(request):
      cur=connection.cursor()
@@ -95,25 +96,12 @@ def get_node_state(request):
 		flag=0
     return HttpResponse(flag)
 
-
 from .util import get_ostype_by_ip
-@permission_required('account.can_stop_node',raise_exception=True)
+
 @login_required
+@permission_required('account.can_stop_node',raise_exception=True)
 def node_stop(request):
     msg=""
-    _user=request.user
-    userprofile = UserProfiles.objects.get(user=_user)
-    _b = userprofile.business.all()
-    print _b
-    p=0
-    for business in _b:
-        print business.name
-        if business.name=='node_stop':
-            p=1
-            break
-        else:
-            p=0
-    print p
     start_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     user=request.user
     _ip=request.GET.get('ip')
@@ -123,74 +111,57 @@ def node_stop(request):
     upduser=get_user_by_reg_and_ip(_ip,_reg)
     ret_dict={}
     salt_return=""
-    cmd_history(ip=_ip,regname=_reg,user=user,cmd='close_node',cmd_time=start_time)
-    t=0
-    if p==1:
-        if tgt:
-            client=LocalClient()
-            command="su - %s -c 'sh ~/bin/close.sh'"%(upduser)
-            try:
-                jid=client.cmd_async(tgt,'cmd.run',[command])
-            except:
-                msg='salt is not running'
-                return HttpResponse(msg)
-            while not client.get_cache_returns(jid):
-                time.sleep(1)
-                if t==10:
-                    print "timeout"
-                    break
-                else:
-                    t=t+1
-            ret_dict=client.get_cache_returns(jid)
-            salt_return=ret_dict[tgt]['ret']
-            print salt_return
+    rst=cmd_history(ip=_ip,regname=_reg,user=upduser,cmd='close_node',cmd_time=start_time)
+    if tgt:
+        client=LocalClient()
+        command="su - %s -c 'sh ~/bin/close.sh'"%(upduser)
+        try:
+            jid=client.cmd_async(tgt,'cmd.run',[command])
+        except:
+            msg='salt is not running'
+            return HttpResponse(msg)
+        t=0
+        while not client.get_cache_returns(jid):
+            time.sleep(1)
+            if  t==10:
+                print "timeout"
+                break
+            else:
+                t=t+1
+        ret_dict=client.get_cache_returns(jid)
+        salt_return=ret_dict[tgt]['ret']
+        print salt_return
+        if salt_return=="":
+            msg="success"
+        elif re.match(r"No such", salt_return):
+            msg="no such file"
+        else:
+            msg="other error"
+    elif os_type=='AIX':
+        ssh=ssh_connection(_ip,upduser)
+        command="sh ~/bin/open.sh'"
+        try:
+            stdin,stdout,stderr=ssh.exec_command(command,timeout=10)
+            ret_str=stdout.readlines()
             if salt_return=="":
                 msg="success"
             elif re.match(r"No such", salt_return):
                 msg="no such file"
             else:
                 msg="other error"
-        elif os_type=='AIX':
-            ssh=ssh_connection(_ip,upduser)
-            command="sh ~/bin/open.sh'"
-            try:
-                stdin,stdout,stderr=ssh.exec_command(command,timeout=10)
-                ret_str=stdout.readlines()
-                if salt_return=="":
-                    msg="success"
-                elif re.match(r"No such", salt_return):
-                    msg="no such file"
-                else:
-                    msg="other error"
-            except:
-                msg='other error'
-        else: 
-            msg="No saltstack found in tgt %s"%_ip
-        if msg=='success':
-            update_node_status(_ip,_reg,1)
-        else:
-            pass
+        except:
+            msg='other error'
+    else: 
+        msg="No saltstack found in tgt %s"%_ip
+    if msg=='success':
+        update_node_status(_ip,_reg,1)
     else:
-        msg='no provileges to execute node_stop'
-    print msg
+        pass
     return HttpResponse(msg)
 @permission_required('account.can_start_node',raise_exception=True)
 @login_required     
 def node_start(request):
     msg=""
-    _user=request.user
-    userprofile = UserProfiles.objects.get(user=_user)
-    _b = userprofile.business.all()
-    print _b
-    p=0
-    for business in _b:
-        print business.name
-        if business.name=='node_stop':
-            p=1
-            break
-        else:
-            p=0
-    print p
     start_time=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     user=request.user
     _ip=request.GET.get('ip')
@@ -200,56 +171,52 @@ def node_start(request):
     upduser=get_user_by_reg_and_ip(_ip,_reg)
     ret_dict={}
     salt_return=""
-    cmd_history(ip=_ip,regname=_reg,user=user,cmd='open_node',cmd_time=start_time)
-    t=0
-    if p==1:
-        if tgt:
-            client=LocalClient()
-            command="su - %s -c 'sh ~/bin/open.sh'"%(upduser)
-            try:
-                jid=client.cmd_async(tgt,'cmd.run',[command])
-            except:
-                msg='salt is not running'
-                return HttpResponse(msg)
-            while not client.get_cache_returns(jid):
-                time.sleep(1)
-                if t==10:
-                    print "timeout"
-                    break
-                else:
-                    t=t+1
-            ret_dict=client.get_cache_returns(jid)
-            salt_return=ret_dict[tgt]['ret']
-            print salt_return
+    rst=cmd_history(ip=_ip,regname=_reg,user=user,cmd='close_node',cmd_time=start_time)
+    if tgt:
+        client=LocalClient()
+        command="su - %s -c 'sh ~/bin/close.sh'"%(upduser)
+        try:
+            jid=client.cmd_async(tgt,'cmd.run',[command])
+        except:
+            msg='salt is not running'
+            return HttpResponse(msg)
+        t=0
+        while not client.get_cache_returns(jid):
+            time.sleep(1)
+            if  t==10:
+                print "timeout"
+                break
+            else:
+                t=t+1
+        ret_dict=client.get_cache_returns(jid)
+        salt_return=ret_dict[tgt]['ret']
+        print salt_return
+        if salt_return=="":
+            msg="success"
+        elif re.match(r"No such", salt_return):
+            msg="no such file"
+        else:
+            msg="other error"
+    elif os_type=='AIX':
+        ssh=ssh_connection(_ip,upduser)
+        command="sh ~/bin/open.sh'"
+        try:
+            stdin,stdout,stderr=ssh.exec_command(command,timeout=10)
+            ret_str=stdout.readlines()
             if salt_return=="":
                 msg="success"
             elif re.match(r"No such", salt_return):
                 msg="no such file"
             else:
                 msg="other error"
-        elif os_type=='AIX':
-            ssh=ssh_connection(_ip,upduser)
-            command="sh ~/bin/open.sh'"
-            try:
-                stdin,stdout,stderr=ssh.exec_command(command,timeout=10)
-                ret_str=stdout.readlines()
-                if salt_return=="":
-                    msg="success"
-                elif re.match(r"No such", salt_return):
-                    msg="no such file"
-                else:
-                    msg="other error"
-            except:
-                msg='other error'
-        else: 
-            msg="No saltstack found in tgt %s"%_ip
-        if msg=='success':
-            update_node_status(_ip,_reg,1)
-        else:
-            pass
+        except:
+            msg='other error'
+    else: 
+        msg="No saltstack found in tgt %s"%_ip
+    if msg=='success':
+        update_node_status(_ip,_reg,1)
     else:
-        msg='no provileges to execute node_stop'
-    print msg
+        pass
     return HttpResponse(msg)
 
 @permission_required("account.can_restart_node",)
